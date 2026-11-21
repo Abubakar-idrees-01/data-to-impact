@@ -30,8 +30,29 @@ library answers the question. If the best chunk scores below `refusal_threshold`
 calling the LLM: no hallucination risk, and an instant response. The threshold is chosen from data, using
 answerable and unanswerable questions, in `python eval/run_eval.py refusal` (→ [RESULTS.md](../RESULTS.md)).
 
+## A weak spot we found: tables
+MS MARCO is made of web passages written as prose. A table row like `Final examination | 40% | 1-5` doesn't
+look like an answer to that model. On the owner's course outline, the question *"What is the weightage of the
+final exam?"* scored **0.02**, below the refusal threshold, even though retrieval had ranked the right chunk #1.
+
+**Fix: linearize tables at ingest** ([`ingest/cleaning.py`](../../src/studyrag/ingest/cleaning.py),
+`linearize_table`). Every row repeats its column headers, turning it into a sentence:
+
+```
+Final examination | 40% | 1-5      →   Final examination — Weight: 40%; Primary CLO coverage: 1-5.
+```
+
+Same question, same model: **0.02 → 0.80**. We tested three formats and kept the best. Two-column tables, or
+tables whose header repeats ("Item | Details | Item | Details"), are key/value lists and become `Key: value.`
+
+The phrasing "How much is the final examination **worth**?" still scored low (0.13) even after the fix. A 22M
+reranker has blind spots. That's why a refusal also shows the closest passages: if the system is wrong,
+the student can still see the answer.
+
 ## Interview questions
 - *Why not rerank everything?* Cost grows linearly with candidates, about 10–20 ms per pair on CPU.
 - *What if the right chunk isn't in the top 20?* The reranker can't fix it, so first-stage recall (hit@20) bounds final quality.
 - *Is the sigmoid output a true probability?* Not exactly (MS MARCO calibration ≠ your data), which is why
   we calibrate the threshold on our own questions.
+- *What data does a reranker struggle with?* Anything unlike its training data: tables, code and very short
+  key/value text. Rewrite it into sentences before indexing, and test with real documents.

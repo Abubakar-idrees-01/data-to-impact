@@ -13,7 +13,9 @@ Instead of "write 10 MCQs about Lecture 2" (long prompt, long output, no traceab
 | Problem | Fix |
 |---|---|
 | Invalid / truncated JSON | grammar-constrained decoding (impossible by construction) |
-| Answer is almost always "A" | **shuffle options** after generation and remap the answer; the raw position bias is measured in the eval |
+| Answer position bias (small models often favour "A") | **shuffle options** after generation and remap the answer; the raw position is measured in the eval |
+| Explanation says "Option C is correct", but shuffling moved that option to D | remap every letter reference ("Option C", "options A and B", "the answer is B") with the same permutation (`remap_letters`) |
+| Options repeated inside the question ("…? A) x B) y") | cut from the stem; after shuffling they would contradict the real options |
 | Duplicate questions | embedding similarity to previous questions > 0.9 → dropped; previous questions are also listed in the prompt as "do not repeat" |
 | Two identical options | rejected |
 | "All of the above" | flagged |

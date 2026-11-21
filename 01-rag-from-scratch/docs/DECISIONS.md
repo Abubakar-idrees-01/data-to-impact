@@ -63,7 +63,9 @@ answerable vs unanswerable questions (RESULTS.md).
 
 ### D10. One passage per generated question, grammar-constrained JSON, shuffled options
 **Why:** short prompts are fast on CPU; every item gets an exact source; grammar constraints make invalid JSON
-impossible; shuffling removes small models' strong "answer is A" bias (measured in RESULTS.md).
+impossible. Shuffling guards against position bias, which is common in small models. *Measured:* Qwen3.5-2B
+turned out fairly balanced (raw positions A 4, B 5, C 3, D 3 over 15 questions), so shuffling here is a cheap safeguard
+rather than a fix. Shuffling did create a bug, though: see D20.
 
 ### D11. Streamlit for the UI
 **Considered:** Gradio, FastAPI + React.
@@ -100,5 +102,24 @@ See [concepts/08-ocr.md](concepts/08-ocr.md).
 ### D17. One shared OCR cache
 Every index (the app's, and one per chunking strategy in the evals) reuses `storage/ocr_cache.json`, so OCR runs
 once per unique image, ever. Without this, evaluating three chunking strategies would have re-OCR'd 150 slides three times.
+
+### D18. Linearize tables before indexing
+**Found on real data:** the owner's course outline stores the grading scheme in a table. Retrieval ranked it #1
+for "how much is the final exam worth?", but the reranker gave it 0.005, so the system *refused*. That was the only
+false refusal among 63 answerable questions. Pipe-separated rows read as noise to a model trained on prose.
+**Decision:** each table row becomes a sentence with its column headers ("Final examination — Weight: 40%; …").
+Reranker relevance for "weightage of the final exam" went from 0.02 to 0.80. Three formats were tested and the best kept.
+**Considered:** lowering the refusal threshold (would let unanswerable questions through, whose scores reach
+0.065); adding a BM25-score rule (it would have separated this one case, but tuning a rule on one example is overfitting).
+
+### D19. A refusal shows the closest passages
+A refusal is a threshold decision, so it can be wrong. Instead of a dead end, the student sees the two closest
+passages with their text. A false refusal then costs one click, not a wrong conclusion that "it isn't in my notes".
+
+### D20. Remap option letters in MCQ explanations after shuffling
+**Found by reviewing generated MCQs by hand:** explanations say "Option C is correct because…", but shuffling had
+moved that option to D, so the student saw a contradiction. Some questions also repeated "A) … B) …" inside the
+stem. **Fix:** remap every letter reference with the shuffle permutation, strip inline options, and ask the model
+to refer to options by content. Unit-tested in `tests/test_pipeline.py`.
 
 <!-- MEASURED_DECISIONS -->

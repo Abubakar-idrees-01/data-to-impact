@@ -97,3 +97,14 @@ def test_mcq_generation_skips_duplicates(settings, embedder, docs_folder):
     llm = FakeLLM(json_outputs=[same, same, same])
     out = list(generate_mcqs(llm, passages, embedder=embedder, retries=1))
     assert len(out) == 1
+
+
+def test_uncited_but_supported_sentences_get_auto_citations(settings, embedder, docs_folder):
+    lib, _ = _build(settings, embedder, docs_folder)
+    llm = FakeLLM(["- Backlinks are links from other websites.\n- Google was founded in 1998 by Larry Page."])
+    qa = QAEngine(Retriever(lib, embedder, None, settings), llm, embedder, settings)
+    ans = qa.ask("What are backlinks?")
+    first, second = ans.text.split("\n")
+    assert first.endswith("]") and ans.auto_cited            # supported claim got a citation
+    assert not second.endswith("]")                           # invented claim did not
+    assert len(ans.verification.unsupported) == 1

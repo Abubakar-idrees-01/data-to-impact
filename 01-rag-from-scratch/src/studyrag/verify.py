@@ -47,11 +47,12 @@ def strip_citations(text: str) -> str:
 
 @dataclass
 class SentenceCheck:
-    sentence: str
+    sentence: str                # claim text (citations and Markdown removed)
     cited: list[int]
     support: float               # best support over cited sources (or all, if uncited)
     best_source: int | None      # 1-based source number that supports it best
     supported: bool
+    raw: str = ""                # the sentence exactly as it appears in the answer
 
 
 @dataclass
@@ -100,5 +101,5 @@ def verify_answer(answer: str, sources, embedder, threshold: float = 0.55) -> Ve
             score = 0.5 * _lexical_recall(toks, passage_tokens[j]) + 0.5 * semantic
             if score > best:
                 best, best_src = score, j + 1
-        checks.append(SentenceCheck(text, cited, round(best, 3), best_src, best >= threshold))
+        checks.append(SentenceCheck(text, cited, round(best, 3), best_src, best >= threshold, raw))
     return Verification(checks)

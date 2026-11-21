@@ -37,6 +37,7 @@ class Answer:
     confidence: str              # "high" | "medium" | "low" | "none"
     retrieval: RetrievalResult
     seconds: float
+    auto_cited: list[int] = field(default_factory=list)   # citations added by the verifier, not the model
 
 
 class QAEngine:
@@ -61,10 +62,30 @@ class QAEngine:
         if prep.refused_early or not text or text.upper().startswith(NOT_FOUND) or NOT_FOUND in text[:40]:
             return Answer(prep.question, REFUSAL_TEXT, "not_found", hits, [], Verification(), "none",
                           prep.retrieval, elapsed)
-        cited = sorted({n for n in extract_citations(text) if 1 <= n <= len(hits)})
         ver = verify_answer(text, [h.chunk for h in hits], self.embedder, self.s.support_threshold)
+        text, auto = self.add_missing_citations(text, ver)
+        cited = sorted({n for n in extract_citations(text) if 1 <= n <= len(hits)})
         return Answer(prep.question, text, "answered", hits, cited, ver,
-                      self.confidence(prep.retrieval.top_relevance, ver, cited), prep.retrieval, elapsed)
+                      self.confidence(prep.retrieval.top_relevance, ver, cited), prep.retrieval, elapsed,
+                      auto_cited=auto)
+
+    @staticmethod
+    def add_missing_citations(text: str, ver: Verification) -> tuple[str, list[int]]:
+        """Small models often skip [n] markers in bullet lists. If the verifier found that an uncited
+        sentence IS supported by a source, append that source's citation (and record that we did)."""
+        added = []
+        for c in ver.checks:
+            if c.cited or not c.supported or not c.best_source or not c.raw:
+                continue
+            raw = c.raw.rstrip()
+            pos = text.find(raw)
+            if pos == -1:
+                continue
+            end = pos + len(raw)
+            text = f"{text[:end]} [{c.best_source}]{text[end:]}"
+            c.cited = [c.best_source]
+            added.append(c.best_source)
+        return text, sorted(set(added))
 
     @staticmethod
     def confidence(top_relevance: float, ver: Verification, cited: list[int]) -> str:

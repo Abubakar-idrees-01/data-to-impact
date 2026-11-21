@@ -58,3 +58,10 @@ desktop.ini
 # ---- Private user documents (never pushed) ----
 **/data/my_docs/*
 !**/data/my_docs/README.md
+
+# ---- Project runtime artifacts ----
+**/storage/
+**/models/*
+!**/models/README.md
+**/eval/results/private/
+**/eval/datasets/private/

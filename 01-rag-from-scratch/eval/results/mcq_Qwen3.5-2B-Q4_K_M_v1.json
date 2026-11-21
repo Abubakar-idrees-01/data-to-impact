@@ -1,0 +1,16 @@
+{
+  "model": "Qwen3.5-2B-Q4_K_M",
+  "passages": 15,
+  "mcqs_produced": 15,
+  "yield_rate": 1.0,
+  "grounded_rate": 1.0,
+  "flagged_rate": 0.0,
+  "answer_key_consistency": 0.867,
+  "raw_answer_position_counts": {
+    "A": 4,
+    "B": 5,
+    "C": 3,
+    "D": 3
+  },
+  "seconds_per_mcq": 69.6
+}

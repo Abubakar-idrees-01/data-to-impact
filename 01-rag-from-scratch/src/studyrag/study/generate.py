@@ -15,6 +15,7 @@ How it works:
 from __future__ import annotations
 
 import random
+import re
 from dataclasses import dataclass, field, asdict
 from typing import Iterator
 
@@ -107,8 +108,24 @@ class _Dedup:
 
 
 # ------------------------------------------------------------------ MCQs
+_INLINE_OPTIONS = re.compile(r"\s+\(?A[).:]\s.*\s\(?B[).:]\s.*$", re.S)
+_LETTER_REFS = re.compile(r"\b((?:[Oo]ptions?|[Cc]hoices?|[Aa]nswer(?:\s+is)?)\s+)([A-D](?:(?:\s*,\s*|\s+(?:and|or)\s+|\s*,\s*and\s+)[A-D])*)\b")
+
+
+def remap_letters(text: str, mapping: dict[str, str]) -> str:
+    """Rewrite "Option C" / "Options A, B and D" / "the answer is B" after the options were shuffled.
+
+    The model writes its explanation against its own A-D order; we shuffle the options to remove
+    its position bias, so every letter it mentions must move with its option.
+    """
+    def repl(m):
+        return m.group(1) + re.sub(r"[A-D]", lambda x: mapping.get(x.group(0), x.group(0)), m.group(2))
+    return _LETTER_REFS.sub(repl, text)
+
+
 def validate_mcq(raw: dict, chunk: Chunk, rng: random.Random) -> MCQ | None:
     q = (raw.get("question") or "").strip()
+    q = _INLINE_OPTIONS.sub("", q).strip()               # model sometimes repeats "A) ... B) ..." in the stem
     opts_raw = raw.get("options") or {}
     letters = list("ABCD")
     options = [str(opts_raw.get(k, "")).strip() for k in letters]
@@ -128,7 +145,9 @@ def validate_mcq(raw: dict, chunk: Chunk, rng: random.Random) -> MCQ | None:
     order = list(range(4))
     rng.shuffle(order)                                    # remove the model's "answer is A" bias
     shuffled = [options[i] for i in order]
-    return MCQ(q, shuffled, shuffled.index(correct), (raw.get("explanation") or "").strip(),
+    mapping = {letters[old]: letters[new] for new, old in enumerate(order)}
+    explanation = remap_letters((raw.get("explanation") or "").strip(), mapping)
+    return MCQ(q, shuffled, shuffled.index(correct), explanation,
                chunk, grounded, issues, raw_answer=ans)
 
 

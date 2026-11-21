@@ -77,7 +77,9 @@ def mcq_user(chunk, difficulty: str, previous: list[str]) -> str:
             "Rules:\n- Exactly 4 options A-D; exactly one is correct according to the passage.\n"
             "- The 3 wrong options must be plausible but clearly wrong according to the passage.\n"
             "- No 'All of the above' or 'None of the above'.\n"
-            "- The explanation says why the answer is correct, using the passage.\n" + _avoid(previous))
+            "- Put the options only in the options field, not inside the question text.\n"
+            "- The explanation says why the answer is correct, using the passage. Refer to options by their "
+            "content, not by letter.\n" + _avoid(previous))
 
 
 MCQ_SCHEMA = {

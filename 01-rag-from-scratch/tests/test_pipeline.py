@@ -108,3 +108,21 @@ def test_uncited_but_supported_sentences_get_auto_citations(settings, embedder, 
     assert first.endswith("]") and ans.auto_cited            # supported claim got a citation
     assert not second.endswith("]")                           # invented claim did not
     assert len(ans.verification.unsupported) == 1
+    assert [c.auto for c in ans.verification.checks] == [True, False]
+
+
+def test_mcq_shuffle_keeps_explanation_letters_and_strips_inline_options(settings, embedder, docs_folder):
+    lib = Library(settings, embedder)
+    lib.sync_folder(docs_folder)
+    chunk = lib.chunks[0]
+    raw = {"question": "What is SEO? A) improving rankings B) buying ads C) email D) printing",
+           "options": {"A": "Improving a website's organic rankings", "B": "Buying search ads",
+                       "C": "Sending newsletters", "D": "Printing flyers"},
+           "answer": "A", "explanation": "Option A is correct; options B and C describe other channels."}
+    for seed in range(10):
+        q = validate_mcq(raw, chunk, random.Random(seed))
+        assert q.question == "What is SEO?"
+        letter = q.answer_letter
+        assert q.explanation.startswith(f"Option {letter} is correct")
+        b, c = "ABCD"[q.options.index("Buying search ads")], "ABCD"[q.options.index("Sending newsletters")]
+        assert f"options {b} and {c} describe" in q.explanation

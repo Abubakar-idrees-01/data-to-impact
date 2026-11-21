@@ -10,16 +10,18 @@ memory (where it may invent things), we first **retrieve** the relevant passages
 and then ask the model to answer **using only those passages**.
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph Indexing["Indexing (once per document)"]
+        direction LR
         F[Your files<br/>PDF · PPTX · DOCX · MD · images] --> L[Load + OCR<br/>keep slide/page numbers]
         L --> C[Chunk<br/>structure-aware]
         C --> B[(BM25<br/>inverted index)]
         C --> E[Embed<br/>bge-small] --> V[(Vector matrix<br/>NumPy)]
     end
     subgraph Answering["Answering (every question)"]
-        Q[Question] --> B2[BM25 top 10]
-        Q --> V2[Vector top 10]
+        direction LR
+        Q[Question] --> B2[BM25 top 10<br/>from the index]
+        Q --> V2[Vector top 10<br/>from the index]
         B2 --> R[Reciprocal Rank Fusion]
         V2 --> R
         R --> X[Cross-encoder rerank]
@@ -30,8 +32,7 @@ flowchart LR
         M --> A[Answer with citations]
         A --> W[Verify each sentence<br/>against its source]
     end
-    B -.-> B2
-    V -.-> V2
+    Indexing ~~~ Answering
 ```
 
 ## Step by step
@@ -93,6 +94,12 @@ shuffled to remove the model's habit of putting the answer at "A". Summaries use
 ### 9. Evaluation → [`eval/run_eval.py`](../eval/run_eval.py)
 Retrieval quality, refusal calibration, verifier accuracy, answer correctness and MCQ quality are all measured.
 → [concept](concepts/11-evaluation.md) · [results](RESULTS.md)
+
+## What it looks like
+The answer below shows steps 4–7 in the app: numbered citations, the sentence the verifier flagged, and the
+**🔍 How I found this** panel with each passage's BM25 rank, vector rank, fusion score and reranker score.
+
+![An answer with citations, a flagged sentence and the retrieval trace](images/ask.png)
 
 ## Code map
 

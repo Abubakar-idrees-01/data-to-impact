@@ -107,6 +107,20 @@ Qwen3.5-2B's citations were the most reliable (0.98 vs 0.80 for the 1.5B). [Full
 All numbers come from `eval/run_eval.py` and are explained in **[docs/RESULTS.md](docs/RESULTS.md)**. Design choices
 backed by these measurements are in **[docs/DECISIONS.md](docs/DECISIONS.md)**.
 
+## Read it as PDFs
+Prefer documents to Markdown? Every guide is also a formatted PDF in [docs/pdf/](docs/pdf/):
+
+| | |
+|---|---|
+| 📄 [**Overview**](docs/pdf/StudyRAG-Overview.pdf) | The project on one page (2 pages) |
+| 🗓️ [**Timeline**](docs/pdf/StudyRAG-Timeline.pdf) | How it was built: each phase, the problems met and how they were solved |
+| 🛠️ [**Setup Guide**](docs/pdf/StudyRAG-Setup-Guide.pdf) | Install and run on Linux, Windows or macOS |
+| 🧭 [**How It Works**](docs/pdf/StudyRAG-How-It-Works.pdf) | Architecture, step by step |
+| 📊 [**Results**](docs/pdf/StudyRAG-Results.pdf) · [**Design Decisions**](docs/pdf/StudyRAG-Design-Decisions.pdf) | Every measurement, and the choices they drove |
+| 🎓 [**Concepts Handbook**](docs/pdf/StudyRAG-Concepts-Handbook.pdf) | All 11 concept notes in one book |
+
+The Markdown files are the source; `python scripts/build_pdfs.py` regenerates the PDFs (needs pandoc and Chrome).
+
 ## Learn how it works
 Concept notes, written to be understood and explained in an interview:
 
@@ -123,7 +137,7 @@ app/            Streamlit web app
 eval/           labelled datasets + evaluation harness
 tests/          unit + pipeline tests (fake models, run in seconds)
 scripts/        model download, sample corpus fetch
-docs/           setup, architecture, concepts, decisions, results
+docs/           overview, timeline, setup, architecture, concepts, decisions, results (+ PDF editions in docs/pdf/)
 ```
 
 ## Limitations

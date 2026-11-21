@@ -47,7 +47,9 @@ All grounded in the uploaded material and cited:
 
 ## Status (2026-11-21): feature-complete, evaluated, documented
 Built: package `src/studyrag`, Streamlit app, CLI, OCR, eval harness, docs (SETUP, HOW_IT_WORKS, 11 concept notes,
-DECISIONS D1-D21, RESULTS §1-8), README with screenshots. 28 unit tests pass.
+DECISIONS D1-D21, RESULTS §1-8, TIMELINE, OVERVIEW), README with screenshots. 28 unit tests pass.
+- PDFs: docs/pdf/ built from the Markdown by `scripts/build_pdfs.py` (pandoc + headless Chrome; mermaid via CDN).
+  Charts: `scripts/make_doc_charts.py` (system python3 with matplotlib). Rebuild PDFs after editing any doc.
 - Owner's lectures (3 PPTX, 150 slides) are image-only -> OCR (RapidOCR, use_cls=False) is essential.
 - Default LLM Qwen3.5-2B (measured best citations on OCR'd slides; 1.5B/0.8B are faster documented alternatives).
 - Measured: retrieval hit@3 1.00 both sets; refusals 14/14, 62/63 answerable kept; key-fact recall 0.90 public /

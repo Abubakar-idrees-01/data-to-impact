@@ -145,9 +145,13 @@ def render_answer(entry: dict, key: str):
     if ans.status == "not_found":
         st.markdown(f"🔎 **{ans.text}**")
         if ans.sources:
-            st.caption("Closest passages I found (not relevant enough to answer from):")
+            # Refusal is decided by a relevance score, so it can occasionally be wrong (e.g. a table the
+            # reranker reads poorly). Showing the closest passages lets the student check for themselves.
+            st.caption("No passage was relevant enough to answer from. Closest passages, in case they help:")
             for h in ans.sources[:2]:
-                st.caption(f"• {h.chunk.header}")
+                rel = "" if h.rerank_score is None else f" · relevance {h.rerank_score:.2f}"
+                with st.expander(f"{h.chunk.header}{rel}"):
+                    st.text(h.chunk.text)
         return
     st.markdown(link_citations(ans.text, key, ans.sources), unsafe_allow_html=True)
     labels = {"high": "High confidence", "medium": "Medium confidence", "low": "Low confidence"}

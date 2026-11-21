@@ -70,6 +70,11 @@ def cmd_ask(rag, a):
     ans = qa.finalize(prep, raw)
     if ans.status == "not_found":
         print(ans.text)
+        if ans.sources:
+            print("closest passages (not relevant enough to answer from):")
+            for h in ans.sources[:2]:
+                print(f"  - {h.chunk.header}")
+        return
     print(f"\nconfidence: {ans.confidence}   ({ans.seconds:.1f}s)")
     for n, h in enumerate(ans.sources, 1):
         mark = "*" if n in ans.cited else " "

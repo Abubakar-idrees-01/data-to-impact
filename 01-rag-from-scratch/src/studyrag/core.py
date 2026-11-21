@@ -34,6 +34,21 @@ class StudyRAG:
         from .llm import load_llm
         return load_llm(self.settings)
 
+    def reload_llm(self) -> None:
+        """Drop the loaded LLM so the next use builds one from the (possibly changed) settings."""
+        self.__dict__.pop("llm", None)
+
+    @property
+    def llm_ready(self) -> tuple[bool, str]:
+        """Can an LLM be loaded with the current settings? (ok, message)"""
+        s = self.settings
+        if s.llm_backend == "llamacpp" and not s.llm_model_path.exists():
+            return False, (f"Model file not found: {s.llm_model_path.name}. "
+                           "Run `python scripts/download_models.py`, or switch to an API backend in Settings.")
+        if s.llm_backend == "openai" and not (s.api_key or "localhost" in s.api_base_url):
+            return False, "API backend selected but no API key set (Settings, or STUDYRAG_API_KEY)."
+        return True, ""
+
     @property
     def qa(self) -> QAEngine:
         return QAEngine(self.retriever, self.llm, self.embedder, self.settings)

@@ -19,4 +19,14 @@ CLAUDE.md (project context), README.md (public write-up), and requirements.
   (owner wants a steady GitHub contribution graph). Never make filler/fake commits.
 - One virtualenv per project (`<project>/.venv`), pinned `requirements.txt`.
 - Everything must run on CPU. Large data and model weights stay out of git.
-- Each project README must show: problem, approach, results (with numbers), how to run.
+- Model weights / HF cache go on this drive (project `models/`, gitignored), not `~` (root has ~8 GB free).
+
+## Documentation standard (every project — owner learns from these docs)
+- `README.md`: problem, live demo link, screenshots/GIF, features, results with numbers, quickstart.
+- `docs/SETUP.md`: step-by-step install for Linux/Windows/macOS, model downloads, troubleshooting.
+- `docs/HOW_IT_WORKS.md`: architecture + diagram, data flow end to end.
+- `docs/concepts/*.md`: one beginner-friendly learning note per core concept, written so the owner
+  can explain it in an interview (intuition → math/algorithm → our code → results).
+- `docs/DECISIONS.md`: why X over Y, backed by our measurements.
+- `docs/images/`: screenshots (captured headlessly with Chrome) and demo GIF.
+- Write the docs for a phase in the same step as its code, not at the end.

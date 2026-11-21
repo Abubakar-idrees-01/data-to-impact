@@ -22,5 +22,12 @@ Allowed off-the-shelf: embedding model (small sentence-transformers model), the 
 - Fully offline / private on a CPU laptop; Streamlit or Gradio UI; deploy to HF Spaces
 - Evaluated with 02-llm-evals: retrieval recall@k, MRR, faithfulness, answer correctness
 
+## Web app / demo
+- Streamlit app: document library sidebar (upload/remove), chat, clickable citations that open the
+  source passage, confidence badge, "show retrieval details" panel for learning/debugging.
+- Same app runs locally (one command) and on Hugging Face Spaces (free CPU) as the public demo.
+- Public demo uses openly licensed documents only (e.g. OpenStax textbooks, arXiv papers);
+  owner's private files stay local and gitignored.
+
 ## Status
 Not started.

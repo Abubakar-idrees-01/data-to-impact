@@ -45,13 +45,15 @@ All grounded in the uploaded material and cited:
 - Public demo uses openly licensed documents only (e.g. OpenStax textbooks, arXiv papers);
   owner's private files stay local and gitignored.
 
-## Status (2026-11-21)
-Built: full package `src/studyrag`, Streamlit app, CLI, OCR, eval harness, docs (SETUP, HOW_IT_WORKS,
-11 concept notes, DECISIONS, RESULTS). 22 unit tests pass.
+## Status (2026-11-21): feature-complete, evaluated, documented
+Built: package `src/studyrag`, Streamlit app, CLI, OCR, eval harness, docs (SETUP, HOW_IT_WORKS, 11 concept notes,
+DECISIONS D1-D21, RESULTS §1-8), README with screenshots. 28 unit tests pass.
 - Owner's lectures (3 PPTX, 150 slides) are image-only -> OCR (RapidOCR, use_cls=False) is essential.
-- Default LLM Qwen3.5-2B Q4_K_M (~37 s/answer on the owner's i5-5200U). Prefill ~25 tok/s, decode ~5.7 tok/s.
+- Default LLM Qwen3.5-2B (measured best citations on OCR'd slides; 1.5B/0.8B are faster documented alternatives).
+- Measured: retrieval hit@3 1.00 both sets; refusals 14/14, 62/63 answerable kept; key-fact recall 0.90 public /
+  0.94 private; citation support 0.96/0.98; ~32-35 s/answer. MCQs ~1 in 4 flawed in human review (weakest part).
 - Private eval set: eval/datasets/private/my_docs_qa.jsonl (35 q, gitignored); owner to verify in Phase 6.
-- Remaining: model comparison (qwen2.5-1.5b, qwen3.5-0.8b downloaded), screenshots, final README numbers.
+- Possible next steps: owner's Phase 6 review, optional HF Spaces deploy (API backend there), 02-llm-evals.
 
 ## Environment gotchas
 - venv at `.venv` on NTFS; PyPI downloads are very slow (~30-80 KB/s), Hugging Face is fast (~1 MB/s).

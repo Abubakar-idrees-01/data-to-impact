@@ -47,11 +47,12 @@ class QAEngine:
         self.s = settings
 
     def prepare(self, question: str, doc_ids: list[str] | None = None) -> Prepared:
+        t0 = time.perf_counter()
         res = self.retriever.retrieve(question, doc_ids=doc_ids)
         refused = not res.hits or res.top_relevance < self.s.refusal_threshold
         msgs = [{"role": "system", "content": QA_SYSTEM},
                 {"role": "user", "content": qa_user(question, [h.chunk for h in res.hits])}]
-        return Prepared(question, res, msgs, refused)
+        return Prepared(question, res, msgs, refused, t_start=t0)
 
     def finalize(self, prep: Prepared, raw_text: str) -> Answer:
         hits = prep.retrieval.hits

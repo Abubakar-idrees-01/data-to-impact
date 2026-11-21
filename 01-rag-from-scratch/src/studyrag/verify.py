@@ -36,8 +36,13 @@ def extract_citations(text: str) -> list[int]:
     return nums
 
 
+_MD = re.compile(r"(\*\*|__|`|^#+\s*|^\s*[-*•]\s+|^\s*\d+[.)]\s+)", re.M)
+
+
 def strip_citations(text: str) -> str:
-    return re.sub(r"\s*" + _CITE.pattern, "", text).strip()
+    """Remove [n] citations and Markdown decoration, leaving only the claim's words."""
+    text = re.sub(r"\s*" + _CITE.pattern, "", text)
+    return _MD.sub("", text).strip()
 
 
 @dataclass

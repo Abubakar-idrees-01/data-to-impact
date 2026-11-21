@@ -216,7 +216,8 @@ def eval_answers(a, settings, data, docs_dir, out_dir):
         ans = qa.ask(q["question"])
         row = {"id": q["id"], "question": q["question"], "answerable": q["answerable"], "status": ans.status,
                "answer": ans.text, "confidence": ans.confidence, "seconds": round(ans.seconds, 1),
-               "supported_ratio": round(ans.verification.supported_ratio, 2), "cited": ans.cited}
+               "supported_ratio": round(ans.verification.supported_ratio, 2), "cited": ans.cited,
+               "auto_cited": ans.auto_cited}
         if q["answerable"] and ans.status == "answered":
             facts = q.get("key_facts") or [q["answer"]]
             found = [fact_found(f, ans.text, emb) for f in facts]
@@ -240,6 +241,8 @@ def eval_answers(a, settings, data, docs_dir, out_dir):
         "fully_correct_rate": mean([r["fact_recall"] >= 0.99 for r in answered]),
         "mostly_correct_rate (>=50% facts)": mean([r["fact_recall"] >= 0.5 for r in answered]),
         "citation_precision": mean([r["citation_precision"] for r in answered]),
+        "answers_with_any_citation": mean([bool(r["cited"]) for r in answered]),
+        "answers_needing_auto_citation": mean([bool(r.get("auto_cited")) for r in answered]),
         "faithfulness (verified sentence ratio)": mean([r["supported_ratio"] for r in answered]),
         "gold_passage_retrieved": mean([r["retrieved_gold"] for r in answered]),
         "refusal_rate_on_unanswerable": mean([r["status"] == "not_found" for r in una_rows]),

@@ -1,0 +1,15 @@
+{
+  "model": "Qwen3.5-2B-Q4_K_M",
+  "n": 42,
+  "n_answerable": 34,
+  "n_unanswerable": 8,
+  "answer_rate_on_answerable": 1,
+  "key_fact_recall": 0.917,
+  "fully_correct_rate": 0.853,
+  "mostly_correct_rate (>=50% facts)": 0.971,
+  "citation_precision": 0.706,
+  "faithfulness (verified sentence ratio)": 0.927,
+  "gold_passage_retrieved": 1,
+  "refusal_rate_on_unanswerable": 1,
+  "median_seconds": 37.25
+}

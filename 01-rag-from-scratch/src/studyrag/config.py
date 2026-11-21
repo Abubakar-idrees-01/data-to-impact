@@ -32,7 +32,7 @@ class Settings:
     # --- retrieval ---
     embedding_model: str = "BAAI/bge-small-en-v1.5"
     reranker_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
-    candidates: int = 20                # results taken from each retriever before fusion
+    candidates: int = 10                # results taken from each retriever before fusion (measured: D13)
     rrf_k: int = 60                     # Reciprocal Rank Fusion constant
     top_k: int = 4                      # chunks given to the LLM
     use_reranker: bool = True

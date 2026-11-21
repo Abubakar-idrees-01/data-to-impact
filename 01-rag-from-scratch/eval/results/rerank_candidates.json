@@ -1,0 +1,8 @@
+{
+  "setup": "sample set, 34 answerable questions, structure chunking, hybrid + rerank, top_k=10",
+  "rows": [
+    {"candidates": 20, "hit@1": 0.91, "hit@3": 1.00, "MRR@10": 0.956, "median_ms": 2068},
+    {"candidates": 10, "hit@1": 0.94, "hit@3": 1.00, "MRR@10": 0.971, "median_ms": 985},
+    {"candidates": 6,  "hit@1": 0.94, "hit@3": 1.00, "MRR@10": 0.971, "median_ms": 603}
+  ]
+}

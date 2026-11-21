@@ -45,5 +45,15 @@ All grounded in the uploaded material and cited:
 - Public demo uses openly licensed documents only (e.g. OpenStax textbooks, arXiv papers);
   owner's private files stay local and gitignored.
 
-## Status
-Not started.
+## Status (2026-11-21)
+Built: full package `src/studyrag`, Streamlit app, CLI, OCR, eval harness, docs (SETUP, HOW_IT_WORKS,
+11 concept notes, DECISIONS, RESULTS). 22 unit tests pass.
+- Owner's lectures (3 PPTX, 150 slides) are image-only -> OCR (RapidOCR, use_cls=False) is essential.
+- Default LLM Qwen3.5-2B Q4_K_M (~37 s/answer on the owner's i5-5200U). Prefill ~25 tok/s, decode ~5.7 tok/s.
+- Private eval set: eval/datasets/private/my_docs_qa.jsonl (35 q, gitignored); owner to verify in Phase 6.
+- Remaining: model comparison (qwen2.5-1.5b, qwen3.5-0.8b downloaded), screenshots, final README numbers.
+
+## Environment gotchas
+- venv at `.venv` on NTFS; PyPI downloads are very slow (~30-80 KB/s), Hugging Face is fast (~1 MB/s).
+- llama-cpp-python compiled with CMAKE_ARGS GGML_NATIVE=OFF + AVX2/FMA/F16C.
+- Shell is zsh: use ${=var} to word-split variables in loops.

@@ -8,7 +8,7 @@ Everything is designed to run on modest, CPU-only hardware.
 
 | # | Project | Problem | Key ideas | Status |
 |---|---------|---------|-----------|--------|
-| 1 | [RAG from Scratch](01-rag-from-scratch) | Trustworthy Q&A over your own documents | Hand-built BM25 + vector search, hybrid retrieval, verified citations | 🚧 planned |
+| 1 | [StudyRAG: RAG from Scratch](01-rag-from-scratch) | Trustworthy study assistant over your own course material | Hand-built BM25 + vector search, hybrid retrieval, OCR, verified citations, MCQ generation | 🔨 in progress |
 | 2 | [LLM Evals](02-llm-evals) | "Is my AI system actually good?" | Faithfulness, retrieval metrics, validated LLM-as-judge, regression tracking | 🚧 planned |
 | 3 | [MCP Server](03-mcp-server) | Give AI assistants access to private knowledge and tools | Model Context Protocol, published package | 🚧 planned |
 | 4 | [AI Agent](04-ai-agent) | Automate research and dev chores safely | Tool use, planning, memory, human-in-the-loop | 🚧 planned |

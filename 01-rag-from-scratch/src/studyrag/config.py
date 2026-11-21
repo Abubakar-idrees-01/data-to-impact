@@ -20,6 +20,9 @@ class Settings:
     storage_dir: Path = PROJECT_ROOT / "storage"   # built index (gitignored)
     models_dir: Path = PROJECT_ROOT / "models"     # downloaded models (gitignored)
 
+    # --- ingestion ---
+    ocr: bool = True                    # read text from image-only slides / scanned pages
+
     # --- chunking ---
     chunk_strategy: str = "structure"   # "fixed" | "structure" | "semantic"
     chunk_size: int = 180               # target max words per chunk

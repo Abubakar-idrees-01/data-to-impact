@@ -84,8 +84,11 @@ with st.sidebar:
     for d in docs:
         c1, c2 = st.columns([5, 1])
         icon = {"pptx": "📊", "pdf": "📕", "docx": "📄", "md": "📝", "txt": "📝"}.get(d.doc_type, "📄")
-        c1.markdown(f"{icon} **{d.title}**  \n<small>{d.n_chunks} chunks · {d.n_words:,} words</small>",
+        ocr_note = f" · 📷 {d.n_ocr} via OCR" if d.n_ocr else ""
+        c1.markdown(f"{icon} **{d.title}**  \n<small>{d.n_chunks} chunks · {d.n_words:,} words{ocr_note}</small>",
                     unsafe_allow_html=True)
+        for w in d.warnings:
+            c1.caption(f"⚠️ {w}")
         if c2.button("✕", key=f"rm-{d.doc_id}", help="Remove from library (the file is kept)"):
             lib.remove(d.doc_id)
             st.rerun()

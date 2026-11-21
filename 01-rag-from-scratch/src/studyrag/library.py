@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import json
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
@@ -40,9 +40,11 @@ class DocInfo:
     n_chunks: int
     n_words: int
     added_at: float
+    n_ocr: int = 0                       # slides/pages whose text came from OCR
+    warnings: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
-        return self.__dict__.copy()
+        return dict(self.__dict__)
 
 
 class Library:
@@ -55,6 +57,8 @@ class Library:
         self.matrix = np.zeros((0, embedder.dim), dtype=np.float32)
         self.bm25 = BM25Index()
         self.vindex = VectorIndex()
+        from .ingest import ocr as ocr_mod
+        ocr_mod.set_cache_path(self.dir / "ocr_cache.json")
         self._load()
 
     # ------------------------------------------------------------ persistence
@@ -62,7 +66,7 @@ class Library:
         s = self.settings
         return {"version": INDEX_VERSION, "embedding_model": self.embedder.model_name,
                 "chunk_strategy": s.chunk_strategy, "chunk_size": s.chunk_size,
-                "chunk_overlap": s.chunk_overlap, "min_chunk_words": s.min_chunk_words}
+                "chunk_overlap": s.chunk_overlap, "min_chunk_words": s.min_chunk_words, "ocr": s.ocr}
 
     def _load(self) -> None:
         manifest = self.dir / "manifest.json"
@@ -108,8 +112,8 @@ class Library:
             if Path(d.path) == path:
                 self.remove(d.doc_id, save=False)
                 status = "updated"
-        doc = load_document(path)
         s = self.settings
+        doc = load_document(path, ocr=s.ocr)
         chunks = chunk_document(doc, s.chunk_strategy, size=s.chunk_size, overlap=s.chunk_overlap,
                                 min_words=s.min_chunk_words, embed=self.embedder.embed_documents)
         vecs = self.embedder.embed_documents([c.index_text for c in chunks])
@@ -117,7 +121,8 @@ class Library:
         self.matrix = np.vstack([self.matrix, vecs]) if len(self.matrix) else vecs
         self.docs[doc.doc_id] = DocInfo(doc_id=doc.doc_id, title=doc.title, source=doc.source,
                                         path=str(path), doc_type=doc.doc_type, n_chunks=len(chunks),
-                                        n_words=doc.word_count, added_at=time.time())
+                                        n_words=doc.word_count, added_at=time.time(),
+                                        n_ocr=doc.ocr_blocks, warnings=doc.warnings)
         self._rebuild_indexes()
         if save:
             self._save()

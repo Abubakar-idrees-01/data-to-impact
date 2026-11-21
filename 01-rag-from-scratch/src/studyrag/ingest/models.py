@@ -16,6 +16,7 @@ class Block:
     location: int          # 1-based slide / page / section number
     kind: str              # "slide" | "page" | "section"
     heading: str = ""      # slide title or section heading, if any
+    ocr: bool = False      # text was read from an image by OCR
 
 
 @dataclass
@@ -25,6 +26,11 @@ class Document:
     source: str            # original file name
     doc_type: str          # "pdf" | "docx" | "pptx" | "md" | "txt"
     blocks: list[Block] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+
+    @property
+    def ocr_blocks(self) -> int:
+        return sum(b.ocr for b in self.blocks)
 
     @property
     def word_count(self) -> int:

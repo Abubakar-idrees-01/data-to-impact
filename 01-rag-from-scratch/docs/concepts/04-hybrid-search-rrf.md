@@ -29,7 +29,7 @@ beats being "the best in one". That is usually right: agreement between two inde
 
 ## Code
 [`hybrid.py`](../../src/studyrag/hybrid.py) is 10 lines; [`retrieval.py`](../../src/studyrag/retrieval.py)
-takes the top 20 from each retriever, fuses them, and keeps each chunk's individual ranks for the
+takes the top 10 from each retriever, fuses them, and keeps each chunk's individual ranks for the
 "How I found this" panel.
 
 ## What we measured

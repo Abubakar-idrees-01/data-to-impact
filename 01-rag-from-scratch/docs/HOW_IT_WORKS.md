@@ -18,8 +18,8 @@ flowchart LR
         C --> E[Embed<br/>bge-small] --> V[(Vector matrix<br/>NumPy)]
     end
     subgraph Answering["Answering (every question)"]
-        Q[Question] --> B2[BM25 top 20]
-        Q --> V2[Vector top 20]
+        Q[Question] --> B2[BM25 top 10]
+        Q --> V2[Vector top 10]
         B2 --> R[Reciprocal Rank Fusion]
         V2 --> R
         R --> X[Cross-encoder rerank]
@@ -63,7 +63,7 @@ Market space`, which is indexed together with the text. → [concept: chunking](
   (incremental indexing), and the OCR cache means no image is ever OCR'd twice.
 
 ### 4. Retrieval → [`retrieval.py`](../src/studyrag/retrieval.py)
-1. BM25 returns its top 20 chunks; vector search returns its top 20.
+1. BM25 returns its top 10 chunks; vector search returns its top 10 (`candidates`, see DECISIONS D13).
 2. **Reciprocal Rank Fusion** merges the two lists using only ranks. → [concept](concepts/04-hybrid-search-rrf.md)
 3. A **cross-encoder** re-scores the fused candidates by reading question and chunk together, and the top 4 are kept. → [concept](concepts/05-reranking.md)
 

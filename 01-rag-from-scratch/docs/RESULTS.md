@@ -146,23 +146,33 @@ attention. *Measure; don't assume model size predicts speed.*
 for weak machines (2× faster, a few more incomplete answers); or the API backend.
 
 ## 7. MCQ quality (Qwen3.5-2B, 15 passages from the public set)
-| metric | v1 | **v2** |
-|---|---|---|
-| yield (valid MCQ per passage) | 1.00 | **1.00** |
-| grounded (correct option supported by passage) | 1.00 | **0.93** |
-| answer-key consistency (model re-answers its own question) | 0.87 | **0.87** |
-| raw answer position A / B / C / D | 4 / 5 / 3 / 3 | 4 / 4 / 5 / 2 |
-| time per MCQ | 69.6 s | 65.7 s |
+| metric | v1 | v2 (letter remap) | **v3** (+ self-check) |
+|---|---|---|---|
+| yield (valid MCQ per passage) | 1.00 | 1.00 | **1.00** |
+| grounded (correct option supported by passage) | 1.00 | 0.93 | **1.00** |
+| answer-key consistency (model re-answers its own question) | 0.87 | 0.87 | 1.00 (by construction, see below) |
+| questions regenerated after a failed self-check | – | – | 2 |
+| raw answer position A / B / C / D | 4 / 5 / 3 / 3 | 4 / 4 / 5 / 2 | 3 / 9 / 2 / 1 |
+| time per MCQ | 69.6 s | 65.7 s | 83.9 s |
 
-**Human review of all 15 v2 questions:** 12 good. 3 flawed: two options paraphrasing each other (2 cases) and
-a distractor that is also true. The review found two bugs that automatic metrics missed:
-1. Explanations referred to options by letter ("Option C is correct"), but shuffling had moved them. In v2,
-   all 15 explanations match the displayed letters ([D20](DECISIONS.md)).
-2. Some questions repeated "A) … B) …" inside the stem; v2 had none.
+**Human review is the real metric here.** Automatic checks can't tell whether a distractor is *also* true.
 
-The paraphrased-options flaw is now caught automatically (`_near_duplicate_options`). On the 30 reviewed MCQs it
-flags exactly the 2 true duplicates and no valid question. The "grounded" drop from 1.00 to 0.93 is one false flag: the
-correct option paraphrased the passage too loosely for the word-overlap check. That check is deliberately strict.
+- **v2, all 15 reviewed:** 12 good, 3 flawed (two near-duplicate options, a distractor that is also true). The
+  review found two bugs no metric caught: explanations pointed at the wrong letter after shuffling, and some
+  stems repeated "A) … B) …". Both were fixed ([D20](DECISIONS.md)); in v2/v3 every explanation matches the displayed letters.
+- **v3, all 15 reviewed, more strictly** (each key checked against its passage): **8 good, 3 borderline, 4 flawed**:
+  two with more than one defensible option, one where no option matches the stem, and one with a **wrong key**
+  (the passage says SEM *incorporates* SEO; the key says they are distinct).
+
+**What the self-check does and doesn't do ([D21](DECISIONS.md)).** In v2, the model disagreed with its own key
+on 2 questions, and both were among the 3 I had judged flawed: it is a precise detector. In the app it shows up as
+a ⚠️ warning; the MCQ screenshot below shows it catching a question with two true options. It can't catch a
+question the model is *consistently* wrong about (v3's SEM question). It costs ~18 s per question.
+
+**Verdict:** questions are grounded, varied and correctly lettered, but roughly 1 in 4 still has a flaw a careful
+student would notice. That's the weakest output of a 2B model, so every question shows its source passage, and
+the API backend exists for higher-quality generation. Position bias varies from run to run (v3: 9 of 15 at "B"),
+which is why options are always shuffled.
 
 ## 8. Private set: the owner's real course material (aggregates only)
 3 lecture decks (150 image-only slides, OCR'd) + a course outline (DOCX with tables). 35 questions: 29 answerable,

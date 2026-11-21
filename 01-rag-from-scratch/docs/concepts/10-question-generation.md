@@ -19,13 +19,16 @@ Instead of "write 10 MCQs about Lecture 2" (long prompt, long output, no traceab
 | Duplicate questions | embedding similarity to previous questions > 0.9 → dropped; previous questions are also listed in the prompt as "do not repeat" |
 | Two identical options | rejected |
 | "All of the above" | flagged |
+| Two options say the same thing | content-word overlap ≥ 85% between two options (unless one is negated) → rejected and regenerated |
+| Two options are both defensible, or the key is wrong | **self-check**: the model answers its own shuffled question from the passage, like a student. If it picks another option, the question is regenerated once; if it still disagrees, it is kept with a ⚠️ warning |
 | Correct option not actually in the passage | grounding check (word overlap of the answer + explanation with the passage) → flagged with ⚠️ |
 
 ## Quality measurement ([`eval/run_eval.py mcq`](../../eval/run_eval.py))
 - **Yield**: valid MCQs per passage attempted.
 - **Grounded rate**: the correct option is supported by its passage.
 - **Answer-key consistency**: the model is shown the passage and its *own* question and must answer it. If it
-  picks a different option than the key, the question is ambiguous or the key is wrong.
+  picks a different option than the key, the question is ambiguous or the key is wrong. This started as an
+  eval metric; once the human review showed it was catching real flaws, it became part of generation.
 - **Raw position distribution**: how often the model originally put the answer at A/B/C/D (shows why shuffling matters).
 - A human review of a sample (see [RESULTS.md](../RESULTS.md)).
 

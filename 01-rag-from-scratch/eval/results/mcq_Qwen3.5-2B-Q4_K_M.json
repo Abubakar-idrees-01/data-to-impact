@@ -3,14 +3,15 @@
   "passages": 15,
   "mcqs_produced": 15,
   "yield_rate": 1.0,
-  "grounded_rate": 0.933,
-  "flagged_rate": 0.067,
-  "answer_key_consistency": 0.867,
+  "grounded_rate": 1.0,
+  "flagged_rate": 0.0,
+  "answer_key_consistency": 1.0,
+  "needed_second_attempt": 2,
   "raw_answer_position_counts": {
-    "A": 4,
-    "B": 4,
-    "C": 5,
-    "D": 2
+    "A": 3,
+    "B": 9,
+    "C": 2,
+    "D": 1
   },
-  "seconds_per_mcq": 65.7
+  "seconds_per_mcq": 83.9
 }

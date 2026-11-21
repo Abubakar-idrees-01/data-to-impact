@@ -128,4 +128,12 @@ moved that option to D, so the student saw a contradiction. Some questions also 
 stem. **Fix:** remap every letter reference with the shuffle permutation, strip inline options, and ask the model
 to refer to options by content. Unit-tested in `tests/test_pipeline.py`.
 
+### D21. MCQs are self-checked before the student sees them
+**Found in the human review:** about 1 in 5 generated questions had two defensible options (e.g. a distractor
+that the passage also supports), and the model's explanation then contradicted itself. **Decision:** after
+generating a question, the model answers it from the passage like a student (one short, grammar-constrained call
+at temperature 0). A disagreement triggers one regeneration; if it persists, the question is kept with a visible
+warning instead of being silently dropped. **Cost:** one extra short call per question (the passage is already
+short). Measured effect in [RESULTS.md §7](RESULTS.md).
+
 <!-- MEASURED_DECISIONS -->

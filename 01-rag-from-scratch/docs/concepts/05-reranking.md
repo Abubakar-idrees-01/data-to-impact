@@ -17,7 +17,7 @@ bi-encoder comparing two separate vectors cannot do.
 | Speed for 10k chunks | ~1 ms (one matrix multiply) | far too slow |
 | Accuracy | good | much better |
 
-So: bi-encoder for the whole library, cross-encoder only for the top 20.
+So: bi-encoder for the whole library, cross-encoder only for the top 10 (20 was measured to be twice as slow with no accuracy gain: DECISIONS D13).
 
 ## Our model
 `Xenova/ms-marco-MiniLM-L-6-v2` (22M parameters, ONNX), trained on Microsoft's MS MARCO search dataset.
@@ -51,7 +51,7 @@ the student can still see the answer.
 
 ## Interview questions
 - *Why not rerank everything?* Cost grows linearly with candidates, about 10–20 ms per pair on CPU.
-- *What if the right chunk isn't in the top 20?* The reranker can't fix it, so first-stage recall (hit@20) bounds final quality.
+- *What if the right chunk isn't in the top 10?* The reranker can't fix it, so first-stage recall (hit@10) bounds final quality.
 - *Is the sigmoid output a true probability?* Not exactly (MS MARCO calibration ≠ your data), which is why
   we calibrate the threshold on our own questions.
 - *What data does a reranker struggle with?* Anything unlike its training data: tables, code and very short

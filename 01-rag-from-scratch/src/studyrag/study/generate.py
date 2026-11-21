@@ -37,6 +37,7 @@ class MCQ:
     source: Chunk
     grounded: bool = True        # correct option supported by the passage?
     issues: list[str] = field(default_factory=list)
+    raw_answer: str = ""         # letter the model originally chose (before shuffling) - for bias analysis
 
     @property
     def answer_letter(self) -> str:
@@ -128,7 +129,7 @@ def validate_mcq(raw: dict, chunk: Chunk, rng: random.Random) -> MCQ | None:
     rng.shuffle(order)                                    # remove the model's "answer is A" bias
     shuffled = [options[i] for i in order]
     return MCQ(q, shuffled, shuffled.index(correct), (raw.get("explanation") or "").strip(),
-               chunk, grounded, issues)
+               chunk, grounded, issues, raw_answer=ans)
 
 
 def generate_mcqs(llm, passages: list[Chunk], difficulty: str = "medium", embedder=None,

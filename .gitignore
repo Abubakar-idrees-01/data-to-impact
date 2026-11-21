@@ -65,3 +65,6 @@ desktop.ini
 !**/models/README.md
 **/eval/results/private/
 **/eval/datasets/private/
+
+# eval scratch indexes
+**/eval/.cache/

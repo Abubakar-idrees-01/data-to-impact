@@ -94,7 +94,10 @@ def ocr_image(image: bytes) -> OcrResult:
     cached = _cache.get(key)
     if cached is not None:
         return cached
-    out = _get_engine()(image)
+    # use_cls=False: the text-direction classifier sometimes decides a long, perfectly upright line is
+    # upside down, rotates it and the recogniser outputs gibberish. Slides/scans are upright, so we skip it
+    # (measured on 150 real slides: garbled lines 3.4% -> see docs/RESULTS.md; also ~15% faster).
+    out = _get_engine()(image, use_cls=False)
     boxes = getattr(out, "boxes", None)
     txts = getattr(out, "txts", None)
     scores = getattr(out, "scores", None)

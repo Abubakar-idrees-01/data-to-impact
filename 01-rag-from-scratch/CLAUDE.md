@@ -1,7 +1,7 @@
 # 01 — RAG from Scratch
 
 ## Goal
-Upload your own documents (PDF, DOCX, TXT, MD, web pages) and get answers grounded **only**
+**Study assistant.** Upload your own study material (PDF, DOCX, legacy DOC via LibreOffice, PPTX, TXT, MD) and get answers grounded **only**
 in them, with exact citations. If the answer isn't in the documents, the system says so.
 
 ## "From scratch" scope (build ourselves, to show understanding)
@@ -21,6 +21,22 @@ Allowed off-the-shelf: embedding model (small sentence-transformers model), the 
 - Incremental indexing (add/remove docs without rebuilding)
 - Fully offline / private on a CPU laptop; Streamlit or Gradio UI; deploy to HF Spaces
 - Evaluated with 02-llm-evals: retrieval recall@k, MRR, faithfulness, answer correctness
+
+## Study features (decided 2026-11-21)
+All grounded in the uploaded material and cited:
+- Q&A with citations; summaries (whole doc / chapter / slide deck)
+- Generate MCQs (4 options, answer + explanation + source), short-answer questions, flashcards
+- Quiz mode: user answers, app grades and explains with the source passage
+- Pluggable LLM backend: local GGUF model by default (offline, free); optional API key backend
+  for faster/better generation on weak machines. Small local models are slow for long outputs
+  (e.g. 10 MCQs), so stream output and generate in batches.
+- Owner's test files go in `data/my_docs/` (gitignored). RAG indexes them; no model training.
+
+## Decisions
+- Owner learns after the full build → build the complete project, docs written alongside code.
+- Owner will verify Phase 6 eval questions; Claude builds the eval set + metrics and must
+  report measured accuracy/correctness (retrieval, faithfulness, answer and MCQ quality).
+- Deployment (HF Spaces) is optional, decide later.
 
 ## Web app / demo
 - Streamlit app: document library sidebar (upload/remove), chat, clickable citations that open the

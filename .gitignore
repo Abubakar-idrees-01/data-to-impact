@@ -54,3 +54,7 @@ Thumbs.db
 desktop.ini
 .vscode/
 .idea/
+
+# ---- Private user documents (never pushed) ----
+**/data/my_docs/*
+!**/data/my_docs/README.md

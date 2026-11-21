@@ -45,7 +45,7 @@ Final examination | 40% | 1-5      →   Final examination — Weight: 40%; Prim
 Same question, same model: **0.02 → 0.80**. We tested three formats and kept the best. Two-column tables, or
 tables whose header repeats ("Item | Details | Item | Details"), are key/value lists and become `Key: value.`
 
-The phrasing "How much is the final examination **worth**?" still scored low (0.13) even after the fix. A 22M
+The phrasing "How much is the final examination **worth**?" still scored low (0.07 after re-indexing; 0.005 before) even after the fix. A 22M
 reranker has blind spots. That's why a refusal also shows the closest passages: if the system is wrong,
 the student can still see the answer.
 

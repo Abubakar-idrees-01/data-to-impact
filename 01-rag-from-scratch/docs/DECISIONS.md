@@ -30,6 +30,12 @@ the difference between minutes and hours of setup.
   need a system install), and we get grammar-constrained JSON decoding.
 - `0.8B` and `4B` remain one command away (`scripts/download_models.py --llm ...`) for weaker or stronger machines.
 
+*Measured afterwards* ([RESULTS.md §6](RESULTS.md)): against Qwen2.5-1.5B and Qwen3.5-0.8B, the 2B model is the
+slowest (5.7 vs 14.2 and 18.9 tok/s; its hybrid attention is less optimized in llama.cpp on CPU). On clean text all
+three answer about equally well. On the owner's OCR'd slides, the 2B's own citations were supported 98% of the
+time vs 80% for the 1.5B, and it was mostly correct on 96% vs 89%. It stays the default; the faster models
+are documented alternatives.
+
 ### D4. Thinking mode disabled
 **Decision:** pre-fill an empty `<think></think>` block (what the official template does for `enable_thinking=False`).
 **Why:** on this CPU, hidden reasoning would add tens of seconds to every answer before the first visible word.

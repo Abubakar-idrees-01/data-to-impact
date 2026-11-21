@@ -49,6 +49,22 @@ does when `enable_thinking=False`.
 llama.cpp is usually fastest with one thread per **physical** core. Hyper-threads share a core's execution
 units and memory bandwidth, so extra threads often don't help. We default to physical cores and measure 2 vs 4.
 
+## Model size does not predict speed
+We measured three models on the same laptop ([RESULTS.md §6](../RESULTS.md)):
+
+| model | size | generation | time to first token |
+|---|---|---|---|
+| Qwen3.5-0.8B | 0.53 GB | 18.9 tok/s | 6.3 s |
+| Qwen2.5-1.5B | 1.12 GB | 14.2 tok/s | 13.4 s |
+| Qwen3.5-2B | 1.28 GB | 5.7 tok/s | 19.4 s |
+
+If memory bandwidth were the only cost, the 2B model would be about 15% slower than the 1.5B (1.28 vs 1.12 GB read
+per token). Instead it is **2.5× slower**. Qwen3.5 mixes classic attention with a newer linear-attention design, and
+llama.cpp's CPU kernels for it are younger and less optimized. Architecture and runtime support matter as much as size.
+
+We still chose the 2B as the default, because on the real lecture slides its citations were far more reliable
+(0.98 vs 0.80 citation support). Speed is a trade-off you measure, not a number you guess.
+
 ## The API escape hatch
 If a machine is too slow, the same app can call any OpenAI-compatible API
 ([`llm/openai_compat.py`](../../src/studyrag/llm/openai_compat.py)). It's faster and stronger, but no longer

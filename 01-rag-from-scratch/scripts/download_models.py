@@ -18,10 +18,10 @@ sys.path.insert(0, str(ROOT / "src"))
 
 # name -> (Hugging Face repo, file, approx size, note)
 LLMS = {
-    "qwen3.5-2b": ("unsloth/Qwen3.5-2B-GGUF", "Qwen3.5-2B-Q4_K_M.gguf", "1.3 GB", "default: best quality/speed balance on CPU"),
-    "qwen3.5-0.8b": ("unsloth/Qwen3.5-0.8B-GGUF", "Qwen3.5-0.8B-Q4_K_M.gguf", "0.5 GB", "fastest; weaker at MCQs"),
+    "qwen3.5-2b": ("unsloth/Qwen3.5-2B-GGUF", "Qwen3.5-2B-Q4_K_M.gguf", "1.3 GB", "default: most reliable citations (~32 s/answer on a 2015 i5)"),
+    "qwen3.5-0.8b": ("unsloth/Qwen3.5-0.8B-GGUF", "Qwen3.5-0.8B-Q4_K_M.gguf", "0.5 GB", "fastest (~15 s/answer); a few more incomplete answers"),
     "qwen3.5-4b": ("unsloth/Qwen3.5-4B-GGUF", "Qwen3.5-4B-Q4_K_M.gguf", "2.7 GB", "best quality; slow without a GPU"),
-    "qwen2.5-1.5b": ("Qwen/Qwen2.5-1.5B-Instruct-GGUF", "qwen2.5-1.5b-instruct-q4_k_m.gguf", "1.1 GB", "older, widely supported"),
+    "qwen2.5-1.5b": ("Qwen/Qwen2.5-1.5B-Instruct-GGUF", "qwen2.5-1.5b-instruct-q4_k_m.gguf", "1.1 GB", "~30% faster than the 2B; citations less reliable on OCR'd slides"),
 }
 
 

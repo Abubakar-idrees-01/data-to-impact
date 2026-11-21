@@ -82,6 +82,16 @@ def mcq_user(chunk, difficulty: str, previous: list[str]) -> str:
             "content, not by letter.\n" + _avoid(previous))
 
 
+def mcq_check_user(mcq) -> str:
+    opts = "\n".join(f"{'ABCD'[j]}) {o}" for j, o in enumerate(mcq.options))
+    return (f'Passage:\n"""\n{mcq.source.text}\n"""\n\nUsing only the passage, answer this question.\n'
+            f"{mcq.question}\n{opts}")
+
+
+MCQ_CHECK_SCHEMA = {"type": "object", "properties": {"answer": {"type": "string", "enum": list("ABCD")}},
+                    "required": ["answer"]}
+
+
 MCQ_SCHEMA = {
     "type": "object",
     "properties": {

@@ -260,29 +260,19 @@ def eval_answers(a, settings, data, docs_dir, out_dir):
 
 
 # ------------------------------------------------------------------ 5. MCQ quality
-MCQ_CHECK_SCHEMA = {"type": "object", "properties": {"answer": {"type": "string", "enum": list("ABCD")}},
-                    "required": ["answer"]}
-
-
 def eval_mcq(a, settings, data, docs_dir, out_dir):
     from studyrag.llm import load_llm
-    from studyrag.study.generate import generate_mcqs, select_passages
+    from studyrag.study.generate import check_mcq, generate_mcqs, select_passages
     emb, _ = models(settings, rerank=False)
     lib = build_library(settings, emb, docs_dir, f"{a.set}-{settings.chunk_strategy}")
     llm = load_llm(settings)
     passages = select_passages(lib, None, a.n, min_words=40, seed=7)
     t = time.perf_counter()
-    mcqs = list(generate_mcqs(llm, passages, "medium", emb, seed=7))
+    mcqs = list(generate_mcqs(llm, passages, "medium", emb, seed=7, self_check=not a.no_self_check))
     gen_s = time.perf_counter() - t
     rows, consistent = [], 0
     for q in mcqs:
-        opts = "\n".join(f"{'ABCD'[j]}) {o}" for j, o in enumerate(q.options))
-        msgs = [{"role": "user", "content": f'Passage:\n"""\n{q.source.text}\n"""\n\nUsing only the passage, '
-                 f"answer this question.\n{q.question}\n{opts}"}]
-        try:
-            pick = llm.generate_json(msgs, MCQ_CHECK_SCHEMA, max_tokens=20, temperature=0.0).get("answer")
-        except Exception:
-            pick = None
+        pick = q.self_check if q.self_check is not None else check_mcq(llm, q)   # measured either way
         ok = pick == q.answer_letter
         consistent += ok
         rows.append({**q.to_dict(), "self_check_pick": pick, "self_check_ok": ok})
@@ -293,6 +283,7 @@ def eval_mcq(a, settings, data, docs_dir, out_dir):
         "grounded_rate": round(sum(q.grounded for q in mcqs) / n, 3) if n else 0,
         "flagged_rate": round(sum(bool(q.issues) for q in mcqs) / n, 3) if n else 0,
         "answer_key_consistency": round(consistent / n, 3) if n else 0,
+        "needed_second_attempt": sum(q.attempts > 1 for q in mcqs),
         "raw_answer_position_counts": {k: sum(q.raw_answer == k for q in mcqs) for k in "ABCD"},
         "seconds_per_mcq": round(gen_s / n, 1) if n else None,
     }
@@ -334,6 +325,7 @@ def main() -> None:
     p.add_argument("--set", default="sample", choices=list(SETS))
     p.add_argument("-n", type=int, default=15, help="MCQs to generate")
     p.add_argument("--limit", type=int, default=0, help="only the first N questions (answers)")
+    p.add_argument("--no-self-check", action="store_true", help="MCQ: disable the generator's self-check")
     a = p.parse_args()
     settings = Settings.from_env()
     ds, docs_dir, out_dir = SETS[a.set]

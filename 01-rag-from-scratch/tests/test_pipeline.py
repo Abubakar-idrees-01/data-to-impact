@@ -95,7 +95,7 @@ def test_mcq_generation_skips_duplicates(settings, embedder, docs_folder):
     same = {"question": "What is email marketing?", "options": {"A": "Sending targeted messages to subscribers",
             "B": "Buying ads", "C": "Printing flyers", "D": "Cold calling"}, "answer": "A", "explanation": "From the passage."}
     llm = FakeLLM(json_outputs=[same, same, same])
-    out = list(generate_mcqs(llm, passages, embedder=embedder, retries=1))
+    out = list(generate_mcqs(llm, passages, embedder=embedder, retries=1, self_check=False))
     assert len(out) == 1
 
 
@@ -136,3 +136,34 @@ def test_near_duplicate_options_are_rejected_but_negations_are_kept():
     assert not _near_duplicate_options([
         "They must compete directly with the advertiser to attract the same target audiences.",
         "They attract the same target audiences but do not compete with the advertiser.", "a b c", "d e f"])
+
+
+def test_mcq_self_check_regenerates_then_flags(settings, embedder, docs_folder):
+    import re
+    from studyrag.prompts import MCQ_CHECK_SCHEMA
+    lib, _ = _build(settings, embedder, docs_folder)
+    passage = select_passages(lib, None, 1, min_words=5)
+    bad = {"question": "What is SEO?", "options": {"A": "Improving organic rankings", "B": "Buying ads",
+           "C": "Printing flyers", "D": "Cold calling"}, "answer": "A", "explanation": "From the passage."}
+    good = dict(bad, question="What does SEO improve?")
+
+    class StudentLLM:                       # re-answers "Buying ads" for the first question, correctly after
+        def __init__(self):
+            self.drafts, self.checks, self.always_wrong = [bad, good], 0, False
+        def generate_json(self, messages, schema, max_tokens=0, temperature=0.0):
+            if schema is not MCQ_CHECK_SCHEMA:
+                return self.drafts.pop(0)
+            self.checks += 1
+            want = "Buying ads" if self.checks == 1 or self.always_wrong else "Improving organic rankings"
+            return {"answer": re.search(rf"([A-D])\) {want}", messages[0]["content"]).group(1)}
+
+    out = list(generate_mcqs(StudentLLM(), passage, embedder=embedder, retries=1))
+    assert len(out) == 1 and out[0].question == "What does SEO improve?"
+    assert out[0].attempts == 2 and out[0].self_check == out[0].answer_letter
+    assert not any("defensible" in i for i in out[0].issues)
+
+    always_wrong = StudentLLM()
+    always_wrong.drafts = [bad, dict(bad, question="Define SEO")]
+    always_wrong.always_wrong = True        # keeps answering "Buying ads"
+    flagged = list(generate_mcqs(always_wrong, passage, embedder=embedder, retries=1))
+    assert len(flagged) == 1 and any("two options may be defensible" in i for i in flagged[0].issues)

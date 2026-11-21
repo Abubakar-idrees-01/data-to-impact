@@ -22,7 +22,7 @@ from typing import Iterator
 import numpy as np
 
 from ..chunking import Chunk
-from ..prompts import (FLASHCARD_SCHEMA, GEN_SYSTEM, MCQ_SCHEMA, SHORT_Q_SCHEMA, flashcards_user,
+from ..prompts import (FLASHCARD_SCHEMA, GEN_SYSTEM, MCQ_CHECK_SCHEMA, MCQ_SCHEMA, mcq_check_user, SHORT_Q_SCHEMA, flashcards_user,
                        mcq_user, short_question_user)
 from ..text import tokenize
 
@@ -39,6 +39,8 @@ class MCQ:
     grounded: bool = True        # correct option supported by the passage?
     issues: list[str] = field(default_factory=list)
     raw_answer: str = ""         # letter the model originally chose (before shuffling) - for bias analysis
+    self_check: str | None = None  # letter the model picks when it answers its own question from the passage
+    attempts: int = 1
 
     @property
     def answer_letter(self) -> str:
@@ -96,15 +98,20 @@ class _Dedup:
     def __init__(self, embedder, threshold: float = 0.9):
         self.embedder, self.threshold, self.vecs = embedder, threshold, []
 
-    def is_dup(self, text: str) -> bool:
+    def is_dup(self, text: str, remember: bool = True) -> bool:
         if self.embedder is None:
             return False
         v = self.embedder.embed_documents([text])[0]
         v = v / max(np.linalg.norm(v), 1e-12)
         if any(float(v @ u) > self.threshold for u in self.vecs):
             return True
-        self.vecs.append(v)
+        if remember:
+            self.vecs.append(v)
         return False
+
+    def remember(self, text: str) -> None:
+        if self.embedder is not None:
+            self.is_dup(text, remember=True)
 
 
 # ------------------------------------------------------------------ MCQs
@@ -171,10 +178,26 @@ def validate_mcq(raw: dict, chunk: Chunk, rng: random.Random) -> MCQ | None:
                chunk, grounded, issues, raw_answer=ans)
 
 
+def check_mcq(llm, mcq: MCQ) -> str | None:
+    """Ask the model to answer its own (shuffled) question from the passage, like a student would.
+
+    If it picks a different option than the key, two options are probably defensible or the key is wrong.
+    """
+    try:
+        return llm.generate_json([{"role": "user", "content": mcq_check_user(mcq)}], MCQ_CHECK_SCHEMA,
+                                 max_tokens=20, temperature=0.0).get("answer")
+    except Exception:
+        return None
+
+
 def generate_mcqs(llm, passages: list[Chunk], difficulty: str = "medium", embedder=None,
-                  seed: int = 0, retries: int = 1) -> Iterator[MCQ]:
+                  seed: int = 0, retries: int = 1, self_check: bool = True) -> Iterator[MCQ]:
+    """One MCQ per passage. Each candidate is validated (shuffled, de-duplicated, grounded) and, with
+    `self_check`, re-answered by the model; a disagreeing candidate is regenerated once and, if it still
+    disagrees, kept with a visible warning rather than silently dropped."""
     rng, seen, dedup = random.Random(seed), [], _Dedup(embedder)
     for chunk in passages:
+        chosen = None
         for attempt in range(retries + 1):
             msgs = [{"role": "system", "content": GEN_SYSTEM},
                     {"role": "user", "content": mcq_user(chunk, difficulty, seen)}]
@@ -183,10 +206,22 @@ def generate_mcqs(llm, passages: list[Chunk], difficulty: str = "medium", embedd
             except Exception:
                 continue
             mcq = validate_mcq(raw, chunk, rng)
-            if mcq and not dedup.is_dup(mcq.question):
-                seen.append(mcq.question)
-                yield mcq
-                break
+            if not mcq or dedup.is_dup(mcq.question, remember=False):
+                continue
+            mcq.attempts = attempt + 1
+            if self_check:
+                mcq.self_check = check_mcq(llm, mcq)
+                if mcq.self_check != mcq.answer_letter:
+                    mcq.issues.append(f"answering its own question, the model chose {mcq.self_check}: "
+                                      "two options may be defensible")
+                    chosen = chosen or mcq
+                    continue
+            chosen = mcq
+            break
+        if chosen:
+            dedup.remember(chosen.question)
+            seen.append(chosen.question)
+            yield chosen
 
 
 # ------------------------------------------------------------------ short questions & flashcards

@@ -164,7 +164,7 @@ def render_answer(entry: dict, key: str):
     with st.expander(f"Sources ({len(ans.cited)} cited of {len(ans.sources)})"):
         for n, h in enumerate(ans.sources, 1):
             star = "✅ cited" if n in ans.cited else "not cited"
-            st.markdown(f'<div id="src-{key}-{n}" class="src-anchor"></div>**[{n}] {h.chunk.header}** · {star}',
+            st.markdown(f'<div id="src-{key}-{n}" class="src-anchor"></div><b>[{n}] {html.escape(h.chunk.header)}</b> · {star}',
                         unsafe_allow_html=True)
             st.text(h.chunk.text)
     with st.expander("🔍 How I found this"):
@@ -250,7 +250,8 @@ def generation_controls(key: str, default_n: int = 5):
 with tab_mcq:
     if need_docs():
         n, diff, topic = generation_controls("mcq")
-        st.caption("Generation runs on your CPU: expect roughly 20-40 s per question with the local model. "
+        st.caption("Generation runs on your CPU: expect about a minute per question with the default local model "
+                   "on an older laptop (measured: 66 s on a 2015 i5), much less on newer CPUs or the API backend. "
                    "Each question appears as soon as it is ready.")
         if st.button("Generate MCQs", type="primary") and need_llm():
             ss.mcqs, ss.mcq_answers, ss.mcq_submitted = [], {}, False

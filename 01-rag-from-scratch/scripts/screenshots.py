@@ -49,42 +49,52 @@ def main() -> None:
                PYTHONPATH=str(ROOT / "src"))
     server = subprocess.Popen([sys.executable, "-m", "streamlit", "run", str(ROOT / "app/streamlit_app.py"),
                                "--server.port", str(PORT), "--server.headless", "true",
-                               "--browser.gatherUsageStats", "false", "--theme.base", "light"],
+                               "--browser.gatherUsageStats", "false", "--theme.base", "light",
+                               "--client.toolbarMode", "viewer"],
                               env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
         wait_for_server()
         with sync_playwright() as p:
             browser = p.chromium.launch(executable_path=chrome_path(), headless=True)
-            page = browser.new_page(viewport={"width": 1400, "height": 900}, device_scale_factor=1)
+            page = browser.new_page(viewport={"width": 1400, "height": 1000}, device_scale_factor=1)
             page.goto(URL)
             page.get_by_text("Library ·").wait_for(timeout=300_000)       # models + index loaded
             time.sleep(2)
 
-            # 1. Ask: grounded answer with citations, confidence, sources and retrieval trace
+            # Streamlit scrolls inside its own container, so full-page captures don't work: scroll the
+            # element of interest to the top of the viewport and capture the viewport instead.
+            def show(locator):
+                locator.evaluate("e => e.scrollIntoView({block: 'start'})")
+                time.sleep(1)
+
+            messages = page.get_by_test_id("stChatMessage")
+
+            # 1. Ask: grounded answer with citations, confidence, verification and retrieval trace
             q = "Why do transactional emails matter for marketers?"
             page.get_by_test_id("stChatInputTextArea").fill(q)
             page.keyboard.press("Enter")
             page.locator(".badge").first.wait_for(timeout=600_000)
             time.sleep(1)
-            page.get_by_text("Sources (").first.click()
             page.get_by_text("How I found this").first.click()
-            time.sleep(1)
-            page.screenshot(path=str(OUT / "ask.png"), full_page=True)
+            time.sleep(4)                                                 # dataframe draws on a canvas
+            show(messages.nth(0))
+            page.screenshot(path=str(OUT / "ask.png"))
             print("ask.png")
 
-            # 2. Refusal
+            # 2. Refusal, with the closest passages offered
             page.get_by_test_id("stChatInputTextArea").fill("What is a good bounce rate for a landing page?")
             page.keyboard.press("Enter")
             page.get_by_text("couldn't find this").last.wait_for(timeout=120_000)
             time.sleep(1)
-            page.screenshot(path=str(OUT / "refusal.png"), full_page=True)
+            show(messages.nth(2))
+            page.screenshot(path=str(OUT / "refusal.png"))
             print("refusal.png")
 
             # 3. Summarize: instant outline
             page.get_by_role("tab", name="📝 Summarize").click()
             page.get_by_text("Outline (instant").wait_for()
             time.sleep(1)
-            page.screenshot(path=str(OUT / "outline.png"), full_page=False)
+            page.screenshot(path=str(OUT / "outline.png"))
             print("outline.png")
 
             # 4. MCQ practice: generate 3, answer the first
@@ -94,9 +104,11 @@ def main() -> None:
             page.get_by_role("button", name="Generate MCQs").click()
             page.get_by_text("Q3.").wait_for(timeout=900_000)
             time.sleep(2)
-            page.locator('[data-testid="stRadio"]').first.locator("label").nth(1).click()
+            page.get_by_test_id("stRadioOption").filter(visible=True).filter(has_text="A) ").first.click()
             time.sleep(2)
-            page.screenshot(path=str(OUT / "mcq.png"), full_page=True)
+            page.set_viewport_size({"width": 1400, "height": 1300})
+            show(page.get_by_text("Q1.").first)
+            page.screenshot(path=str(OUT / "mcq.png"))
             print("mcq.png")
             browser.close()
     finally:

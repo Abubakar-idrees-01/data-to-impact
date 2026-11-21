@@ -6,10 +6,11 @@ are copyrighted and must not be published. Output: data/sample_docs/*.md
 
 from __future__ import annotations
 
+import json
 import re
+import urllib.parse
+import urllib.request
 from pathlib import Path
-
-import httpx
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "sample_docs"
@@ -50,19 +51,23 @@ def to_markdown(title: str, text: str) -> str:
             "licensed under CC BY-SA 4.0. Text extracted without modification apart from formatting.*\n")
 
 
+def fetch(title: str) -> dict:
+    params = urllib.parse.urlencode({"action": "query", "prop": "extracts", "explaintext": 1,
+                                     "exsectionformat": "wiki", "titles": title, "format": "json",
+                                     "redirects": 1})
+    req = urllib.request.Request(f"{API}?{params}", headers=HEADERS)
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return next(iter(json.load(r)["query"]["pages"].values()))
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    with httpx.Client(headers=HEADERS, timeout=60) as client:
-        for title in ARTICLES:
-            r = client.get(API, params={"action": "query", "prop": "extracts", "explaintext": 1,
-                                        "exsectionformat": "wiki", "titles": title, "format": "json",
-                                        "redirects": 1})
-            r.raise_for_status()
-            page = next(iter(r.json()["query"]["pages"].values()))
-            md = to_markdown(page["title"], page.get("extract", ""))
-            path = OUT / (page["title"].replace(" ", "_").replace("/", "-") + ".md")
-            path.write_text(md, encoding="utf-8")
-            print(f"{path.name}: {len(md.split()):,} words")
+    for title in ARTICLES:
+        page = fetch(title)
+        md = to_markdown(page["title"], page.get("extract", ""))
+        path = OUT / (page["title"].replace(" ", "_").replace("/", "-") + ".md")
+        path.write_text(md, encoding="utf-8")
+        print(f"{path.name}: {len(md.split()):,} words")
 
 
 if __name__ == "__main__":

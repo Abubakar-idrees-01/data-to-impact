@@ -112,6 +112,26 @@ _INLINE_OPTIONS = re.compile(r"\s+\(?A[).:]\s.*\s\(?B[).:]\s.*$", re.S)
 _LETTER_REFS = re.compile(r"\b((?:[Oo]ptions?|[Cc]hoices?|[Aa]nswer(?:\s+is)?)\s+)([A-D](?:(?:\s*,\s*|\s+(?:and|or)\s+|\s*,\s*and\s+)[A-D])*)\b")
 
 
+_NEGATION = re.compile(r"\b(not|no|never|without|cannot|n't)\b", re.I)
+
+
+def _near_duplicate_options(options: list[str], threshold: float = 0.85) -> bool:
+    """True if one option is a paraphrase of another (>= 85% of the shorter one's content words appear in
+    the other), e.g. "To find channels which result in maximum two-way communication..." vs "To maximize
+    two-way communication...". A student would see two right answers. A negated pair ("must compete" vs
+    "do not compete") is a legitimate distractor, so it is skipped. Threshold set on 30 reviewed MCQs."""
+    toks = [set(tokenize(o)) for o in options]
+    neg = [bool(_NEGATION.search(o)) for o in options]
+    for i in range(len(options)):
+        for j in range(i + 1, len(options)):
+            a, b = toks[i], toks[j]
+            if min(len(a), len(b)) < 3 or neg[i] != neg[j]:
+                continue
+            if len(a & b) / min(len(a), len(b)) >= threshold:
+                return True
+    return False
+
+
 def remap_letters(text: str, mapping: dict[str, str]) -> str:
     """Rewrite "Option C" / "Options A, B and D" / "the answer is B" after the options were shuffled.
 
@@ -132,8 +152,8 @@ def validate_mcq(raw: dict, chunk: Chunk, rng: random.Random) -> MCQ | None:
     ans = str(raw.get("answer", "")).strip().upper()[:1]
     if not q or ans not in letters or any(not o for o in options):
         return None
-    if len({o.lower() for o in options}) < 4:            # duplicate options
-        return None
+    if len({o.lower() for o in options}) < 4 or _near_duplicate_options(options):
+        return None                                        # two options say the same thing
     issues = []
     if any(o.lower().rstrip(".") in BANNED_OPTIONS for o in options):
         issues.append("uses 'all/none of the above'")

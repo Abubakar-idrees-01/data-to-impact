@@ -126,3 +126,13 @@ def test_mcq_shuffle_keeps_explanation_letters_and_strips_inline_options(setting
         assert q.explanation.startswith(f"Option {letter} is correct")
         b, c = "ABCD"[q.options.index("Buying search ads")], "ABCD"[q.options.index("Sending newsletters")]
         assert f"options {b} and {c} describe" in q.explanation
+
+
+def test_near_duplicate_options_are_rejected_but_negations_are_kept():
+    from studyrag.study.generate import _near_duplicate_options
+    assert _near_duplicate_options([
+        "To find channels which result in maximum two-way communication and a better overall ROI for the brand.",
+        "To maximize two-way communication and a better overall ROI for the brand.", "x y z", "p q r"])
+    assert not _near_duplicate_options([
+        "They must compete directly with the advertiser to attract the same target audiences.",
+        "They attract the same target audiences but do not compete with the advertiser.", "a b c", "d e f"])

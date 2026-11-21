@@ -226,6 +226,10 @@ def eval_answers(a, settings, data, docs_dir, out_dir):
             row["citation_precision"] = (round(sum(is_relevant(c, q["gold"]) for c in cited_chunks)
                                                / len(cited_chunks), 2) if cited_chunks else 0.0)
             row["retrieved_gold"] = any(is_relevant(h.chunk, q["gold"]) for h in ans.sources)
+            # reference-free: does the passage the model cited actually support the sentence citing it?
+            own = [c for c in ans.verification.checks if c.cited and not c.auto]
+            row["model_citations"] = len(own)
+            row["model_citations_supported"] = sum(c.supported for c in own)
         rows.append(row)
         print(f"[{i}/{len(items)}] {q['id']} {ans.status:<9} {ans.seconds:5.1f}s  "
               f"facts={row.get('fact_recall', '-')}  cite_prec={row.get('citation_precision', '-')}")
@@ -241,6 +245,9 @@ def eval_answers(a, settings, data, docs_dir, out_dir):
         "fully_correct_rate": mean([r["fact_recall"] >= 0.99 for r in answered]),
         "mostly_correct_rate (>=50% facts)": mean([r["fact_recall"] >= 0.5 for r in answered]),
         "citation_precision": mean([r["citation_precision"] for r in answered]),
+        "citation_support (cited passage supports the sentence)": (
+            round(sum(r["model_citations_supported"] for r in answered)
+                  / max(1, sum(r["model_citations"] for r in answered)), 3)),
         "answers_with_any_citation": mean([bool(r["cited"]) for r in answered]),
         "answers_needing_auto_citation": mean([bool(r.get("auto_cited")) for r in answered]),
         "faithfulness (verified sentence ratio)": mean([r["supported_ratio"] for r in answered]),

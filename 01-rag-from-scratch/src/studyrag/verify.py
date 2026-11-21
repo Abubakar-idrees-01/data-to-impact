@@ -53,6 +53,7 @@ class SentenceCheck:
     best_source: int | None      # 1-based source number that supports it best
     supported: bool
     raw: str = ""                # the sentence exactly as it appears in the answer
+    auto: bool = False           # True when the citation was added by us, not written by the model
 
 
 @dataclass

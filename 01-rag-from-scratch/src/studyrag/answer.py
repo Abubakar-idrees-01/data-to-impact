@@ -83,7 +83,7 @@ class QAEngine:
                 continue
             end = pos + len(raw)
             text = f"{text[:end]} [{c.best_source}]{text[end:]}"
-            c.cited = [c.best_source]
+            c.cited, c.auto = [c.best_source], True
             added.append(c.best_source)
         return text, sorted(set(added))
 

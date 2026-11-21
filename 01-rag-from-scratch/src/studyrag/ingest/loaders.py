@@ -13,7 +13,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from .cleaning import clean_text
+from .cleaning import clean_text, linearize_table
 from .models import Block, Document
 
 IMAGE_TYPES = {".png", ".jpg", ".jpeg", ".webp", ".bmp"}
@@ -87,12 +87,8 @@ def _load_pptx(path: Path, ocr: bool = True, warnings: list[str] | None = None) 
                 out.extend(shape_texts(s))
             return out
         if getattr(shape, "has_table", False) and shape.has_table:
-            rows = []
-            for row in shape.table.rows:
-                cells = [c.text.strip() for c in row.cells]
-                if any(cells):
-                    rows.append(" | ".join(cells))
-            return ["\n".join(rows)]
+            rows = [[c.text.strip() for c in row.cells] for row in shape.table.rows]
+            return ["\n".join(linearize_table(rows))]
         if getattr(shape, "has_text_frame", False) and shape.has_text_frame:
             paras = []
             for p in shape.text_frame.paragraphs:
@@ -182,14 +178,15 @@ def _load_docx(path: Path) -> list[Block]:
                 sections[-1][1].append(text)
         elif tag == "tbl":
             t = Table(child, d)
+            rows = []
             for row in t.rows:
                 cells = []
                 for c in row.cells:            # merged cells repeat; keep each value once per row
                     v = c.text.strip()
                     if v and (not cells or cells[-1] != v):
                         cells.append(v)
-                if cells:
-                    sections[-1][1].append(" | ".join(cells))
+                rows.append(cells)
+            sections[-1][1].extend(linearize_table(rows))
     blocks = []
     n = 0
     for heading, lines in sections:

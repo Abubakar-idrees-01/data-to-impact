@@ -2,7 +2,7 @@
 
 from studyrag.chunking import chunk_fixed, chunk_semantic, chunk_structure, split_sentences
 from studyrag.ingest import Block, Document, load_document
-from studyrag.ingest.cleaning import clean_text
+from studyrag.ingest.cleaning import clean_text, linearize_table
 
 
 def test_clean_text_normalises_bullets_and_hyphenation():
@@ -32,7 +32,7 @@ def test_pptx_loader_keeps_slide_numbers_titles_and_tables(tmp_path):
     assert [b.location for b in doc.blocks] == [1, 3]
     assert doc.blocks[0].heading == "What is SEO"
     assert "Improving organic rankings" in doc.blocks[0].text
-    assert "Email | 2.5%" in doc.blocks[1].text and "Speaker notes: Mention benchmarks" in doc.blocks[1].text
+    assert "Email: 2.5%." in doc.blocks[1].text and "Speaker notes: Mention benchmarks" in doc.blocks[1].text
 
 
 def test_docx_loader_splits_sections_on_headings(tmp_path):
@@ -89,3 +89,14 @@ def test_semantic_chunking_cuts_at_topic_shift(embedder):
 def test_split_sentences_handles_bullets_and_periods():
     assert split_sentences("First point. Second point.\n- bullet one\n- bullet two") == [
         "First point.", "Second point.", "- bullet one", "- bullet two"]
+
+
+def test_linearize_table_repeats_headers_in_every_row():
+    rows = [["Assessment", "Weight", "CLO"], ["Midterm", "25%", "1-3"], ["Final exam", "40%", "1-5"]]
+    assert linearize_table(rows) == ["Midterm — Weight: 25%; CLO: 1-3.", "Final exam — Weight: 40%; CLO: 1-5."]
+
+
+def test_linearize_table_key_value_layouts():
+    assert linearize_table([["Instructor", "Dr X"], ["Room", "2.12"]]) == ["Instructor: Dr X.", "Room: 2.12."]
+    side_by_side = [["Item", "Details", "Item", "Details"], ["Code", "DS-294", "Credits", "2"]]
+    assert linearize_table(side_by_side) == ["Code: DS-294. Credits: 2."]

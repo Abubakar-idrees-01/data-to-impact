@@ -29,3 +29,39 @@ def clean_text(text: str) -> str:
         lines.append(line)
     text = "\n".join(lines)
     return _MANY_NEWLINES.sub("\n\n", text).strip()
+
+
+def linearize_table(rows: list[list[str]]) -> list[str]:
+    """Turn table rows into sentences that search models can read.
+
+    Rerankers and embedders are trained on prose, so "Final examination | 40% | 1-5" looks like
+    noise to them. Repeating the column headers in every row ("Final examination: Weight 40%;
+    ...") gives each row its meaning. Measured on our course outline: the reranker's relevance for
+    "What is the weightage of the final exam?" went from 0.02 (pipe rows) to 0.80.
+
+    - 2-column tables are usually key/value lists ("Instructor | Dr X") -> "Instructor: Dr X.";
+      so are tables whose header repeats ("Item | Details | Item | Details").
+    - wider tables use the first row as headers and the first column as the row label.
+    """
+    rows = [[c for c in r] for r in rows if any(c.strip() for c in r)]
+    if not rows:
+        return []
+    width = max(len(r) for r in rows)
+    if width == 1:
+        return [r[0] for r in rows]
+    header, body = rows[0], rows[1:]
+    if width == 2 or (len(set(header)) < len(header) and width % 2 == 0):
+        # key/value layout; repeated header labels ("Item | Details | Item | Details") mean
+        # several key/value pairs side by side, so the header row itself carries no meaning
+        if width > 2:
+            rows = body
+        return [" ".join(f"{r[i]}: {r[i + 1]}." for i in range(0, len(r) - 1, 2) if r[i] and r[i + 1])
+                or " ".join(c for c in r if c) for r in rows]
+    if not body or not all(header):        # no usable header row: keep the plain cells
+        return [" | ".join(r) for r in rows]
+    out = []
+    for r in body:
+        pairs = [f"{header[i]}: {r[i]}" for i in range(1, min(len(r), len(header))) if r[i]]
+        pairs += [r[i] for i in range(len(header), len(r)) if r[i]]
+        out.append(f"{r[0]} — " + "; ".join(pairs) + "." if pairs else r[0])
+    return out

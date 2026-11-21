@@ -135,7 +135,7 @@ variable `STUDYRAG_<NAME>`:
 | `STUDYRAG_CHUNK_STRATEGY` | `structure` | `fixed`, `structure` or `semantic` |
 | `STUDYRAG_TOP_K` | `4` | passages given to the LLM per answer |
 | `STUDYRAG_USE_RERANKER` | `true` | cross-encoder reranking on/off |
-| `STUDYRAG_REFUSAL_THRESHOLD` | `0.02` | min reranker relevance to attempt an answer |
+| `STUDYRAG_REFUSAL_THRESHOLD` | `0.2` | min reranker relevance to attempt an answer |
 | `STUDYRAG_OCR` | `true` | OCR image-only slides and scanned pages |
 | `STUDYRAG_LLM_THREADS` | `0` (auto) | CPU threads for the LLM |
 | `STUDYRAG_STORAGE_DIR` | `storage/` | where the index is saved |

@@ -36,7 +36,7 @@ class Settings:
     rrf_k: int = 60                     # Reciprocal Rank Fusion constant
     top_k: int = 4                      # chunks given to the LLM
     use_reranker: bool = True
-    refusal_threshold: float = 0.02     # min reranker probability to attempt an answer
+    refusal_threshold: float = 0.2      # min reranker probability to attempt an answer (calibrated: D14)
 
     # --- generation ---
     llm_backend: str = "llamacpp"       # "llamacpp" (local, offline) | "openai" (any OpenAI-compatible API)

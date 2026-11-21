@@ -31,10 +31,24 @@ OCR returns unordered line boxes. We reconstruct:
 - **PDF**: if a page has fewer than 8 extractable words, it is probably scanned, so OCR its embedded images.
 - **PNG/JPG** files: always OCR.
 
+## A bug found on real data: the upside-down classifier
+PaddleOCR-style pipelines have an optional third model, a **text-direction classifier**, that decides whether
+each detected line is upside down and rotates it before recognition. On our real slides it misfired on some
+long bullet lines. A perfectly upright line like *"The transactions that take place in the market space occurs
+via online media or internet."* was rotated 180° and came out as **"Thi so s i s e innee"**.
+
+We measured it across all 1,860 OCR'd lines with a simple gibberish detector (≥ 4 words averaging under 2.6
+letters each): **3.4% of lines were garbled**, often the first line of a definition, which is exactly what a
+student asks about. Slides and scans are upright, so we disabled the classifier (`use_cls=False`).
+Result: **0.0% garbled lines, and OCR ~15% faster** (one model fewer per line).
+
+Lesson: test with real data. Synthetic test slides would never have revealed this.
+
 ## Cost and caching
-OCR takes about 1–3 seconds per slide on an old laptop CPU. Results are cached in `storage/ocr_cache.json`,
-keyed by a SHA-1 hash of the image bytes, so re-indexing (for example after changing chunking settings)
-never repeats OCR work.
+OCR of a full-HD slide image takes about **4–5 seconds** on our 2015 laptop CPU. The 150 lecture slides took
+~12 minutes including embedding, peaking at 1.3 GB RAM. Results are cached in `storage/ocr_cache.json`, keyed
+by a SHA-1 hash of the image bytes and shared by every index, so re-indexing (for example after changing
+chunking settings, or building the evaluation indexes) never repeats OCR work.
 
 ## Interview questions
 - *How would you know OCR quality is good enough?* Measure retrieval and answer accuracy on questions

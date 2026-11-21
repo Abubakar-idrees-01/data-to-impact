@@ -75,4 +75,30 @@ build step without improving what this project is about.
 **Why:** labelling "the answer is on Lec 1, slide 4" stays valid when chunking changes, so one dataset can fairly
 compare every chunking strategy.
 
+## Decisions changed by measurement
+
+### D13. Rerank only the top 10 fused candidates (was 20)
+**Measured:** 20 → 10 candidates halved reranking latency (2.1 s → 1.0 s per query) and *raised* hit@1 slightly
+(0.91 → 0.94); hit@3 stayed 1.00. The cross-encoder costs ~100 ms per pair on this CPU.
+
+### D14. Refusal threshold 0.2 (was a guessed 0.02)
+**Measured:** answerable questions' best reranker score was 0.80–1.00, unanswerable ones ≤ 0.065. The initial 0.02
+let 1 in 8 unanswerable questions through to the LLM; anything from 0.1 to 0.5 separates them perfectly.
+0.2 sits in the middle of the gap (log scale).
+
+### D15. Auto-citation of verified but uncited sentences
+**Observed** in the first end-to-end run: answers were correct, but the 2B model often dropped `[n]` markers when
+writing bullet lists, so the student saw facts with no source. **Fix:** (1) the prompt now requires a citation on
+every bullet; (2) when the verifier finds an uncited sentence *is* supported by a source (support ≥ 0.55), the
+system appends that citation itself. Unsupported sentences never get one, and stay flagged.
+
+### D16. OCR without the text-direction classifier
+**Measured on the 150 real slides:** the classifier flipped 3.4% of lines upside down, producing gibberish; with it
+disabled, 0.0% garbled lines and ~15% faster OCR. Slides and scans are upright by nature.
+See [concepts/08-ocr.md](concepts/08-ocr.md).
+
+### D17. One shared OCR cache
+Every index (the app's, and one per chunking strategy in the evals) reuses `storage/ocr_cache.json`, so OCR runs
+once per unique image, ever. Without this, evaluating three chunking strategies would have re-OCR'd 150 slides three times.
+
 <!-- MEASURED_DECISIONS -->

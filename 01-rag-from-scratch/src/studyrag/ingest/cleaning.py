@@ -41,9 +41,10 @@ def linearize_table(rows: list[list[str]]) -> list[str]:
 
     - 2-column tables are usually key/value lists ("Instructor | Dr X") -> "Instructor: Dr X.";
       so are tables whose header repeats ("Item | Details | Item | Details").
-    - wider tables use the first row as headers and the first column as the row label.
+    - wider tables use the first row as headers and the first column as the row label; a bare
+      number label gets its header ("Week 5 — Topics: ..."), or the row loses its meaning.
     """
-    rows = [[c for c in r] for r in rows if any(c.strip() for c in r)]
+    rows = [[_one_line(c) for c in r] for r in rows if any(c.strip() for c in r)]
     if not rows:
         return []
     width = max(len(r) for r in rows)
@@ -61,7 +62,19 @@ def linearize_table(rows: list[list[str]]) -> list[str]:
         return [" | ".join(r) for r in rows]
     out = []
     for r in body:
-        pairs = [f"{header[i]}: {r[i]}" for i in range(1, min(len(r), len(header))) if r[i]]
+        pairs = [f"{header[i]}: {r[i].rstrip('.')}" for i in range(1, min(len(r), len(header))) if r[i]]
         pairs += [r[i] for i in range(len(header), len(r)) if r[i]]
-        out.append(f"{r[0]} — " + "; ".join(pairs) + "." if pairs else r[0])
+        label = r[0]
+        if header[0] and _BARE_LABEL.match(label):   # "5" means nothing alone: "Week 5"
+            label = f"{header[0]} {label}"
+        out.append(f"{label} — " + "; ".join(pairs) + "." if pairs else label)
     return out
+
+
+_BARE_LABEL = re.compile(r"^(?=.*\d)[\w.\-/]{1,6}$")  # a number or short code like "5", "2b", "W3", "1.2"
+
+
+def _one_line(cell: str) -> str:
+    """Multi-line cells ("Search engine optimisation\nSearch intent, keywords...") become one line."""
+    parts = [p.strip() for p in cell.split("\n") if p.strip()]
+    return " ".join(p if p[-1] in ".:;,!?" or i == len(parts) - 1 else p + "." for i, p in enumerate(parts))

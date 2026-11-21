@@ -27,7 +27,7 @@ from .ingest import SUPPORTED, file_hash, load_document
 from .text import tokenize
 from .vector_index import VectorIndex
 
-INDEX_VERSION = 2       # bump when loaders change what text a file produces (2: linearized tables)
+INDEX_VERSION = 3       # bump when loaders change what text a file produces (3: table row labels)
 
 
 @dataclass

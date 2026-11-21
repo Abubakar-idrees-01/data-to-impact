@@ -100,3 +100,10 @@ def test_linearize_table_key_value_layouts():
     assert linearize_table([["Instructor", "Dr X"], ["Room", "2.12"]]) == ["Instructor: Dr X.", "Room: 2.12."]
     side_by_side = [["Item", "Details", "Item", "Details"], ["Code", "DS-294", "Credits", "2"]]
     assert linearize_table(side_by_side) == ["Code: DS-294. Credits: 2."]
+
+
+def test_linearize_table_names_bare_number_labels_and_joins_cell_lines():
+    rows = [["Week", "Topics", "Activity"], ["5", "Search engine optimisation\nSearch intent, keywords", "Audit a page"]]
+    assert linearize_table(rows) == [
+        "Week 5 — Topics: Search engine optimisation. Search intent, keywords; Activity: Audit a page."]
+    assert linearize_table([["Item", "Weight", "CLO"], ["Total", "100%", ""]]) == ["Total — Weight: 100%."]

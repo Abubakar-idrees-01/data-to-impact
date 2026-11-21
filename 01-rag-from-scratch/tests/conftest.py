@@ -62,6 +62,7 @@ def embedder():
 @pytest.fixture
 def settings(tmp_path):
     return Settings(storage_dir=tmp_path / "storage", models_dir=tmp_path / "models",
+                    ocr_cache_file=tmp_path / "ocr_cache.json",
                     use_reranker=False, chunk_size=60, min_chunk_words=10)
 
 

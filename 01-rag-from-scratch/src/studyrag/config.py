@@ -22,6 +22,7 @@ class Settings:
 
     # --- ingestion ---
     ocr: bool = True                    # read text from image-only slides / scanned pages
+    ocr_cache_file: Path = PROJECT_ROOT / "storage" / "ocr_cache.json"   # shared by every index
 
     # --- chunking ---
     chunk_strategy: str = "structure"   # "fixed" | "structure" | "semantic"

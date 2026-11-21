@@ -58,7 +58,7 @@ class Library:
         self.bm25 = BM25Index()
         self.vindex = VectorIndex()
         from .ingest import ocr as ocr_mod
-        ocr_mod.set_cache_path(self.dir / "ocr_cache.json")
+        ocr_mod.set_cache_path(Path(settings.ocr_cache_file))
         self._load()
 
     # ------------------------------------------------------------ persistence

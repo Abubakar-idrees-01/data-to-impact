@@ -8,10 +8,11 @@
   "fully_correct_rate": 0.824,
   "mostly_correct_rate (>=50% facts)": 0.971,
   "citation_precision": 0.863,
+  "citation_support (cited passage supports the sentence)": 0.957,
   "answers_with_any_citation": 1,
   "answers_needing_auto_citation": 0.529,
   "faithfulness (verified sentence ratio)": 0.951,
   "gold_passage_retrieved": 1,
   "refusal_rate_on_unanswerable": 1,
-  "median_seconds": 32.0
+  "median_seconds": 31.9
 }

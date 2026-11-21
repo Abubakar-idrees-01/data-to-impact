@@ -1,0 +1,19 @@
+{
+  "rows": [
+    {
+      "threads": 2,
+      "prompt tokens": 491,
+      "prompt tok/s": 78.5,
+      "generate tok/s": 18.9,
+      "time to first token (s)": 6.3
+    },
+    {
+      "threads": 4,
+      "prompt tokens": 491,
+      "prompt tok/s": 82.3,
+      "generate tok/s": 19.8,
+      "time to first token (s)": 6.0
+    }
+  ],
+  "table": "| threads | prompt tokens | prompt tok/s | generate tok/s | time to first token (s) |\n|---|---|---|---|---|\n| 2 | 491 | 78.5 | 18.9 | 6.3 |\n| 4 | 491 | 82.3 | 19.8 | 6.0 |"
+}

@@ -1,0 +1,18 @@
+{
+  "model": "Qwen3.5-0.8B-Q4_K_M",
+  "n": 42,
+  "n_answerable": 34,
+  "n_unanswerable": 8,
+  "answer_rate_on_answerable": 1,
+  "key_fact_recall": 0.9,
+  "fully_correct_rate": 0.765,
+  "mostly_correct_rate (>=50% facts)": 0.971,
+  "citation_precision": 0.934,
+  "citation_support (cited passage supports the sentence)": 0.963,
+  "answers_with_any_citation": 1,
+  "answers_needing_auto_citation": 0.824,
+  "faithfulness (verified sentence ratio)": 0.984,
+  "gold_passage_retrieved": 1,
+  "refusal_rate_on_unanswerable": 1,
+  "median_seconds": 14.6
+}

@@ -1,0 +1,1094 @@
+{
+ "suite": "judge-ragtruth-dev",
+ "name": "faithfulness-claims__openai_gpt-oss-120b",
+ "items": [
+  {
+   "id": "rt13697",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 57,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Blue: Representation of the United Kingdom's colors, symbolizing the country's history and heritage.",
+     "type": "unsupported",
+     "why": "Source says the colors represent an enduring tie to the United Kingdom's colors, but does not mention 'symbolizing the country's history and heritage'."
+    }
+   ]
+  },
+  {
+   "id": "rt1162",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 107,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "other motorists heard the sound of the impending collapse and managed to escape before the concrete fell.",
+     "type": "unsupported",
+     "why": "The source mentions other motorists hearing the collapse but does not state they escaped before the concrete fell."
+    },
+    {
+     "quote": "The incident occurred on Monday, and by Tuesday afternoon, authorities had removed enough debris to discover the death toll.",
+     "type": "contradiction",
+     "why": "The source says crews removed enough debris to discover the death toll on Monday after nine hours, not by Tuesday afternoon."
+    }
+   ]
+  },
+  {
+   "id": "rt10394",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 185,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt16574",
+   "gold": false,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 70,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt6476",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 125,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "takeout and good options for groups are available",
+     "type": "unsupported",
+     "why": "Source indicates RestaurantsGoodForGroups is false, so claiming good options for groups is not supported."
+    },
+    {
+     "quote": "The ambiance of the restaurant is described as trendy and upscale, with no mention of music.",
+     "type": "unsupported",
+     "why": "Source lists ambience as casual only; trendy and upscale are not indicated."
+    }
+   ]
+  },
+  {
+   "id": "rt1333",
+   "gold": true,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 246,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt13671",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 219,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt17264",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Subtle Conflict"
+   ],
+   "response_words": 246,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt11574",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 132,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt7885",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 215,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt17240",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 98,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "If you are unable to access Apple Music Radio on your iPhone, make sure that you have updated your device to the latest version of iOS.",
+     "type": "unsupported",
+     "why": "Source does not mention iOS updates as a requirement."
+    },
+    {
+     "quote": "Additionally, ensure that your Apple Music subscription is active.",
+     "type": "unsupported",
+     "why": "Source does not mention checking subscription status."
+    }
+   ]
+  },
+  {
+   "id": "rt8723",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 182,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt10195",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 184,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt12064",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 76,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting ',' delimiter: line 12 column 6 (char 536)",
+   "problems": []
+  },
+  {
+   "id": "rt10482",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 115,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt112",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 90,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt16953",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 291,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt1068",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 131,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Furious 7 star Vin Diesel has predicted that his latest film will win an Oscar for Best Picture, due to its ethnic diversity.",
+     "type": "unsupported",
+     "why": "The source reports Diesel predicting an Oscar win but does not state he attributes it to the film's ethnic diversity."
+    }
+   ]
+  },
+  {
+   "id": "rt794",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 108,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "but the video shows no evidence of this.",
+     "type": "unsupported",
+     "why": "Source says it is unclear whether the dark object is a Taser; it does not state the video shows no evidence of a Taser."
+    }
+   ]
+  },
+  {
+   "id": "rt11810",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 110,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt3946",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 66,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt17097",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 164,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt14127",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 174,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Push the reset tool in and turn it 90 degrees (either direction) until it clicks.",
+     "type": "unsupported",
+     "why": "The source mentions turning the reset tool 90 degrees in either direction, but does not mention anything about it clicking."
+    }
+   ]
+  },
+  {
+   "id": "rt5305",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 115,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt8538",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 128,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13882",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 189,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting ',' delimiter: line 17 column 6 (char 984)",
+   "problems": []
+  },
+  {
+   "id": "rt9336",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 133,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt12367",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 57,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt10621",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 247,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt3373",
+   "gold": true,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 143,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The case has sparked outrage and calls for justice, with Dent and his attorney hopeful that more individuals involved in the incident will be held accountable.",
+     "type": "unsupported",
+     "why": "The source does not mention any public outrage or calls for justice; it only includes statements of hope from Dent and his attorney."
+    }
+   ]
+  },
+  {
+   "id": "rt12781",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 105,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt13427",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 100,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "such as health insurance, life insurance, and retirement plans",
+     "type": "unsupported",
+     "why": "Source mentions health insurance but does not mention life insurance or retirement plans."
+    },
+    {
+     "quote": "The name \"cafeteria\" comes from the idea that employees can pick and choose their benefits like they would pick food from a cafeteria menu.",
+     "type": "unsupported",
+     "why": "Source does not explain the origin of the term \"cafeteria\" or compare it to picking food."
+    }
+   ]
+  },
+  {
+   "id": "rt8722",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 146,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt7931",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 151,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt10771",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 185,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt3506",
+   "gold": false,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 110,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt9634",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 127,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt15766",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 94,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "However, it's important to note that these symptoms can also be caused by other conditions, and only a qualified medical professional can accurately diagnose leukemia based on a comprehensive evaluation.",
+     "type": "unsupported",
+     "why": "The source passages do not mention that the symptoms may be caused by other conditions or that a qualified professional is needed for diagnosis; this information is not present in the source."
+    }
+   ]
+  },
+  {
+   "id": "rt2589",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 72,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt3174",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 78,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt1723",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 147,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13083",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 195,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt2396",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 98,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "completed the 2018 Boston Marathon",
+     "type": "unsupported",
+     "why": "The source mentions he completed the Boston Marathon but does not state the year; the year 2018 cannot be inferred."
+    }
+   ]
+  },
+  {
+   "id": "rt17345",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 217,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "You should now be able to copy the cell contents you want to lock, but unable to paste them anywhere else on the worksheet.",
+     "type": "contradiction",
+     "why": "Source states you can paste copied contents into any unlocked cell, not that you cannot paste anywhere else."
+    }
+   ]
+  },
+  {
+   "id": "rt5367",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 85,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt10276",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 153,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt3483",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 134,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt4814",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 109,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The new tribes will be formed based on the castaways' reactions to the change.",
+     "type": "unsupported",
+     "why": "Source does not state that tribe formation is based on castaways' reactions."
+    },
+    {
+     "quote": "Some people are excited about the changes, while others are scared.",
+     "type": "unsupported",
+     "why": "Source does not mention any people's emotions about the changes."
+    }
+   ]
+  },
+  {
+   "id": "rt13404",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 87,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt5366",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 64,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "In an attempt to prove herself, Sheila accepts a job as a bartender.",
+     "type": "unsupported",
+     "why": "The source says Deacon offers Sheila a job as a bartender, but does not state that she accepts it."
+    }
+   ]
+  },
+  {
+   "id": "rt5627",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 85,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt11177",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 102,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Located in downtown Santa Barbara",
+     "type": "unsupported",
+     "why": "The source provides the address but does not state that the location is in downtown Santa Barbara."
+    }
+   ]
+  },
+  {
+   "id": "rt13201",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 57,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13993",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 102,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt17263",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 249,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt1873",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 141,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt6707",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 113,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting ',' delimiter: line 7 column 6 (char 256)",
+   "problems": []
+  },
+  {
+   "id": "rt10173",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 118,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Unterminated string starting at: line 4 column 16 (char 39)",
+   "problems": []
+  },
+  {
+   "id": "rt8272",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 208,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  },
+  {
+   "id": "rt2307",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict",
+    "Subtle Conflict"
+   ],
+   "response_words": 132,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Expecting value: line 1 column 1 (char 0)",
+   "problems": []
+  }
+ ],
+ "metrics": {
+  "agree": {
+   "value": 0.8666666666666667,
+   "ci_low": 0.7031831605558306,
+   "ci_high": 0.9469043057578189,
+   "n": 30
+  },
+  "n_errors": {
+   "value": 30.0,
+   "n": 60
+  },
+  "kappa": {
+   "value": 0.7333333333333334,
+   "n": 60
+  },
+  "kappa_ci_low": {
+   "value": 0.4925037481259371,
+   "n": 60
+  },
+  "kappa_ci_high": {
+   "value": 0.9333333333333333,
+   "n": 60
+  },
+  "f1": {
+   "value": 0.846153846153846,
+   "n": 60
+  },
+  "f1_ci_low": {
+   "value": 0.6666666666666666,
+   "n": 60
+  },
+  "f1_ci_high": {
+   "value": 0.967741935483871,
+   "n": 60
+  },
+  "precision": {
+   "value": 0.7333333333333333,
+   "n": 60
+  },
+  "precision_ci_low": {
+   "value": 0.5,
+   "n": 60
+  },
+  "precision_ci_high": {
+   "value": 0.9375,
+   "n": 60
+  },
+  "recall": {
+   "value": 1.0,
+   "n": 60
+  },
+  "recall_ci_low": {
+   "value": 1.0,
+   "n": 60
+  },
+  "recall_ci_high": {
+   "value": 1.0,
+   "n": 60
+  },
+  "balanced_accuracy": {
+   "value": 0.8947368421052632,
+   "n": 60
+  },
+  "balanced_accuracy_ci_low": {
+   "value": 0.7940015479876161,
+   "n": 60
+  },
+  "balanced_accuracy_ci_high": {
+   "value": 0.975,
+   "n": 60
+  },
+  "accuracy": {
+   "value": 0.8666666666666667,
+   "n": 60
+  },
+  "accuracy_ci_low": {
+   "value": 0.7333333333333333,
+   "n": 60
+  },
+  "accuracy_ci_high": {
+   "value": 0.9666666666666667,
+   "n": 60
+  },
+  "tp": {
+   "value": 11.0,
+   "n": 60
+  },
+  "fp": {
+   "value": 4.0,
+   "n": 60
+  },
+  "fn": {
+   "value": 0.0,
+   "n": 60
+  },
+  "tn": {
+   "value": 15.0,
+   "n": 60
+  }
+ },
+ "config": {
+  "rubric": "faithfulness/claims@1",
+  "model": "openai/gpt-oss-120b",
+  "usage": {
+   "calls": 60,
+   "cache_hits": 0,
+   "prompt_tokens": 65091,
+   "completion_tokens": 37912,
+   "seconds": 823.758385181427,
+   "waits": 89
+  }
+ },
+ "env": {
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_count": 4,
+  "git_commit": "0a5dedd",
+  "git_dirty": false
+ },
+ "created": "2026-11-22T09:42:41+00:00"
+}

@@ -1,0 +1,1689 @@
+{
+ "suite": "judge-ragtruth-dev",
+ "name": "faithfulness-claims__qwen_qwen3.8-27b",
+ "items": [
+  {
+   "id": "rt13697",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 57,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Blue: Representation of the United Kingdom's colors, symbolizing the country's history and heritage.",
+     "type": "unsupported",
+     "why": "The source states the colors represent an 'enduring tie' to the UK's colors, but does not explicitly state that Blue specifically represents the UK's colors (the source groups 'red white and blue' together) nor does it use the specific phrase 'symbolizing the country's history and heritage'."
+    },
+    {
+     "quote": "a connection to the country's history and heritage",
+     "type": "unsupported",
+     "why": "The source mentions an 'enduring tie' to the UK's colors, but does not explicitly define this as a connection to 'history and heritage'."
+    }
+   ]
+  },
+  {
+   "id": "rt1162",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 107,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "managed to escape before the concrete fell",
+     "type": "unsupported",
+     "why": "The source states that other motorists heard the crackle, but does not state that they escaped or that they were in a position to escape."
+    },
+    {
+     "quote": "by Tuesday afternoon",
+     "type": "unsupported",
+     "why": "The source states it took nine hours on Monday to remove debris and that the investigation continued Tuesday, but does not specify that the death toll was discovered on Tuesday afternoon."
+    }
+   ]
+  },
+  {
+   "id": "rt10394",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 185,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 5,
+   "error": null,
+   "problems": [
+    {
+     "quote": "use valet parking services",
+     "type": "contradiction",
+     "why": "The source data explicitly states \"valet\": false."
+    },
+    {
+     "quote": "WiFi connectivity",
+     "type": "unsupported",
+     "why": "The source data lists \"WiFi\": null, meaning the information is not provided or confirmed."
+    },
+    {
+     "quote": "on Google Reviews",
+     "type": "unsupported",
+     "why": "The source data does not specify which platform the reviews are from."
+    },
+    {
+     "quote": "decent food",
+     "type": "contradiction",
+     "why": "The review text says \"Decent place for lunch\", not \"decent food\". The reviewer explicitly stated \"great food\"."
+    },
+    {
+     "quote": "lack of parking",
+     "type": "unsupported",
+     "why": "The review states \"You have to find a parking space in the street ( no private parking lot)\". It does not state there is a lack of parking, only that it is street parking."
+    }
+   ]
+  },
+  {
+   "id": "rt16574",
+   "gold": false,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 70,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "the recommended methods are wrapping it in foil and reheating it in the oven, or using a heavy frying pan with beef broth and simmering it until completely heated",
+     "type": "unsupported",
+     "why": "The source presents these as specific user strategies or steps, not as a definitive list of 'recommended methods' for the general case. The source does not state that these are the only or primary recommendations, nor does it explicitly link them as the solution to 'overcooking' specifically (it focuses on drying out/turning gray)."
+    },
+    {
+     "quote": "The key is to avoid drying out or turning the meat gray while still warming it up.",
+     "type": "unsupported",
+     "why": "The source states that the process 'takes some skill' to avoid drying out or turning gray, but it does not explicitly define this as 'the key' to the process. This is an interpretive summary rather than a direct fact from the text."
+    }
+   ]
+  },
+  {
+   "id": "rt6476",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 125,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "takeout and good options for groups are available",
+     "type": "contradiction",
+     "why": "The source data explicitly states \"RestaurantsGoodForGroups\": false, contradicting the claim that good options for groups are available."
+    },
+    {
+     "quote": "The ambiance of the restaurant is described as trendy and upscale",
+     "type": "contradiction",
+     "why": "The source data explicitly states \"trendy\": false and \"upscale\": false. The source indicates the ambience is \"casual\": true."
+    },
+    {
+     "quote": "on Google reviews",
+     "type": "unsupported",
+     "why": "The source data does not specify which platform the reviews or rating are from; it only provides the data structure."
+    }
+   ]
+  },
+  {
+   "id": "rt1333",
+   "gold": true,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 246,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "A full-scale invasion of Yemen or the continuation of the conflict would have catastrophic consequences for the region.",
+     "type": "unsupported",
+     "why": "The source states that a full-scale invasion is a scenario that is 'very hard to contemplate' and that a political compromise is the only option that is 'not cataclysmic'. It does not explicitly state that the continuation of the conflict itself would have catastrophic consequences, nor does it link the invasion directly to regional catastrophe in those terms; it focuses on the lack of viable military options and the danger of sectarian tensions undermining Iranian interests."
+    }
+   ]
+  },
+  {
+   "id": "rt13671",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 219,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "ideally on the same day or at least within the first few days of life",
+     "type": "unsupported",
+     "why": "The source only states it is permissible to name the child on the first day or on the seventh. It does not mention 'the same day' or 'within the first few days' as a general rule or ideal."
+    },
+    {
+     "quote": "While there is no specific action prescribed in sharee’ah for preparing to welcome a new baby a day or two before delivery (passage 2)",
+     "type": "contradiction",
+     "why": "The statement about no prescribed action is found in Passage 1, not Passage 2. Additionally, the source says 'a day or two before he is born', whereas the response says 'before delivery', which is a slight semantic shift but the citation error is the primary issue."
+    },
+    {
+     "quote": "The passages do not provide specific guidance on other aspects of welcoming a new Muslim baby, such as the significance of the name chosen",
+     "type": "contradiction",
+     "why": "Passage 2 explicitly provides guidance on the significance of the name, stating it is a 'vested right', should be chosen with the intention of 'barakah', and that the child will be 'called by your name on the day of judgment'."
+    }
+   ]
+  },
+  {
+   "id": "rt17264",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Subtle Conflict"
+   ],
+   "response_words": 246,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "gently",
+     "type": "unsupported",
+     "why": "The source says to 'Tap' the sides, but does not specify doing so 'gently'."
+    },
+    {
+     "quote": "gently",
+     "type": "unsupported",
+     "why": "The source says to 'Tap' the end of the bolt, but does not specify doing so 'gently'."
+    },
+    {
+     "quote": "If none of these methods work, you can try using a penetrating oil or heating the nut with a heat gun",
+     "type": "contradiction",
+     "why": "The source presents applying penetrating oil (WD-40) and applying heat as primary steps in the main procedure (Passage 1) or as immediate alternatives (Passage 3), not as a final resort only to be tried if the previous steps fail. The response creates a sequential dependency ('If none of these methods work') that is not present in the source."
+    }
+   ]
+  },
+  {
+   "id": "rt11574",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 132,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "One customer even mentioned that the cake from \"A Piece of Cake\" was the highlight of their wedding.",
+     "type": "unsupported",
+     "why": "The source review states it was the \"best decision of our wedding\" and that people talked about it, but does not explicitly state it was the \"highlight\" of the wedding."
+    }
+   ]
+  },
+  {
+   "id": "rt7885",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 215,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The attributes of the business include outdoor seating, no WiFi, and no takeout option.",
+     "type": "contradiction",
+     "why": "The source lists 'RestaurantsTakeOut': false, which typically indicates the attribute is not present or not applicable, but the second review explicitly states 'I'm also a big fan of Tues pasta club for take out', directly contradicting the claim that there is no takeout option."
+    },
+    {
+     "quote": "The reviewer also mentions the Pasta Club, which offers flavorful pasta selections and excellent wine pairings.",
+     "type": "unsupported",
+     "why": "The second review (which mentions the open kitchen and date night) mentions the 'Tues pasta club for take out' and 'excellent wine pairings', but does not describe the pasta selections as 'flavorful'. The description of 'flavorful' pasta selections comes from the third review, which does not mention the open kitchen or date night. The response conflates details from different reviews into a single attribution."
+    }
+   ]
+  },
+  {
+   "id": "rt17240",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 98,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "If you are unable to access Apple Music Radio on your iPhone, make sure that you have updated your device to the latest version of iOS. Additionally, ensure that your Apple Music subscription is active.",
+     "type": "unsupported",
+     "why": "The source does not mention updating iOS or checking subscription status as troubleshooting steps for access issues."
+    }
+   ]
+  },
+  {
+   "id": "rt8723",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 182,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "it is still open for business",
+     "type": "contradiction",
+     "why": "The source contains a review from June 2015 stating 'This place has closed down' and another from March 2015 stating it was 'Closed by the health department'. The response claims it is currently open, which contradicts the evidence of closure provided in the reviews."
+    }
+   ]
+  },
+  {
+   "id": "rt10195",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 184,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "wine bars, bars",
+     "type": "unsupported",
+     "why": "The source lists 'Wine Bars' and 'Bars' as categories, but the response presents them as food/drink options offered by the business. While the categories are in the source, describing them as 'options' alongside 'donuts' and 'cuisine' implies they are menu items or services in a way that conflates the business type with the menu, but more critically, the source does not state the business *is* a wine bar or bar, only that it falls under those categories. However, a stronger issue is the next point."
+    },
+    {
+     "quote": "tasty Bloody Mary",
+     "type": "unsupported",
+     "why": "The source review states 'they make a Bloody Mary too' and 'There are days you need a bloody Mary', but it does not explicitly describe the drink as 'tasty'. The adjective 'tasty' is an added opinion not present in the source text."
+    },
+    {
+     "quote": "popular and well-regarded",
+     "type": "unsupported",
+     "why": "While the 4.0 star rating and positive reviews support 'well-regarded', the term 'popular' is not directly supported by the source data (no foot traffic or volume data is provided). It is an inference that goes beyond the provided facts."
+    }
+   ]
+  },
+  {
+   "id": "rt12064",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 76,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "return them to the bloodstream",
+     "type": "unsupported",
+     "why": "The source states that molecules are reabsorbed from the filtrate, but it does not explicitly state that they are returned to the bloodstream."
+    },
+    {
+     "quote": "flow rate of the fluid",
+     "type": "unsupported",
+     "why": "The source lists 'Concentration of small molecules in the filtrate' as a factor affecting reabsorption, but does not mention flow rate as a factor."
+    }
+   ]
+  },
+  {
+   "id": "rt10482",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 115,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The spa operates between 11:00 and 21:00 from Monday to Friday, and 12:00 to 17:00 over the weekend.",
+     "type": "contradiction",
+     "why": "The source data indicates the business is closed (based on reviews stating 'business closed' and 'it was closed'), so stating it currently 'operates' contradicts the evidence provided in the reviews. Additionally, the source lists specific hours for Saturday and Sunday, which are not necessarily 'the weekend' in a general sense, but the primary contradiction is the operational status."
+    },
+    {
+     "quote": "Some customers have raised concerns about the business's reliability, citing instances of closure without notice and non-refunded pre-paid service packages.",
+     "type": "unsupported",
+     "why": "While the reviews mention closure and non-refunds, the phrase 'business's reliability' is an interpretive summary. More critically, the next sentence attributes complaints to 'management', which is not supported. However, looking closer at the specific claim: The reviews do support closure without notice and non-refunds. Let's re-evaluate. The reviews say 'They never called me to let me know' (closure without notice) and 'did not try to refund me' (non-refunded). This part is supported. Let's look at the next sentence."
+    },
+    {
+     "quote": "There are also complaints about the difficulty of getting into contact with the spa's management.",
+     "type": "unsupported",
+     "why": "The source review mentions difficulty contacting 'anyone at the spa' and specifically mentions a person named Lauryn (who had a personal number) and Jeff. It does not explicitly identify these individuals as 'management'. While one might infer they are staff, labeling them specifically as 'management' is an addition not found in the text. Furthermore, the complaint about contact was specifically regarding Lauryn's personal number and the general difficulty before that, but the term 'management' is not in the source."
+    }
+   ]
+  },
+  {
+   "id": "rt112",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 90,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "44 years after its release",
+     "type": "contradiction",
+     "why": "The source states the song is 44 years old (implying the article was written in 2015), but explicitly states the song was released in November 1971. Therefore, the song was not 44 years old at the time of its release."
+    },
+    {
+     "quote": "poignant reflection on the loss of innocence",
+     "type": "unsupported",
+     "why": "The source describes the song as a 'hybrid of modern poetry and folk ballad', an 'allegory', and a reflection on 'fate', 'youthful protest', and a 'world gone wrong'. It does not use the phrase 'loss of innocence' or explicitly define the song's theme as such."
+    },
+    {
+     "quote": "changing times of the 1950s and 60s",
+     "type": "unsupported",
+     "why": "The source mentions the song forces the mind to 'relive the '50s, '60s and '70s' and references the 1959 plane crash and 1971 release, but does not explicitly characterize the song as a reflection on the 'changing times' of those specific decades in the manner stated."
+    }
+   ]
+  },
+  {
+   "id": "rt16953",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 291,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 7,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Preheat the grill to 400°F (200°C).",
+     "type": "unsupported",
+     "why": "The source states the temperature should be around 400°F, but does not provide the Celsius conversion (200°C)."
+    },
+    {
+     "quote": "Season the roast with salt and pepper.",
+     "type": "unsupported",
+     "why": "The source does not mention seasoning with salt and pepper; it only mentions rubbing with oil or marinating."
+    },
+    {
+     "quote": "Medium-rare should be at 145°F (63°C), medium should be at 160°F (71°C), and well-done should be at 170°F (77°C).",
+     "type": "unsupported",
+     "why": "The source provides Fahrenheit temperatures but does not provide the Celsius conversions (63°C, 71°C, 77°C)."
+    },
+    {
+     "quote": "Let the roast rest for 10-15 minutes before slicing and serving.",
+     "type": "unsupported",
+     "why": "The source does not mention resting the roast or slicing/serving instructions."
+    },
+    {
+     "quote": "Place the roast in an aluminum pan and continue cooking as usual.",
+     "type": "unsupported",
+     "why": "The source says to place the roast in an aluminum pan (likely for marinating or holding), but does not instruct to 'continue cooking as usual' in that pan; the grilling instructions involve direct/indirect heat on the grill."
+    },
+    {
+     "quote": "Preheat the grill to 400°F (200°C)",
+     "type": "unsupported",
+     "why": "The source does not provide the Celsius conversion (200°C)."
+    },
+    {
+     "quote": "Season the roast with salt and pepper",
+     "type": "unsupported",
+     "why": "The source does not mention seasoning with salt and pepper."
+    }
+   ]
+  },
+  {
+   "id": "rt1068",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 131,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "due to its ethnic diversity",
+     "type": "unsupported",
+     "why": "The source states Diesel predicted the film would win Best Picture, but it does not state that his prediction was *because* of the film's ethnic diversity. The source presents the diversity as a counter-argument to why people might dismiss the prediction, not as the cause of the prediction itself."
+    }
+   ]
+  },
+  {
+   "id": "rt794",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 108,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The video shows no evidence of this.",
+     "type": "contradiction",
+     "why": "The source states that a dark object falls behind Scott and hits the ground, and it is 'unclear whether that is the Taser.' It does not state that the video shows 'no evidence' of the Taser being used; rather, the evidence is ambiguous or unclear."
+    },
+    {
+     "quote": "The city's police chief and mayor have called for an independent investigation into the case.",
+     "type": "unsupported",
+     "why": "The source states that the investigation is being conducted by the independent South Carolina Law Enforcement Division and that the police department is citing this ongoing investigation. It does not state that the police chief or mayor 'called for' this investigation."
+    },
+    {
+     "quote": "The shooting has sparked protests in the city, calling for justice for Scott and accountability for police brutality.",
+     "type": "unsupported",
+     "why": "The source contains no mention of protests, calls for justice, or accountability for police brutality."
+    }
+   ]
+  },
+  {
+   "id": "rt11810",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 110,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The ambiance of the restaurant is described as casual",
+     "type": "unsupported",
+     "why": "The source data explicitly lists 'casual' as false under the Ambience attributes, and no review describes the ambiance as casual."
+    },
+    {
+     "quote": "some customers have expressed frustration with the lack of business hours",
+     "type": "unsupported",
+     "why": "The source data lists 'hours' as null, and no review mentions frustration regarding business hours. One review mentions the restaurant was empty, but not that hours were lacking."
+    }
+   ]
+  },
+  {
+   "id": "rt3946",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 66,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Fans speculate if Eric is dying, with some believing he will pass away after the show.",
+     "type": "unsupported",
+     "why": "The source asks fans if they think Eric is dying, but does not state that fans are currently speculating or that some believe he will pass away after the show."
+    }
+   ]
+  },
+  {
+   "id": "rt17097",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 164,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 5,
+   "error": null,
+   "problems": [
+    {
+     "quote": "fill it with treats like candy or small toys for electronics",
+     "type": "unsupported",
+     "why": "The source mentions 'treats' and 'electronic Tech toys' as separate items, but does not state that the treats are 'candy' or that the toys are 'for electronics' (the source says gifts that can be used *with* electronics). The phrase 'small toys for electronics' is a distortion of the source text."
+    },
+    {
+     "quote": "such as a gift card, snacks, or personal care items",
+     "type": "unsupported",
+     "why": "The source mentions 'items he/she can use in a dorm or apartment' and 'gift card or cash', but does not specify 'snacks' or 'personal care items'."
+    },
+    {
+     "quote": "decorate the container with school colors or a personalized message",
+     "type": "unsupported",
+     "why": "The source mentions decorating a 'clear gallon can' with school colors in Passage 1, but Passage 2 (regarding the college-bound grad) only mentions a 'Graduation Can Wrap Printable'. It does not mention decorating with school colors or adding a 'personalized message' in the context of the college-bound gift."
+    },
+    {
+     "quote": "For either grade school or high school graduation",
+     "type": "unsupported",
+     "why": "Passage 3 mentions 'elementary school or junior high school' and 'high school'. It does not use the term 'grade school' (which is ambiguous) nor does it explicitly group them as 'either grade school or high school' in a way that supports the specific phrasing, though this is a minor paraphrase issue. More importantly, the next sentence claims the album is for 'their time in school' which is a generalization not explicitly detailed as 'time in school' for high schoolers in the same way, but the main issue is the previous points. Actually, looking closer, Passage 3 says 'elementary school or junior high school' and 'high school'. The response says 'grade school or high school'. 'Grade school' is not in the source. This is a minor unsupported term, but the bigger issues are the specific items."
+    },
+    {
+     "quote": "Unable to answer based on given passages. The passages do not provide specific instructions or recommendations for making kids' graduation gifts.",
+     "type": "contradiction",
+     "why": "The response first lists three specific ideas derived from the passages, then contradicts itself by stating it is unable to answer and that the passages do not provide recommendations. The passages clearly provide recommendations (cap card, can, photo album)."
+    }
+   ]
+  },
+  {
+   "id": "rt14127",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 174,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "until it clicks",
+     "type": "unsupported",
+     "why": "The source states to 'turn 90 degrees' but does not mention a clicking sound or mechanism."
+    },
+    {
+     "quote": "It's important to note that you can only reset the combination to one of the 10,000 personalized combinations available on the lock.",
+     "type": "unsupported",
+     "why": "The source states the lock can be 'Reset to any of 10,000 personalized combination', which implies the total number of possibilities, not a restriction that you can *only* reset to one of them (which is logically redundant or misleading phrasing not present in the source). More strictly, the source lists this as a feature ('Reset to any of...'), whereas the response frames it as a specific constraint/note about the reset process itself, adding interpretive framing not in the text. However, the primary issue is the 'until it clicks' addition. Let's look closer at the 10,000 statement. The source says 'Reset to any of 10,000 personalized combination'. The response says 'you can only reset... to one of the 10,000...'. This is a faithful paraphrase of the capacity. Is it a problem? It's borderline. But 'until it clicks' is definitely unsupported. Let's re-evaluate the 10,000 statement. It is a feature description in Passage 3. The response presents it as a note on the reset process. This is acceptable summarization. The main error is 'until it clicks'."
+    }
+   ]
+  },
+  {
+   "id": "rt5305",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 115,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt8538",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 128,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13882",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 189,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 7,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Vitamin C: found in citrus fruits, berries, and leafy greens, it helps to boost the immune system and protect against infection.",
+     "type": "unsupported",
+     "why": "The source mentions Vitamin C is an antioxidant found in colorful fruits and vegetables, but does not list specific foods like citrus, berries, or leafy greens, nor does it explicitly state it boosts the immune system or protects against infection."
+    },
+    {
+     "quote": "Vitamin E: found in nuts, seeds, and vegetable oils, it helps to protect cells from damage and support the immune system.",
+     "type": "unsupported",
+     "why": "The source does not list nuts, seeds, or vegetable oils as sources of Vitamin E, nor does it explicitly state it supports the immune system."
+    },
+    {
+     "quote": "Zinc: found in oysters, beef, and fortified cereals, it plays a crucial role in activating the body's immune cells and fighting off infections.",
+     "type": "unsupported",
+     "why": "The source lists Zinc as an essential mineral but does not mention specific food sources (oysters, beef, etc.) or its specific role in activating immune cells or fighting infections."
+    },
+    {
+     "quote": "Selenium: found in Brazil nuts, fish, and turkey, it acts as an antioxidant and helps to protect cells from damage.",
+     "type": "unsupported",
+     "why": "The source lists Selenium as an essential mineral but does not mention specific food sources (Brazil nuts, fish, turkey) or explicitly state it acts as an antioxidant (only beta-carotene, C, and E are named as antioxidant vitamins)."
+    },
+    {
+     "quote": "Manganese: found in spinach, pumpkin seeds, and almonds, it supports the immune system and helps to fight off harmful bacteria.",
+     "type": "unsupported",
+     "why": "The source lists Manganese as an essential mineral but does not mention specific food sources or its role in supporting the immune system or fighting bacteria."
+    },
+    {
+     "quote": "Copper: found in shellfish, beef liver, and lentils, it plays a role in the production of white blood cells, which help to fight off infections.",
+     "type": "unsupported",
+     "why": "The source lists Copper as an essential mineral but does not mention specific food sources or its role in white blood cell production."
+    },
+    {
+     "quote": "It is important to note that while these vitamins and minerals can be beneficial for immune health, it is always best to consult with a healthcare professional before taking any supplements.",
+     "type": "unsupported",
+     "why": "The source suggests some people might benefit from supplements but does not advise consulting a healthcare professional."
+    }
+   ]
+  },
+  {
+   "id": "rt9336",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 133,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "It operates from 4:00 PM to 8:30 PM, Tuesday through Sunday.",
+     "type": "contradiction",
+     "why": "The source data lists Monday hours as '0:0-0:0', which typically indicates the business is closed, but the response omits Monday entirely and implies the operating days are only Tuesday through Sunday. More critically, the source lists hours for Monday as '0:0-0:0' (closed) and Tuesday-Sunday as '16:0-20:30'. The response says 'Tuesday through Sunday', which is factually consistent with the open days, but the phrasing 'operates from... Tuesday through Sunday' is a summary. However, looking closely at the source: Monday is 0:0-0:0. The response says it operates Tue-Sun. This is accurate. Let's re-evaluate. Is there a contradiction? No. Is it unsupported? No. Wait, let's look at the 'Monday' entry. '0:0-0:0' usually means closed. The response says it operates Tue-Sun. This is supported. Let's look for other issues."
+    },
+    {
+     "quote": "Some customers praise the pizza, calling Bettina their favorite pizza place in North America.",
+     "type": "unsupported",
+     "why": "The source review says 'this could be my new favorite pizza place in North America'. The response states they are 'calling Bettina their favorite pizza place', which changes the conditional/hypothetical 'could be' to a definitive statement. While minor, it alters the meaning. However, a stronger issue is the next point."
+    }
+   ]
+  },
+  {
+   "id": "rt12367",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 57,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt10621",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 247,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "it also offers a good atmosphere for sports enthusiasts and has a friendly staff",
+     "type": "unsupported",
+     "why": "The source data does not explicitly state that the bar has a 'good atmosphere' or that the staff is generally 'friendly'. While one review mentions friendly staff, another mentions unfriendly service, and the attributes for ambience are null. The response presents a generalized positive conclusion ('good atmosphere', 'friendly staff') that is not directly supported by the aggregate data or the specific text provided, especially given the conflicting reviews."
+    },
+    {
+     "quote": "While it may have some areas for improvement, such as customer service and food quality",
+     "type": "unsupported",
+     "why": "The source data contains reviews complaining about service and food, but it does not explicitly state that these are 'areas for improvement'. This is an editorial interpretation/opinion added by the writer, not a fact derived from the structured data."
+    }
+   ]
+  },
+  {
+   "id": "rt3373",
+   "gold": true,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 143,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The case has sparked outrage and calls for justice",
+     "type": "unsupported",
+     "why": "The source mentions the prosecutor's statement that brutality 'cannot and will not be tolerated' and the attorney's hope for further accountability, but it does not state that the case 'sparked outrage' or 'calls for justice' as a general community reaction."
+    },
+    {
+     "quote": "with Dent and his attorney hopeful that more individuals involved in the incident will be held accountable",
+     "type": "unsupported",
+     "why": "The source quotes the attorney saying 'we are very hopeful the prosecutor's net will catch even more fish in the near future,' which implies catching more people, but the specific phrasing 'more individuals involved in the incident' is an interpretation not explicitly stated. More critically, the source says Dent and his attorney are 'ecstatic' and 'hopeful the prosecutor's net will catch even more fish', but does not explicitly state they are hopeful that *more individuals involved in the incident* will be held accountable; the 'fish' could refer to other cases or broader systemic issues, though in context it likely refers to this incident. However, the previous point about 'outrage' is a clearer hallucination. Let's re-evaluate 'more individuals involved in the incident'. The source says 'catch even more fish'. This is a metaphor. Is it directly inferable that the fish are 'individuals involved in the incident'? It's a strong inference, but 'sparked outrage' is definitely not in the text. Let's look for other issues. 'The incident was captured on police car dashcam video' - Source says 'seen in police car dashcam video'. Supported. 'showed the officer grabbing the unarmed motorist around the neck and punching him in the head' - Source says 'grabbing the unarmed motorist... around the neck... and punching him several times in the head'. Supported. 'William Melendez, has been charged with assault and mistreatment of a prisoner' - Source says 'charged with assault and mistreatment of a prisoner'. Supported. 'Vicki Yost, has stepped down' - Source says 'stepped down' and 'resignation'. Supported. 'Floyd Dent, had drug charges against him dropped' - Source says 'drug charges against Dent... were formally dropped'. Supported. 'Melendez has pleaded not guilty' - Source says 'Melendez pleaded not guilty'. Supported. The main issue is 'sparked outrage and calls for justice'. The source does not mention public outrage or calls for justice. It mentions the prosecutor's stance and the attorney's statement. Therefore, this is unsupported."
+    }
+   ]
+  },
+  {
+   "id": "rt12781",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 105,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13427",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 100,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "life insurance, and retirement plans",
+     "type": "unsupported",
+     "why": "The source only mentions 'health insurance' and 'various nontaxable benefits' generally; it does not list life insurance or retirement plans as specific examples."
+    },
+    {
+     "quote": "The name \"cafeteria\" comes from the idea that employees can pick and choose their benefits like they would pick food from a cafeteria menu.",
+     "type": "unsupported",
+     "why": "The source does not explain the etymology or origin of the term 'cafeteria'."
+    }
+   ]
+  },
+  {
+   "id": "rt8722",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 146,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The menu includes Mexican dishes such as sopes, tacos, burritos, and quesadillas.",
+     "type": "unsupported",
+     "why": "The source only mentions 'sopes' and 'chips & salsa' in the reviews. Tacos, burritos, and quesadillas are not mentioned in the source data."
+    },
+    {
+     "quote": "Overall, Taqueria El Buen Gusto seems to be a decent option for Mexican food in the area.",
+     "type": "unsupported",
+     "why": "This is a subjective opinion/conclusion not present in the source data. The source contains mixed reviews (including one stating it closed due to vermin infestation), so a blanket positive summary is not directly supported."
+    }
+   ]
+  },
+  {
+   "id": "rt7931",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 151,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 4,
+   "error": null,
+   "problems": [
+    {
+     "quote": "serves traditional American breakfast, brunch, and dinner options",
+     "type": "unsupported",
+     "why": "The source lists 'American (Traditional)' as a category, but does not explicitly state that the menu serves 'dinner options' or that the food is 'traditional American' in style (reviews mention Mexican dishes like chilaquiles and omelets). The hours (7:0-21:0) imply late service, but 'dinner options' is an inference not explicitly supported by the text."
+    },
+    {
+     "quote": "pancakes, and sandwiches",
+     "type": "unsupported",
+     "why": "The source reviews mention chilaquiles, tri-tip, grilled cheese, and omelets. There is no mention of pancakes or sandwiches in the provided data."
+    },
+    {
+     "quote": "wheelchair accessible",
+     "type": "unsupported",
+     "why": "The source data does not contain any information regarding wheelchair accessibility."
+    },
+    {
+     "quote": "generous portions and fresh ingredients",
+     "type": "unsupported",
+     "why": "The source describes the meal as 'hearty' and 'solid', but does not explicitly state that portions are 'generous' or that ingredients are 'fresh'."
+    }
+   ]
+  },
+  {
+   "id": "rt10771",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 185,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "specializes in serving hot dogs",
+     "type": "unsupported",
+     "why": "The source lists 'Hot Dogs' and 'Restaurants' as categories, but does not state that the business 'specializes' in hot dogs. It also mentions a burger and chicken sandwich menu in the reviews, implying a broader menu."
+    },
+    {
+     "quote": "known for its friendly staff, delicious hot dogs, and a variety of menu options",
+     "type": "unsupported",
+     "why": "The phrase 'known for' is a subjective characterization not present in the source data. While the source contains reviews praising these aspects, the source itself does not state that the business is 'known for' them."
+    }
+   ]
+  },
+  {
+   "id": "rt3506",
+   "gold": false,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 110,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Over 500,000 Yazidis now live in northern Iraq",
+     "type": "contradiction",
+     "why": "The source states the U.S. State Department estimates that 500,000 Yazidis live in northern Iraq, which is an estimate, not a definitive fact stated as 'Over 500,000... now live'. More critically, the source says 'estimates that 500,000', while the response asserts 'Over 500,000'. The source does not support the 'Over' qualifier; it gives a specific estimate of 500,000. Additionally, the source says 'accounting for less than 1% of the country's population', implying the total population of Iraq is much larger, but the specific claim of 'Over 500,000' contradicts the specific estimate of '500,000' by adding an inequality not present in the source."
+    }
+   ]
+  },
+  {
+   "id": "rt9634",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 127,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 4,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The restaurant is open Monday to Sunday from 11:30am to 23:00pm",
+     "type": "contradiction",
+     "why": "The source lists hours for Monday-Thursday as 11:30-22:0 (10:00 PM), not 23:00 (11:00 PM). Additionally, 23:00 is 11:00 PM, not 23:00 PM."
+    },
+    {
+     "quote": "The restaurant has a garage parking lot",
+     "type": "contradiction",
+     "why": "The source explicitly states \"garage\": false and \"lot\": false."
+    },
+    {
+     "quote": "no validated parking, street parking, or valet service",
+     "type": "contradiction",
+     "why": "The source explicitly states \"street\": true, meaning street parking is available."
+    },
+    {
+     "quote": "The restaurant accepts credit cards and has a menu available online.",
+     "type": "unsupported",
+     "why": "The source contains no information regarding payment methods or online menus."
+    }
+   ]
+  },
+  {
+   "id": "rt15766",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 94,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "However, it's important to note that these symptoms can also be caused by other conditions, and only a qualified medical professional can accurately diagnose leukemia based on a comprehensive evaluation.",
+     "type": "unsupported",
+     "why": "The source passages do not state that these symptoms are caused by other conditions, nor do they mention the role of medical professionals in diagnosis or the need for comprehensive evaluation."
+    }
+   ]
+  },
+  {
+   "id": "rt2589",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 72,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "did not intentionally endanger anyone's safety",
+     "type": "unsupported",
+     "why": "The source states BFMTV regrets the mention and claims it was based on police sources and not repeated, but it does not explicitly state that they did not 'intentionally' endanger anyone. This is an inference about intent not present in the text."
+    }
+   ]
+  },
+  {
+   "id": "rt3174",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 78,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt1723",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 147,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13083",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 195,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 9,
+   "error": null,
+   "problems": [
+    {
+     "quote": "particularly in the arms, legs, and trunk",
+     "type": "unsupported",
+     "why": "The source mentions rigidity affecting legs, face, neck, or other parts, but does not mention the trunk."
+    },
+    {
+     "quote": "Bradykinesia: Slowness of movement",
+     "type": "unsupported",
+     "why": "The term 'Bradykinesia' and the general concept of 'slowness of movement' are not present in the source; the source only mentions reduced arm swing."
+    },
+    {
+     "quote": "Pain: Non-specific pain, which can be widespread or localized to a particular area",
+     "type": "unsupported",
+     "why": "The source mentions 'pain' as a non-motor symptom but does not describe it as 'non-specific', 'widespread', or 'localized'."
+    },
+    {
+     "quote": "Depression: Depressive symptoms, such as low mood, loss of interest in activities, and changes in sleep patterns",
+     "type": "unsupported",
+     "why": "The source mentions 'depression' but does not list specific symptoms like low mood, loss of interest, or sleep changes."
+    },
+    {
+     "quote": "Fatigue: Feeling tired or weak, which can interfere with daily activities",
+     "type": "unsupported",
+     "why": "Fatigue is not mentioned in the source."
+    },
+    {
+     "quote": "Difficulty with coordination and balance: Trouble performing smooth and coordinated movements, such as walking, dressing, or using utensils",
+     "type": "unsupported",
+     "why": "The source does not mention coordination, balance, dressing, or using utensils."
+    },
+    {
+     "quote": "Difficulty with swallowing: Trouble swallowing food, liquids, or medications, which can lead to choking or pneumonia",
+     "type": "unsupported",
+     "why": "Swallowing difficulties, choking, and pneumonia are not mentioned in the source."
+    },
+    {
+     "quote": "Urinary problems: Difficulty starting or stopping urination, or leaking of urine",
+     "type": "unsupported",
+     "why": "Urinary problems are not mentioned in the source."
+    },
+    {
+     "quote": "Sexual dysfunction: Decreased sexual desire or ability, due to the disease itself or its treatment",
+     "type": "unsupported",
+     "why": "Sexual dysfunction is not mentioned in the source."
+    }
+   ]
+  },
+  {
+   "id": "rt2396",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 98,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "2018 Boston Marathon",
+     "type": "unsupported",
+     "why": "The source does not specify the year of the marathon; it only mentions 'this year's marathon' and the 2013 bombings."
+    }
+   ]
+  },
+  {
+   "id": "rt17345",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 217,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "You should now be able to copy the cell contents you want to lock, but unable to paste them anywhere else on the worksheet.",
+     "type": "contradiction",
+     "why": "The source states: 'You should be able to paste the cell contents you copy in any unlocked cell on your worksheet.' The response claims the user is 'unable to paste them anywhere else', which contradicts the source's statement that pasting is possible in unlocked cells."
+    },
+    {
+     "quote": "After doing these steps, the cells you selected will be locked and cannot be copied or pasted anywhere else on the worksheet.",
+     "type": "contradiction",
+     "why": "The source explicitly states that you 'should be able to paste the cell contents you copy in any unlocked cell'. The response claims they 'cannot be... pasted anywhere else', which is a direct contradiction."
+    }
+   ]
+  },
+  {
+   "id": "rt5367",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 85,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt10276",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 153,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 4,
+   "error": null,
+   "problems": [
+    {
+     "quote": "It offers a variety of smoothies, juices, and bowls made with fresh ingredients.",
+     "type": "unsupported",
+     "why": "The source mentions 'Juice Bars & Smoothies' and a review mentions 'Acai bowls', but the source does not state that the items are made with 'fresh ingredients'."
+    },
+    {
+     "quote": "The business has a casual and relaxed atmosphere",
+     "type": "contradiction",
+     "why": "The source data explicitly lists 'casual': false and 'divey': true in the Ambience attributes. The response claims it is casual, which contradicts the structured data."
+    },
+    {
+     "quote": "with outdoor seating and WiFi available",
+     "type": "contradiction",
+     "why": "The source data explicitly lists 'WiFi': 'no'. The response claims WiFi is available."
+    },
+    {
+     "quote": "praised the business for its sustainable practices, such as using reusable cups and allowing customers to bring their own containers",
+     "type": "unsupported",
+     "why": "While a review mentions reusing cups and bringing them for savings, the source does not attribute 'sustainable practices' to the business itself, nor does it explicitly state the business 'allows' bringing containers as a policy (the review implies the customer brings their own for a discount). More importantly, the framing as a business practice/praise for sustainability is an interpretation not directly supported by the factual data provided."
+    }
+   ]
+  },
+  {
+   "id": "rt3483",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 134,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 5,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Ben was diagnosed with Hodgkin's lymphoma in 2014, which he had previously fought and beaten as a teenager.",
+     "type": "contradiction",
+     "why": "The source states he fought the cancer when he was 20, not as a teenager."
+    },
+    {
+     "quote": "he is currently undergoing chemotherapy as part of a clinical trial",
+     "type": "contradiction",
+     "why": "The source states he was slated for a clinical trial but his levels were too high to meet requirements, so he is on generalized chemotherapy instead."
+    },
+    {
+     "quote": "a highly aggressive form of brain cancer that had spread to her spine",
+     "type": "contradiction",
+     "why": "The source states the tumor was lodged in her spine instead of her brain, not that it spread from the brain to the spine."
+    },
+    {
+     "quote": "She has started a blog to document her journey and raise money for her medical expenses",
+     "type": "unsupported",
+     "why": "The source mentions a family online journal updated by friends and fundraisers run by the community, but does not state that Shelby started a blog herself."
+    },
+    {
+     "quote": "and has also become an advocate for cancer research",
+     "type": "unsupported",
+     "why": "The source does not mention Shelby becoming an advocate for cancer research; it only mentions the couple seeking clinical trials and advanced care."
+    }
+   ]
+  },
+  {
+   "id": "rt4814",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 109,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The new tribes will be formed based on the castaways' reactions to the change.",
+     "type": "unsupported",
+     "why": "The source states that the producers had to switch up the tribes and that people acted surprised, but it does not state that the tribe formation was based on the castaways' reactions."
+    },
+    {
+     "quote": "Some people are excited about the changes, while others are scared.",
+     "type": "unsupported",
+     "why": "The source mentions that people acted surprised and some felt added pressure, but it does not mention anyone being 'excited' or 'scared'."
+    },
+    {
+     "quote": "The next episode will reveal the final four players.",
+     "type": "contradiction",
+     "why": "The source states that the 'fourth person is voted out of the game,' implying the game continues with the remaining players, not that the episode reveals the 'final four' (which would imply the end of the game or a specific final four stage not mentioned)."
+    }
+   ]
+  },
+  {
+   "id": "rt13404",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 87,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt5366",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 64,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "In an attempt to prove herself, Sheila accepts a job as a bartender.",
+     "type": "contradiction",
+     "why": "The source states that Deacon 'offers' Sheila the job and that she 'acknowledges' his advice but 'cannot do it' (refusing to let Finn go). It does not state that she accepted the job; in fact, the text implies she is not following his advice."
+    }
+   ]
+  },
+  {
+   "id": "rt5627",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 85,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "arrested for shoplifting at Macy's 10 days after being arraigned on similar charges",
+     "type": "contradiction",
+     "why": "The source states he was arrested 10 days after he was arraigned, but the arraignment for the *previous* case (where he pled not guilty) occurred 11 days ago. The 10-day figure refers to the time since the previous arraignment, but the phrasing implies the current arrest happened 10 days after the *current* arraignment or conflates the timelines incorrectly. More precisely, the source says 'arrested just 10 days after he was arraigned in a shoplifting case' (referring to the first case). The response says 'arrested... 10 days after being arraigned on similar charges'. This is actually a faithful summary of the first sentence. Let's re-read carefully. Source: 'arrested just 10 days after he was arraigned in a shoplifting case.' Response: 'arrested... 10 days after being arraigned on similar charges.' This is supported. Let's look for other issues."
+    },
+    {
+     "quote": "The judge cited New York law allowing bail for theft cases involving harm to property",
+     "type": "unsupported",
+     "why": "The source states the judge cited the law which calls theft a 'harm to property' and that 'If it's committed with another crime, a judge can set bail.' The response omits the crucial condition that the theft must be committed 'with another crime' (or in concert with another) for bail to be set under this specific provision. By stating the law allows bail for theft cases involving harm to property generally, it misrepresents the legal standard described in the source, which requires the additional element of being committed with another crime."
+    }
+   ]
+  },
+  {
+   "id": "rt11177",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 102,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Located in downtown Santa Barbara",
+     "type": "unsupported",
+     "why": "The source provides the address '715 Chapala St' and city 'Santa Barbara', but does not explicitly state that this location is in 'downtown'."
+    },
+    {
+     "quote": "reasonable prices",
+     "type": "unsupported",
+     "why": "The source contains no information regarding the price range or affordability of the meals."
+    }
+   ]
+  },
+  {
+   "id": "rt13201",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 57,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13993",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 102,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The power supply is responsible for providing the energy needed to create the picture in both types of TVs.",
+     "type": "unsupported",
+     "why": "The source states that the power supply creates the energy needed to create the picture in the context of the plasma TV description ('In a plasma TV...'). It does not explicitly state that the power supply provides the energy for the LCD TV, although it is implied by general knowledge, it is not directly stated or strictly inferable from the specific text provided for LCDs which focuses on the light source and crystals."
+    }
+   ]
+  },
+  {
+   "id": "rt17263",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 249,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Note: The passages do not mention using a wrench, so it is assumed that a wrench can be used to loosen the nut.",
+     "type": "contradiction",
+     "why": "The source explicitly mentions using a wrench in Passage 1 ('use your wrench to loosen') and Passage 2 ('so that a wrench can remove it')."
+    }
+   ]
+  },
+  {
+   "id": "rt1873",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 141,
+   "pred": null,
+   "agree": null,
+   "n_problems": 0,
+   "error": "unparseable judge output: Unterminated string starting at: line 6 column 12 (char 119)",
+   "problems": []
+  },
+  {
+   "id": "rt6707",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 113,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 4,
+   "error": null,
+   "problems": [
+    {
+     "quote": "making it a great spot for both date nights and family dinners",
+     "type": "contradiction",
+     "why": "The source explicitly states 'RestaurantsGoodForGroups': false and 'romantic': false, contradicting the claim that it is suitable for family dinners (groups) and date nights (romantic)."
+    },
+    {
+     "quote": "fusion dishes can be hit or miss",
+     "type": "unsupported",
+     "why": "The source contains only one negative review mentioning fusion elements (salsa on teriyaki), but does not support the generalization that fusion dishes are 'hit or miss' (implying some are good). The positive reviews do not mention fusion."
+    },
+    {
+     "quote": "traditional sushi options are consistently praised for their authenticity",
+     "type": "unsupported",
+     "why": "The reviews praise the sushi as 'best', 'fresh', and 'delicious', but the specific attribute of 'authenticity' is not mentioned in the source text."
+    },
+    {
+     "quote": "staff who are knowledgeable about their menu",
+     "type": "unsupported",
+     "why": "The source mentions staff asking about spice levels and accommodating requests, but does not explicitly state they are 'knowledgeable about their menu'."
+    }
+   ]
+  },
+  {
+   "id": "rt10173",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 118,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 4,
+   "error": null,
+   "problems": [
+    {
+     "quote": "the majority of customers have expressed disappointment",
+     "type": "unsupported",
+     "why": "The source only provides three reviews, all of which are negative. It does not provide data on the 'majority' of all customers or the total number of reviews, so this generalization is not supported by the provided data."
+    },
+    {
+     "quote": "after a recent merger",
+     "type": "unsupported",
+     "why": "The source mentions layoffs but does not state the cause (e.g., a merger). This is outside knowledge not present in the JSON."
+    },
+    {
+     "quote": "Haggen remains popular among locals and visitors alike",
+     "type": "contradiction",
+     "why": "The source shows a 1.5-star rating and three 1-star reviews describing the store as a 'ghost town' and 'worst grocery store'. The claim that it is 'popular' contradicts the negative sentiment and low rating in the source."
+    },
+    {
+     "quote": "with many rating it as their go-to destination for groceries and other essentials",
+     "type": "contradiction",
+     "why": "The source reviews explicitly state customers are going to competitors (Vons, Ralphs) and call the store the 'worst'. There is no support for it being a 'go-to destination'."
+    }
+   ]
+  },
+  {
+   "id": "rt8272",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 208,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "sandwiches",
+     "type": "unsupported",
+     "why": "The source lists baguettes, duck confit, salads, drinks, purple worms (octopus), cookies, and quiche, but does not mention sandwiches."
+    },
+    {
+     "quote": "extended hours during the summer",
+     "type": "unsupported",
+     "why": "The source provides specific hours for Tuesday through Saturday (11:0-18:0 or 11:0-17:0) but contains no information about seasonal or summer hour extensions."
+    },
+    {
+     "quote": "masks are currently required due to the COVID-19 pandemic",
+     "type": "unsupported",
+     "why": "The source mentions masks were required at the time of a 2020 review, but does not state they are 'currently' required, nor does it explicitly name the 'COVID-19 pandemic' as the cause (though it is inferable from the date, the 'currently' aspect is not supported by the static data)."
+    }
+   ]
+  },
+  {
+   "id": "rt2307",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict",
+    "Subtle Conflict"
+   ],
+   "response_words": 132,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "the rate of heavy drinking among women increased by 17.2% during this period, while the rate among men increased by 23%",
+     "type": "contradiction",
+     "why": "The source states that heavy drinking among Americans (overall) rose 17.2 percent, not specifically among women. The 23% figure in the source refers to the increase in binge drinking among men in Santa Clara County, not the increase in heavy drinking among men nationwide."
+    },
+    {
+     "quote": "women experiencing a 36% increase in binge drinking rates compared to a 23% increase among men",
+     "type": "contradiction",
+     "why": "The source states that the 36% increase in women's binge drinking and the 23% increase in men's binge drinking were specific to Santa Clara County, California. The response presents these as general findings of the study without specifying the location, implying they are national rates, which contradicts the source's distinction between the county-level example and the national trend (where women's rate increased more than seven times the rate among men)."
+    }
+   ]
+  }
+ ],
+ "metrics": {
+  "agree": {
+   "value": 0.6610169491525424,
+   "ci_low": 0.5337223255448901,
+   "ci_high": 0.7686251640161651,
+   "n": 59
+  },
+  "n_errors": {
+   "value": 1.0,
+   "n": 60
+  },
+  "kappa": {
+   "value": 0.31395348837209314,
+   "n": 60
+  },
+  "kappa_ci_low": {
+   "value": 0.14480289010013933,
+   "n": 60
+  },
+  "kappa_ci_high": {
+   "value": 0.4894932014833126,
+   "n": 60
+  },
+  "f1": {
+   "value": 0.7499999999999999,
+   "n": 60
+  },
+  "f1_ci_low": {
+   "value": 0.6376482213438736,
+   "n": 60
+  },
+  "f1_ci_high": {
+   "value": 0.8470588235294119,
+   "n": 60
+  },
+  "precision": {
+   "value": 0.6,
+   "n": 60
+  },
+  "precision_ci_low": {
+   "value": 0.46804964539007093,
+   "n": 60
+  },
+  "precision_ci_high": {
+   "value": 0.7346938775510204,
+   "n": 60
+  },
+  "recall": {
+   "value": 1.0,
+   "n": 60
+  },
+  "recall_ci_low": {
+   "value": 1.0,
+   "n": 60
+  },
+  "recall_ci_high": {
+   "value": 1.0,
+   "n": 60
+  },
+  "balanced_accuracy": {
+   "value": 0.6551724137931034,
+   "n": 60
+  },
+  "balanced_accuracy_ci_low": {
+   "value": 0.5689655172413793,
+   "n": 60
+  },
+  "balanced_accuracy_ci_high": {
+   "value": 0.7343979779411764,
+   "n": 60
+  },
+  "accuracy": {
+   "value": 0.6610169491525424,
+   "n": 60
+  },
+  "accuracy_ci_low": {
+   "value": 0.5423728813559322,
+   "n": 60
+  },
+  "accuracy_ci_high": {
+   "value": 0.7796610169491526,
+   "n": 60
+  },
+  "tp": {
+   "value": 30.0,
+   "n": 60
+  },
+  "fp": {
+   "value": 20.0,
+   "n": 60
+  },
+  "fn": {
+   "value": 0.0,
+   "n": 60
+  },
+  "tn": {
+   "value": 9.0,
+   "n": 60
+  }
+ },
+ "config": {
+  "rubric": "faithfulness/claims@1",
+  "model": "qwen/qwen3.8-27b",
+  "usage": {
+   "calls": 60,
+   "cache_hits": 0,
+   "prompt_tokens": 63354,
+   "completion_tokens": 13996,
+   "seconds": 830.6262192726135,
+   "waits": 48
+  }
+ },
+ "env": {
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_count": 4,
+  "git_commit": "0a5dedd",
+  "git_dirty": false
+ },
+ "created": "2026-11-22T09:35:18+00:00"
+}

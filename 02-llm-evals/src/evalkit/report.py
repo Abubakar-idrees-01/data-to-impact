@@ -95,7 +95,7 @@ def bar_chart(bars: Sequence[Bar], title: str, xmin: float = 0.0, xmax: float = 
     colors = {"main": "var(--accent)", "alt": "var(--accent2)", "base": "var(--base)"}
     parts = [f'<svg viewBox="0 0 {width} {height}" width="100%" role="img" aria-label="{esc(title)}">']
     for i in range(ticks + 1):
-        v = xmin + (xmax - xmin) * i / ticks
+        v = round(xmin + (xmax - xmin) * i / ticks, 6) + 0.0      # no "-2.8e-17" or "-0" tick labels
         parts.append(f'<line class="grid" x1="{x(v):.1f}" x2="{x(v):.1f}" y1="{top - 6}" y2="{height - 24}"/>'
                      f'<text x="{x(v):.1f}" y="{height - 8}" text-anchor="middle">{v:g}</text>')
     if xmin < 0 < xmax:

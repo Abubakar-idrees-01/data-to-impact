@@ -118,6 +118,8 @@ def need_llm() -> bool:
     ok, msg = rag.llm_ready
     if not ok:
         st.error(msg)
+    elif rag.settings.llm_backend == "openai":        # API backend: show free-tier rate-limit pauses
+        rag.llm.on_wait = lambda s: st.toast(f"⏳ API rate limit reached: waiting {s:.0f} s, then continuing…")
     return ok
 
 

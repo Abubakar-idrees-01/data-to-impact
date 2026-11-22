@@ -1,0 +1,27 @@
+# Quality rules for StudyRAG's answer runs (project 1). Checked in CI by `evalkit gate`.
+# A new run must clear the absolute floors, and must not be significantly worse than the baseline run.
+
+[metrics.judge_correctness]      # LLM judge vs reference answer: 1 correct, 0.5 partial, 0 incorrect
+min = 0.75
+max_drop = 0.05
+require_significance = true
+
+[metrics.judge_faithful]         # LLM judge: every statement supported by the retrieved passages
+min = 0.80
+max_drop = 0.05
+require_significance = true
+
+[metrics.citation_precision]
+min = 0.70
+max_drop = 0.05
+require_significance = true
+
+[metrics.answered_answerable]    # no wrong refusals of answerable questions
+min = 0.95
+
+[metrics.refused_unanswerable]   # says "not in your documents" when the answer isn't there
+min = 0.95
+
+[metrics.seconds]                # mean seconds per answer on a 2015 laptop CPU
+max = 45
+max_drop = 10

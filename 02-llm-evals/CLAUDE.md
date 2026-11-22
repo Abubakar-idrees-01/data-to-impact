@@ -30,5 +30,16 @@ claim in a README ("RAG is 85% faithful", "router saves 60% latency") is backed 
 ## Consumers
 01-rag (retrieval + answers), 04-ai-agent (task success), 05-adaptive-llm (quality vs speed).
 
-## Status
-Phases 1-3 done (33 tests). Groq key copied into 02-llm-evals/.env (EVALKIT_*; gitignored).
+## Status (2026-11-22 16:40)
+- Phases 1-3, 6 (report) and docs done; 36 tests. Docs: README, SETUP, HOW_IT_WORKS, 6 concept notes,
+  DECISIONS D1-D13, RESULTS (dev final; test + StudyRAG pending), OVERVIEW, TIMELINE (in progress).
+- RUNNING unattended: `bash experiments/pipeline.sh > logs/pipeline.log` (logs/ dev_qwen.log, dev_gptoss.log).
+  Groq free tier = 200k tokens/model/day (TPD) -> ~2 days. Owner chose to stay free. Restart is safe (cache).
+  Order: dev severity (qwen) + dev severity/direct (gpt-oss, effort low, 2000 tok) + StudyRAG correctness (qwen)
+  -> select_judge.py (pre-registered rule) -> test run of selected -> test baselines -> studyrag_eval.py.
+- When it finishes: update RESULTS §2-4, README results, TIMELINE "still running", OVERVIEW table; rebuild
+  site (build_report.py) + docs/images/report.png; add CI workflow (.github/workflows/evalkit.yml is written
+  but UNCOMMITTED until results/studyrag-answers/v1,v2 exist); commit selected.json + results; build PDFs with
+  `../01-rag-from-scratch/.venv/bin/python scripts/build_pdfs.py`; ask owner before enabling GitHub Pages.
+- Dev results: qwen direct 0.633 [0.44,0.83] (current pick), qwen claims 0.314, lexical 0.30, gpt-oss claims
+  (700 tok) 50% coverage -> excluded.

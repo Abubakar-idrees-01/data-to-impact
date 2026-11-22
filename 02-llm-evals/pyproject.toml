@@ -7,7 +7,7 @@ name = "evalkit"
 version = "0.1.0"
 description = "A small, dependency-free toolkit for evaluating LLM systems: metrics with confidence intervals, a validated LLM judge, regression gates and HTML reports."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"   # tomllib
 license = { text = "MIT" }
 dependencies = []
 

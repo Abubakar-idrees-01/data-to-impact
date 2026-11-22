@@ -1,0 +1,2 @@
+# evalkit itself has no third-party dependencies (Python standard library only).
+# For running the tests: pip install -r requirements-dev.txt

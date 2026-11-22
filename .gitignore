@@ -24,9 +24,9 @@ env/
 kaggle.json
 
 # ---- Data (keep large/raw data out of git; commit small samples only) ----
-data/raw/
-data/interim/
-data/external/
+**/data/raw/
+**/data/interim/
+**/data/external/
 *.csv.gz
 *.parquet
 *.h5

@@ -96,12 +96,16 @@ def patient_client(model: str | None, extra: dict | None = None) -> ChatClient:
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--correctness-model", default="qwen/qwen3.8-27b")
+    p.add_argument("--correctness-model", default="openai/gpt-oss-20b",
+                   help="separate model = separate free-tier quota (the faithfulness judge needs its own)")
+    p.add_argument("--correctness-effort", default="low", help="reasoning_effort for a reasoning model ('' = none)")
+    p.add_argument("--correctness-max-tokens", type=int, default=2000)
     p.add_argument("--faithfulness", default=str(ROOT / "results" / "judge-ragtruth-dev" / "selected.json"),
                    help="the judge configuration selected on the RAGTruth dev set (experiments/select_judge.py)")
     p.add_argument("--correctness-only", action="store_true", help="only grade correctness (fills the cache)")
     a = p.parse_args()
-    correct = Judge(patient_client(a.correctness_model), "correctness")
+    effort = {"reasoning_effort": a.correctness_effort} if a.correctness_effort else None
+    correct = Judge(patient_client(a.correctness_model, effort), "correctness", max_tokens=a.correctness_max_tokens)
     faithful = None
     if not a.correctness_only:
         sel = json.loads(Path(a.faithfulness).read_text())

@@ -15,9 +15,24 @@ import httpx
 
 from .base import Message, parse_json_loose, strip_thinking
 
+# Some models (e.g. gpt-oss) write citations with CJK lenticular brackets: 【1】 -> [1]
+_BRACKETS = str.maketrans({"【": "[", "】": "]"})
+
+
+def _check(r: httpx.Response) -> None:
+    """Raise with the provider's own message (e.g. "model ... does not exist"), not just the status code."""
+    if r.is_success:
+        return
+    try:
+        detail = r.json().get("error", {}).get("message") or r.text
+    except ValueError:
+        detail = r.text
+    raise RuntimeError(f"API error {r.status_code} from {r.request.url}: {detail[:300]}")
+
 
 class OpenAICompatLLM:
     def __init__(self, base_url: str, model: str, api_key: str = "", timeout: float = 120.0):
+        base_url, model, api_key = base_url.strip(), model.strip(), api_key.strip()   # pasted values
         self.name = model
         self.url = base_url.rstrip("/") + "/chat/completions"
         self.model = model
@@ -38,13 +53,15 @@ class OpenAICompatLLM:
         body = self._payload(messages, max_tokens, temperature, stream)
         if not stream:
             r = httpx.post(self.url, headers=self.headers, json=body, timeout=self.timeout)
-            r.raise_for_status()
-            return strip_thinking(r.json()["choices"][0]["message"]["content"] or "")
+            _check(r)
+            return strip_thinking(r.json()["choices"][0]["message"]["content"] or "").translate(_BRACKETS)
         return self._stream(body)
 
     def _stream(self, body: dict) -> Iterator[str]:
         with httpx.stream("POST", self.url, headers=self.headers, json=body, timeout=self.timeout) as r:
-            r.raise_for_status()
+            if not r.is_success:
+                r.read()
+                _check(r)
             for line in r.iter_lines():               # Server-Sent Events: "data: {...}"
                 if not line.startswith("data:"):
                     continue
@@ -53,7 +70,7 @@ class OpenAICompatLLM:
                     break
                 delta = json.loads(data)["choices"][0].get("delta", {})
                 if delta.get("content"):
-                    yield delta["content"]
+                    yield delta["content"].translate(_BRACKETS)
 
     def generate_json(self, messages: list[Message], schema: dict, max_tokens: int = 768,
                       temperature: float = 0.3) -> dict:
@@ -66,5 +83,5 @@ class OpenAICompatLLM:
         if r.status_code == 400:                      # provider without JSON mode: retry plain
             body.pop("response_format")
             r = httpx.post(self.url, headers=self.headers, json=body, timeout=self.timeout)
-        r.raise_for_status()
+        _check(r)
         return parse_json_loose(r.json()["choices"][0]["message"]["content"] or "")

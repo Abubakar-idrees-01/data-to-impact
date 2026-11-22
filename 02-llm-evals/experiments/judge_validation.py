@@ -115,11 +115,13 @@ def tune_lexical(cases) -> float:
     return best[1]
 
 
-def run_judge(split: str, cases, rubric: str, model: str | None) -> None:
-    client = ChatClient.from_env(dotenv=ROOT / ".env", cache_dir=ROOT / ".cache" / "llm",
+def run_judge(split: str, cases, rubric: str, model: str | None, effort: str | None = None,
+              max_tokens: int | None = None) -> None:
+    extra = {"reasoning_effort": effort} if effort else None
+    client = ChatClient.from_env(dotenv=ROOT / ".env", cache_dir=ROOT / ".cache" / "llm", extra_body=extra,
                                  **({"model": model} if model else {}))
-    judge = Judge(client, rubric)
-    name = f"{rubric.replace('/', '-')}__{client.model.replace('/', '_')}"
+    judge = Judge(client, rubric, max_tokens=max_tokens)
+    name = f"{rubric.replace('/', '-')}__{client.model.replace('/', '_')}" + (f"__effort-{effort}" if effort else "")
     items, t0 = [], time.time()
     for i, c in enumerate(cases, 1):
         v = judge(task=c.input, source=c.context[0], response=c.meta["response"])
@@ -132,7 +134,8 @@ def run_judge(split: str, cases, rubric: str, model: str | None) -> None:
             print(f"[{i}/{len(cases)}] {time.time() - t0:.0f}s  calls={u.calls} cached={u.cache_hits} "
                   f"tokens={u.prompt_tokens}+{u.completion_tokens} waited={sum(u.waits):.0f}s", flush=True)
     print_report(name, items)
-    path = save(split, name, items, {"rubric": judge.rubric.id, "model": client.model,
+    path = save(split, name, items, {"rubric": judge.rubric.id, "model": client.model, "extra_body": extra,
+                                     "max_tokens": judge.max_tokens,
                                      "usage": vars(client.usage) | {"waits": len(client.usage.waits)}})
     print(f"saved {path}")
 
@@ -143,6 +146,8 @@ def main() -> None:
     p.add_argument("--rubric", default="faithfulness/claims")
     p.add_argument("--model", help="override EVALKIT_API_MODEL")
     p.add_argument("--baselines", action="store_true", help="run the non-LLM detectors instead")
+    p.add_argument("--effort", choices=["low", "medium", "high"], help="reasoning_effort for reasoning models")
+    p.add_argument("--max-tokens", type=int, help="override the rubric's output budget")
     p.add_argument("--limit", type=int)
     a = p.parse_args()
     cases = load_cases(ROOT / "data" / f"ragtruth_{a.split}.jsonl")[: a.limit]
@@ -150,7 +155,7 @@ def main() -> None:
         threshold = tune_lexical(load_cases(ROOT / "data" / "ragtruth_dev.jsonl"))
         run_baselines(a.split, cases, threshold)
     else:
-        run_judge(a.split, cases, a.rubric, a.model)
+        run_judge(a.split, cases, a.rubric, a.model, a.effort, a.max_tokens)
 
 
 if __name__ == "__main__":

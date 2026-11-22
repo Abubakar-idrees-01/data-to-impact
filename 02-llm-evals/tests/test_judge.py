@@ -135,3 +135,16 @@ def test_severity_rubric_counts_only_major_problems(monkeypatch, client):
     assert j(task="t", source="s", response="a").label is False
     v = j(task="t", source="s", response="b")
     assert v.label is True and v.details["major"] == 1
+
+
+def test_extra_body_and_budget_exhaustion(monkeypatch, tmp_path):
+    class Empty(FakeAPI):
+        def __call__(self, req, timeout=None):
+            self.bodies.append(json.loads(req.data))
+            return io.BytesIO(json.dumps({"choices": [{"message": {"content": ""}, "finish_reason": "length"}]}).encode())
+    api = Empty()
+    monkeypatch.setattr(llm.urllib.request, "urlopen", api)
+    c = ChatClient("https://x/v1", "m", cache_dir=tmp_path, extra_body={"reasoning_effort": "low"})
+    v = Judge(c, "faithfulness/direct", max_tokens=1234)(task="t", source="s", response="r")
+    assert v.label is None and "budget ran out" in v.error
+    assert api.bodies[0]["reasoning_effort"] == "low" and api.bodies[0]["max_tokens"] == 1234

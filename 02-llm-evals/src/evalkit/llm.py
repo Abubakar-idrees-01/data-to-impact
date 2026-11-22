@@ -88,7 +88,9 @@ class Usage:
 class ChatClient:
     def __init__(self, base_url: str, model: str, api_key: str = "", timeout: float = 120.0,
                  cache_dir: str | Path | None = ".cache/llm", max_retries: int = 8,
-                 sleep: Callable[[float], None] = time.sleep):
+                 sleep: Callable[[float], None] = time.sleep, extra_body: dict | None = None):
+        """extra_body: provider-specific fields added to every request, e.g. {"reasoning_effort": "low"}
+        for reasoning models (they are part of the cache key)."""
         self.url = base_url.strip().rstrip("/") + "/chat/completions"
         self.model = model.strip()
         self.api_key = api_key.strip()
@@ -96,6 +98,7 @@ class ChatClient:
         self.cache_dir = Path(cache_dir) if cache_dir else None
         self.max_retries = max_retries
         self.sleep = sleep
+        self.extra_body = dict(extra_body or {})
         self.usage = Usage()
 
     @classmethod
@@ -121,6 +124,7 @@ class ChatClient:
         body = {"model": self.model, "messages": messages, "temperature": temperature, "max_tokens": max_tokens}
         if json_mode:
             body["response_format"] = {"type": "json_object"}
+        body.update(self.extra_body)
         path = self._cache_path(self._key(body))
         if use_cache and path and path.exists():
             data = json.loads(path.read_text(encoding="utf-8"))
@@ -129,8 +133,11 @@ class ChatClient:
                               completion_tokens=data.get("completion_tokens", 0))
         t0 = time.time()
         resp = self._post(body)
-        msg = resp["choices"][0]["message"]
-        text = _THINK.sub("", msg.get("content") or "").strip()
+        choice = resp["choices"][0]
+        text = _THINK.sub("", choice["message"].get("content") or "").strip()
+        if not text and choice.get("finish_reason") == "length":
+            # reasoning models can spend the whole budget thinking and return nothing: say so clearly
+            raise APIError(f"empty reply: the {max_tokens}-token budget ran out (reasoning model? raise max_tokens)")
         usage = resp.get("usage") or {}
         result = ChatResult(text=text, seconds=time.time() - t0, prompt_tokens=usage.get("prompt_tokens", 0),
                             completion_tokens=usage.get("completion_tokens", 0))
@@ -159,7 +166,9 @@ class ChatClient:
                 text = e.read().decode(errors="replace")
                 if e.code in RETRY_STATUS and attempt < self.max_retries:
                     wait = retry_wait(e.code, dict(e.headers or {}), text, attempt)
-                    log.warning("API %s, waiting %.1f s (attempt %d/%d)", e.code, wait, attempt + 1, self.max_retries)
+                    hint = re.search(r"(on [^:]+?\([A-Z]+\)[^.]*)", text)    # e.g. "on tokens per minute (TPM): Limit 8000, Used ..."
+                    log.warning("API %s, waiting %.1f s (attempt %d/%d) %s", e.code, wait, attempt + 1,
+                                self.max_retries, hint.group(1)[:120] if hint else "")
                     self.usage.waits.append(wait)
                     self.sleep(wait)
                     continue

@@ -152,10 +152,13 @@ class Verdict:
 
 
 class Judge:
-    def __init__(self, client: ChatClient, rubric: Rubric | str, retries_on_bad_json: int = 1):
+    def __init__(self, client: ChatClient, rubric: Rubric | str, retries_on_bad_json: int = 1,
+                 max_tokens: int | None = None):
+        """max_tokens overrides the rubric's budget (reasoning models need room to think before answering)."""
         self.client = client
         self.rubric = RUBRICS[rubric] if isinstance(rubric, str) else rubric
         self.retries_on_bad_json = retries_on_bad_json
+        self.max_tokens = max_tokens or self.rubric.max_tokens
 
     @property
     def id(self) -> str:
@@ -168,7 +171,7 @@ class Judge:
         for attempt in range(self.retries_on_bad_json + 1):
             try:
                 # attempt > 0: ask again without the cache (the cached reply was unparseable)
-                res = self.client.chat(messages, temperature=0.0, max_tokens=self.rubric.max_tokens,
+                res = self.client.chat(messages, temperature=0.0, max_tokens=self.max_tokens,
                                        json_mode=json_mode, use_cache=attempt == 0)
             except APIError as e:
                 # some providers reject output that fails their JSON validation (e.g. cut off while

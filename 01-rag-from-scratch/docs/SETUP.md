@@ -161,4 +161,5 @@ Changing the chunking, embedding model or OCR settings triggers an automatic re-
 | Answers are very slow | Use the 0.8B model, lower `STUDYRAG_TOP_K` to 3, or use the API backend |
 | `.doc` / `.ppt` files fail | Install LibreOffice (used to convert legacy Office formats) |
 | Downloads keep failing | Re-run the same command: downloads resume where they stopped |
+| `API rate limit reached: waiting N s` | Normal on free tiers (Groq free: ~1,000 output tokens/min on some models). The app waits and continues by itself; summarising a 74-slide lecture took 2 min 43 s on Groq free |
 | `API error 404 ... model ... does not exist` | The provider retired that model: list available models (step 6) and change `STUDYRAG_API_MODEL` |

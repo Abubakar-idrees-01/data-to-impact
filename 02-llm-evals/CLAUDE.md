@@ -35,7 +35,8 @@ claim in a README ("RAG is 85% faithful", "router saves 60% latency") is backed 
   DECISIONS D1-D13, RESULTS (dev final; test + StudyRAG pending), OVERVIEW, TIMELINE (in progress).
 - RUNNING unattended: `bash experiments/pipeline.sh > logs/pipeline.log` (logs/ dev_qwen.log, dev_gptoss.log).
   Groq free tier = 200k tokens/model/day (TPD) -> ~2 days. Owner chose to stay free. Restart is safe (cache).
-  Order: dev severity (qwen) + dev severity/direct (gpt-oss, effort low, 2000 tok) + StudyRAG correctness (qwen)
+  Order: dev severity (qwen) + dev severity/direct (gpt-oss-120b, effort low, 2000 tok) + StudyRAG correctness
+  (gpt-oss-20b, own quota; TPD is a rolling 24h window, quota used 14-16h on 11-22 frees ~14h on 11-23)
   -> select_judge.py (pre-registered rule) -> test run of selected -> test baselines -> studyrag_eval.py.
 - When it finishes: update RESULTS §2-4, README results, TIMELINE "still running", OVERVIEW table; rebuild
   site (build_report.py) + docs/images/report.png; add CI workflow (.github/workflows/evalkit.yml is written

@@ -49,6 +49,21 @@ Reply with JSON only:
  "verdict": "supported" or "hallucinated"}}
 The verdict is "hallucinated" if and only if "problems" is not empty."""
 
+# v2, after the dev set showed the claims rubric flagging wording nuances that human annotators accept
+# ("tasty Bloody Mary" for "they make a Bloody Mary"): every problem gets a severity, only major ones count.
+FAITHFULNESS_SEVERITY_USER = _FAITHFULNESS_BODY + """
+Rate each problem's severity:
+- "major": a reader would come away believing a fact that is wrong or that the SOURCE does not give
+  (a new or changed number, name, date, place, event, attribute, cause, or opinion attributed to someone).
+- "minor": wording, emphasis or tone (e.g. "tasty" for a dish a reviewer liked, "highlight" for "best part"),
+  a reasonable generalization, or a harmless inference that any careful reader would also draw.
+
+Reply with JSON only:
+{{"problems": [{{"quote": "<exact words from the RESPONSE>", "type": "contradiction" or "unsupported",
+                "severity": "major" or "minor", "why": "<short reason>"}}],
+ "verdict": "supported" or "hallucinated"}}
+The verdict is "hallucinated" if and only if at least one problem is "major"."""
+
 FAITHFULNESS_DIRECT_USER = _FAITHFULNESS_BODY + """
 Reply with JSON only: {{"verdict": "supported" or "hallucinated"}}"""
 
@@ -76,6 +91,12 @@ Reply with JSON only:
   "verdict": "correct" or "partially_correct" or "incorrect"}}"""
 
 CORRECTNESS_SCORE = {"correct": 1.0, "partially_correct": 0.5, "incorrect": 0.0}
+
+
+def _severity_label(d: dict) -> dict:
+    problems = d.get("problems") or []
+    major = [p for p in problems if str(p.get("severity", "major")).lower() == "major"]
+    return {"label": bool(major), "problems": problems, "major": len(major)}   # verdict derived from evidence
 
 
 def _faithfulness_label(d: dict) -> dict:
@@ -113,6 +134,8 @@ class Rubric:
 RUBRICS = {
     "faithfulness/claims": Rubric("faithfulness/claims", "1", FAITHFULNESS_SYSTEM, FAITHFULNESS_CLAIMS_USER,
                                   _faithfulness_label),
+    "faithfulness/severity": Rubric("faithfulness/severity", "1", FAITHFULNESS_SYSTEM, FAITHFULNESS_SEVERITY_USER,
+                                    _severity_label, max_tokens=900),
     "faithfulness/direct": Rubric("faithfulness/direct", "1", FAITHFULNESS_SYSTEM, FAITHFULNESS_DIRECT_USER,
                                   _faithfulness_label, max_tokens=400),   # reasoning models think first
     "correctness": Rubric("correctness", "1", CORRECTNESS_SYSTEM, CORRECTNESS_USER, _correctness_label),

@@ -123,3 +123,15 @@ def test_provider_json_rejection_falls_back_to_plain_mode(monkeypatch, client):
     monkeypatch.setattr(llm.urllib.request, "urlopen", api)
     v = Judge(client, "faithfulness/direct")(task="t", source="s", response="r")
     assert v.label is False and "response_format" not in api.bodies[1]
+
+
+def test_severity_rubric_counts_only_major_problems(monkeypatch, client):
+    minor = {"problems": [{"quote": "tasty", "type": "unsupported", "severity": "minor", "why": "tone"}],
+             "verdict": "hallucinated"}             # verdict disagrees with evidence: evidence wins
+    major = {"problems": [{"quote": "in 1999", "type": "contradiction", "severity": "major", "why": "1998"}],
+             "verdict": "hallucinated"}
+    monkeypatch.setattr(llm.urllib.request, "urlopen", FakeAPI(json.dumps(minor), json.dumps(major)))
+    j = Judge(client, "faithfulness/severity")
+    assert j(task="t", source="s", response="a").label is False
+    v = j(task="t", source="s", response="b")
+    assert v.label is True and v.details["major"] == 1

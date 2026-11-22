@@ -114,6 +114,14 @@ export STUDYRAG_API_MODEL=<model name from your provider>
 export STUDYRAG_API_KEY=<your key>
 ```
 
+Providers retire models often, so list the ones your key can use before choosing:
+```bash
+curl -s https://api.groq.com/openai/v1/models -H "Authorization: Bearer $STUDYRAG_API_KEY" | grep -o '"id":"[^"]*"'
+```
+On Groq (November 2026), `qwen/qwen3.8-27b` answered a question over the owner's lectures in 2.8 s instead of ~35 s
+locally, with correct citations. To keep these settings, put the four lines (without `export`) in a `.env` file in the
+project folder (gitignored) and load it with `set -a; source .env; set +a` before starting the app.
+
 ## 7. Run the tests and the evaluation
 
 ```bash
@@ -153,3 +161,4 @@ Changing the chunking, embedding model or OCR settings triggers an automatic re-
 | Answers are very slow | Use the 0.8B model, lower `STUDYRAG_TOP_K` to 3, or use the API backend |
 | `.doc` / `.ppt` files fail | Install LibreOffice (used to convert legacy Office formats) |
 | Downloads keep failing | Re-run the same command: downloads resume where they stopped |
+| `API error 404 ... model ... does not exist` | The provider retired that model: list available models (step 6) and change `STUDYRAG_API_MODEL` |

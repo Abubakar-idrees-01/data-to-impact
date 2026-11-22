@@ -35,7 +35,7 @@ def load_questions() -> dict[str, dict]:
     return {q["id"]: q for q in load_jsonl_items(ROOT / "data" / "studyrag_public.jsonl")}
 
 
-def judge_version(name: str, rows: list[dict], questions: dict, correct: Judge, faithful: Judge) -> Run:
+def judge_version(name: str, rows: list[dict], questions: dict, correct: Judge, faithful: Judge | None) -> Run:
     items = []
     for r in rows:
         answered = r["status"] == "answered"
@@ -45,23 +45,24 @@ def judge_version(name: str, rows: list[dict], questions: dict, correct: Judge, 
         if r["answerable"] and r["status"] == "answered":
             q = questions[r["id"]]
             c = correct(question=q["question"], reference=q["answer"], response=r["answer"])
-            f = faithful(task=TASK.format(q=q["question"]), source="\n\n".join(q["passages"]), response=r["answer"])
+            f = (faithful(task=TASK.format(q=q["question"]), source="\n\n".join(q["passages"]), response=r["answer"])
+                 if faithful else None)
             item.update({
                 "fact_recall": r["fact_recall"], "citation_precision": r["citation_precision"],
                 "verifier_supported_ratio": r["supported_ratio"],
                 "judge_correctness": c.label, "judge_verdict": c.details.get("verdict"),
                 "judge_missing": c.details.get("missing", []),
-                "judge_faithful": None if f.label is None else float(not f.label),
-                "judge_problems": f.details.get("problems", []),
-                "errors": [e for e in (c.error, f.error) if e]})
+                "judge_faithful": None if f is None or f.label is None else float(not f.label),
+                "judge_problems": f.details.get("problems", []) if f else [],
+                "errors": [e for e in (c.error, f.error if f else None) if e]})
         items.append(item)
         print(f"  {name} {r['id']}: correctness={item.get('judge_correctness')} "
               f"faithful={item.get('judge_faithful')} fact_recall={item.get('fact_recall')}", flush=True)
     metrics = ["fact_recall", "judge_correctness", "judge_faithful", "verifier_supported_ratio",
                "citation_precision", "answered_answerable", "refused_unanswerable", "seconds"]
     return Run.build(SUITE, name, items, metrics,
-                     config={"source": VERSIONS[name], "judge_model": correct.client.model,
-                             "rubrics": [correct.rubric.id, faithful.rubric.id]})
+                     config={"source": VERSIONS[name], "correctness_judge": correct.id,
+                             "faithfulness_judge": faithful.id if faithful else None})
 
 
 def heuristic_vs_judge(run: Run) -> None:
@@ -88,23 +89,36 @@ def heuristic_vs_judge(run: Run) -> None:
                   f"{[p.get('quote') for p in it['judge_problems']]}")
 
 
+def patient_client(model: str | None, extra: dict | None = None) -> ChatClient:
+    return ChatClient.from_env(dotenv=ROOT / ".env", cache_dir=ROOT / ".cache" / "llm", extra_body=extra,
+                               max_wait=900, max_retries=1000, **({"model": model} if model else {}))
+
+
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--model", help="judge model (default: EVALKIT_API_MODEL)")
+    p.add_argument("--correctness-model", default="qwen/qwen3.8-27b")
+    p.add_argument("--faithfulness", default=str(ROOT / "results" / "judge-ragtruth-dev" / "selected.json"),
+                   help="the judge configuration selected on the RAGTruth dev set (experiments/select_judge.py)")
+    p.add_argument("--correctness-only", action="store_true", help="only grade correctness (fills the cache)")
     a = p.parse_args()
-    client = ChatClient.from_env(dotenv=ROOT / ".env", cache_dir=ROOT / ".cache" / "llm",
-                                 **({"model": a.model} if a.model else {}))
-    correct, faithful = Judge(client, "correctness"), Judge(client, "faithfulness/claims")
+    correct = Judge(patient_client(a.correctness_model), "correctness")
+    faithful = None
+    if not a.correctness_only:
+        sel = json.loads(Path(a.faithfulness).read_text())
+        faithful = Judge(patient_client(sel["model"], sel.get("extra_body")), sel["rubric"],
+                         max_tokens=sel.get("max_tokens"))
     questions = load_questions()
     runs = {}
     for name, file in VERSIONS.items():
         rows = load_jsonl_items(RAG_RESULTS / file)
         runs[name] = judge_version(name, rows, questions, correct, faithful)
+        if a.correctness_only:
+            continue
         print(f"saved {runs[name].save(ROOT / 'results')}")
         heuristic_vs_judge(runs[name])
-    print("\n" + compare(runs["v1"], runs["v2"]).to_markdown())
-    print(f"\njudge usage: {json.dumps(vars(client.usage), default=str)[:300]}")
-
+    if not a.correctness_only:
+        print("\n" + compare(runs["v1"], runs["v2"]).to_markdown())
+    print(f"\ncorrectness judge usage: {json.dumps(vars(correct.client.usage), default=str)[:300]}")
 
 if __name__ == "__main__":
     main()

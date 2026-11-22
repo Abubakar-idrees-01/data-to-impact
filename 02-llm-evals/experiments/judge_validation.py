@@ -12,6 +12,7 @@ with `evalkit compare` on the `agree` metric.
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 import time
 from collections import defaultdict
@@ -119,6 +120,7 @@ def run_judge(split: str, cases, rubric: str, model: str | None, effort: str | N
               max_tokens: int | None = None) -> None:
     extra = {"reasoning_effort": effort} if effort else None
     client = ChatClient.from_env(dotenv=ROOT / ".env", cache_dir=ROOT / ".cache" / "llm", extra_body=extra,
+                                 max_wait=900, max_retries=1000,     # free tier: wait out the daily token cap
                                  **({"model": model} if model else {}))
     judge = Judge(client, rubric, max_tokens=max_tokens)
     name = f"{rubric.replace('/', '-')}__{client.model.replace('/', '_')}" + (f"__effort-{effort}" if effort else "")
@@ -148,9 +150,14 @@ def main() -> None:
     p.add_argument("--baselines", action="store_true", help="run the non-LLM detectors instead")
     p.add_argument("--effort", choices=["low", "medium", "high"], help="reasoning_effort for reasoning models")
     p.add_argument("--max-tokens", type=int, help="override the rubric's output budget")
+    p.add_argument("--selected", help="take rubric/model/effort/max_tokens from a select_judge.py file")
     p.add_argument("--limit", type=int)
     a = p.parse_args()
     cases = load_cases(ROOT / "data" / f"ragtruth_{a.split}.jsonl")[: a.limit]
+    if a.selected:
+        sel = json.loads(Path(a.selected).read_text())
+        a.rubric, a.model, a.max_tokens = sel["rubric"], sel["model"], sel.get("max_tokens")
+        a.effort = (sel.get("extra_body") or {}).get("reasoning_effort")
     if a.baselines:
         threshold = tune_lexical(load_cases(ROOT / "data" / "ragtruth_dev.jsonl"))
         run_baselines(a.split, cases, threshold)

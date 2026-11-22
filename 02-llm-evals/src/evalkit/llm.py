@@ -88,9 +88,12 @@ class Usage:
 class ChatClient:
     def __init__(self, base_url: str, model: str, api_key: str = "", timeout: float = 120.0,
                  cache_dir: str | Path | None = ".cache/llm", max_retries: int = 8,
-                 sleep: Callable[[float], None] = time.sleep, extra_body: dict | None = None):
+                 sleep: Callable[[float], None] = time.sleep, extra_body: dict | None = None,
+                 max_wait: float = 65.0):
         """extra_body: provider-specific fields added to every request, e.g. {"reasoning_effort": "low"}
-        for reasoning models (they are part of the cache key)."""
+        for reasoning models (they are part of the cache key).
+        max_wait / max_retries: how patient to be with rate limits. Interactive use: defaults. Long unattended
+        experiments on a free tier's daily cap: e.g. max_wait=900, max_retries=1000 (wait for quota to free up)."""
         self.url = base_url.strip().rstrip("/") + "/chat/completions"
         self.model = model.strip()
         self.api_key = api_key.strip()
@@ -99,6 +102,7 @@ class ChatClient:
         self.max_retries = max_retries
         self.sleep = sleep
         self.extra_body = dict(extra_body or {})
+        self.max_wait = max_wait
         self.usage = Usage()
 
     @classmethod
@@ -165,7 +169,7 @@ class ChatClient:
             except urllib.error.HTTPError as e:
                 text = e.read().decode(errors="replace")
                 if e.code in RETRY_STATUS and attempt < self.max_retries:
-                    wait = retry_wait(e.code, dict(e.headers or {}), text, attempt)
+                    wait = retry_wait(e.code, dict(e.headers or {}), text, attempt, self.max_wait)
                     hint = re.search(r"(on [^:]+?\([A-Z]+\)[^.]*)", text)    # e.g. "on tokens per minute (TPM): Limit 8000, Used ..."
                     log.warning("API %s, waiting %.1f s (attempt %d/%d) %s", e.code, wait, attempt + 1,
                                 self.max_retries, hint.group(1)[:120] if hint else "")
@@ -179,7 +183,7 @@ class ChatClient:
                 raise APIError(f"API error {e.code}: {detail[:300]}") from None
             except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
                 if attempt < self.max_retries:
-                    wait = min(2.0 ** attempt, 30.0)
+                    wait = min(2.0 ** attempt, 60.0)
                     log.warning("network error (%s), retrying in %.0f s", e, wait)
                     self.sleep(wait)
                     continue

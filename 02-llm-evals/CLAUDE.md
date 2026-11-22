@@ -20,7 +20,7 @@ claim in a README ("RAG is 85% faithful", "router saves 60% latency") is backed 
 ## Plan (phases; docs written with each phase)
 1. Dataset format + metrics (text, retrieval, agreement, stats with CIs) ✅
 2. Runs (one JSON per run), compare (paired bootstrap, McNemar, flipped items), gate (TOML thresholds), CLI ✅
-3. LLM client (urllib, retries, disk cache) + judge rubrics (faithfulness, correctness) + lexical baseline
+3. LLM client (urllib, retries, disk cache) + judge rubrics (faithfulness, correctness) + lexical baseline ✅
 4. Judge validation on RAGTruth: dev set for prompt work, held-out test set for the final numbers;
    compare with non-LLM baselines; bias analysis by task / generator model / answer length
 5. StudyRAG as first consumer: import project 1 runs, v1 vs v2 significance, judge vs key-fact heuristic
@@ -31,4 +31,4 @@ claim in a README ("RAG is 85% faithful", "router saves 60% latency") is backed 
 01-rag (retrieval + answers), 04-ai-agent (task success), 05-adaptive-llm (quality vs speed).
 
 ## Status
-Phases 1-2 done (22 tests).
+Phases 1-3 done (33 tests). Groq key copied into 02-llm-evals/.env (EVALKIT_*; gitignored).

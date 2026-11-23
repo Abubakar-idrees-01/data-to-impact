@@ -94,3 +94,19 @@ def test_resources_and_prompts(notes, evals):
     assert "votes of trust" in text.contents[0].text and text.contents[0].text.startswith("# seo")
     assert {p.name for p in prompts.prompts} == {"explain_from_notes", "quiz_me", "revise_document"}
     assert "3 questions ONE AT A TIME" in quiz.messages[0].content.text
+
+
+def test_server_picks_up_files_synced_after_it_started(notes, evals, tmp_path):
+    server = build_server(notes, evals)
+    assert call(server, "list_documents").structured_content["count"] == 2
+    new = tmp_path / "docs" / "ppc.md"
+    new.write_text("# Pay per click\nPay-per-click advertising charges the advertiser each time an ad is clicked.\n")
+    # another process (the StudyRAG app or CLI) syncs the folder: same storage dir, separate Library object
+    from studyrag.library import Library
+    import os, time
+    other = Library(notes.b.settings, notes.b.embedder)
+    other.sync_folder(tmp_path / "docs")
+    manifest = tmp_path / "storage" / "manifest.json"
+    os.utime(manifest, (time.time() + 5, time.time() + 5))      # make the change visible on coarse-mtime filesystems
+    assert call(server, "list_documents").structured_content["count"] == 3
+    assert "Pay per click" in call(server, "search_notes", {"query": "pay per click ads"}).structured_content["passages"][0]["citation"]

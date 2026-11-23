@@ -38,6 +38,7 @@ If activation is blocked: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
 
 ```bash
 pip install -r requirements.txt
+pip install --no-deps -e .     # makes `python -m studyrag ...` and the `studyrag` command work
 ```
 
 `llama-cpp-python` (the local LLM engine) ships as source code and is **compiled on your machine**.

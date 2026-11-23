@@ -9,6 +9,7 @@ and can ask `check_answer` whether each sentence is backed by the passages it ci
 from __future__ import annotations
 
 import threading
+from pathlib import Path
 from dataclasses import dataclass
 from typing import Any
 
@@ -40,6 +41,13 @@ class Notes:
     def __init__(self, backend: Backend | None = None):
         self._backend = backend
         self._lock = threading.Lock()
+        self._index_mtime = self._manifest_mtime() if backend else None
+
+    def _manifest_mtime(self) -> float | None:
+        try:
+            return (Path(self._backend.settings.storage_dir) / "manifest.json").stat().st_mtime
+        except (OSError, AttributeError, TypeError):
+            return None
 
     @property
     def b(self) -> Backend:
@@ -48,7 +56,24 @@ class Notes:
             with self._lock:
                 if self._backend is None:
                     self._backend = load_backend()
+                    self._index_mtime = self._manifest_mtime()
+        # The index is shared with the StudyRAG app and CLI: when they sync new files, reload it (cheap: the
+        # models stay loaded, only the chunks and vectors are read again). A long-running server never goes stale.
+        mtime = self._manifest_mtime()
+        if mtime is not None and mtime != self._index_mtime:
+            with self._lock:
+                if mtime != self._index_mtime:
+                    self._reload_library()
+                    self._index_mtime = mtime
         return self._backend
+
+    def _reload_library(self) -> None:
+        from studyrag.library import Library
+        from studyrag.retrieval import Retriever
+        b = self._backend
+        lib = Library(b.settings, b.embedder)
+        self._backend = Backend(lib, Retriever(lib, b.embedder, b.retriever.reranker, b.settings), b.embedder,
+                                b.settings)
 
     # ------------------------------------------------------------------ helpers
     def _doc(self, name: str):

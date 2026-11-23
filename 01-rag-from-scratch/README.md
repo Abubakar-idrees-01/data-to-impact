@@ -78,6 +78,7 @@ Full walkthrough: **[docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md)**
 cd 01-rag-from-scratch
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip install -r requirements.txt                       # compiles llama.cpp: 5-15 min
+pip install --no-deps -e .                            # the studyrag package + command
 python scripts/download_models.py                     # ~1.5 GB, resumable
 streamlit run app/streamlit_app.py
 ```

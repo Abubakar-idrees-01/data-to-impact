@@ -33,7 +33,9 @@ claim in a README ("RAG is 85% faithful", "router saves 60% latency") is backed 
 ## Status (2026-11-22 16:40)
 - Phases 1-3, 6 (report) and docs done; 36 tests. Docs: README, SETUP, HOW_IT_WORKS, 6 concept notes,
   DECISIONS D1-D13, RESULTS (dev final; test + StudyRAG pending), OVERVIEW, TIMELINE (in progress).
-- RUNNING unattended: `bash experiments/pipeline.sh > logs/pipeline.log` (logs/ dev_qwen.log, dev_gptoss.log).
+- RUNNING unattended. ALWAYS launch detached, or it dies when the Claude Code session ends (lost a night on 11-22):
+  `setsid nohup bash experiments/pipeline.sh > logs/pipeline.log 2>&1 < /dev/null & disown`
+  (logs/ dev_qwen.log, dev_gptoss.log, studyrag_correctness.log). StudyRAG correctness: done, 68/68 cached.
   Groq free tier = 200k tokens/model/day (TPD) -> ~2 days. Owner chose to stay free. Restart is safe (cache).
   Order: dev severity (qwen) + dev severity/direct (gpt-oss-120b, effort low, 2000 tok) + StudyRAG correctness
   (gpt-oss-20b, own quota; TPD is a rolling 24h window, quota used 14-16h on 11-22 frees ~14h on 11-23)

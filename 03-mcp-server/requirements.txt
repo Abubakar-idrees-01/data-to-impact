@@ -1,0 +1,17 @@
+# The MCP server (pinned to the versions it was tested with)
+mcp==2.3.0
+mcp-types==2.3.0
+pydantic==2.14.4
+
+# StudyRAG's search stack (project 1), without its local LLM and web UI
+fastembed==0.9.1
+httpx==0.28.1
+numpy==2.5.5
+pypdf==7.1.1
+python-docx==1.2.0
+python-pptx==1.0.2
+rapidocr==3.10.0
+
+# The sibling projects, editable (evalkit has no dependencies)
+-e ../01-rag-from-scratch --no-deps
+-e ../02-llm-evals

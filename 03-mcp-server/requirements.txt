@@ -12,6 +12,6 @@ python-docx==1.2.0
 python-pptx==1.0.2
 rapidocr==3.10.0
 
-# The sibling projects, editable (evalkit has no dependencies)
--e ../01-rag-from-scratch --no-deps
+# The sibling projects, editable (neither package declares dependencies of its own)
+-e ../01-rag-from-scratch
 -e ../02-llm-evals

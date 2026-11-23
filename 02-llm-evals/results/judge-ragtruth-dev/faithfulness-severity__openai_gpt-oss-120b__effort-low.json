@@ -1,0 +1,1543 @@
+{
+ "suite": "judge-ragtruth-dev",
+ "name": "faithfulness-severity__openai_gpt-oss-120b__effort-low",
+ "items": [
+  {
+   "id": "rt13697",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 57,
+   "pred": false,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Blue: Representation of the United Kingdom's colors, symbolizing the country's history and heritage.",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "The source mentions the colors tie to the United Kingdom, but does not state that blue specifically symbolizes the country's history and heritage."
+    }
+   ]
+  },
+  {
+   "id": "rt1162",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 107,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "other motorists heard the sound of the impending collapse and managed to escape before the concrete fell",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source does not state that other motorists escaped before the concrete fell; it only says they heard the crackle."
+    },
+    {
+     "quote": "The incident occurred on Monday, and by Tuesday afternoon, authorities had removed enough debris to discover the death toll.",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "Source says it took nine hours Monday to remove enough debris to discover the death toll, not that it was done by Tuesday afternoon."
+    }
+   ]
+  },
+  {
+   "id": "rt10394",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 185,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Customers can park their vehicles on the street or use valet parking services.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source indicates valet parking is false; no valet service is offered."
+    },
+    {
+     "quote": "The restaurant has outdoor seating available, as well as WiFi connectivity.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "WiFi field is null in source, so connectivity is not confirmed."
+    }
+   ]
+  },
+  {
+   "id": "rt16574",
+   "gold": false,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 70,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt6476",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 125,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "takeout and good options for groups are available.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source indicates RestaurantsGoodForGroups is false, so claiming good options for groups is unsupported."
+    },
+    {
+     "quote": "The ambiance of the restaurant is described as trendy and upscale",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "Source lists all ambience attributes as false except casual true; no mention of trendy or upscale."
+    }
+   ]
+  },
+  {
+   "id": "rt1333",
+   "gold": true,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 246,
+   "pred": false,
+   "agree": 0.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13671",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 219,
+   "pred": false,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "While there is no specific action prescribed in sharee’ah for preparing to welcome a new baby a day or two before delivery (passage 2), you can recite general du’aa’s for the newborn, such as praying for their safety and guidance.",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "The claim about the lack of prescribed action and the suggestion to recite du’aa’s is found in passage 1, not passage 2; the response misattributes the source."
+    }
+   ]
+  },
+  {
+   "id": "rt17264",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Subtle Conflict"
+   ],
+   "response_words": 246,
+   "pred": false,
+   "agree": 0.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt11574",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 132,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt7885",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 215,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Aperitivo is recommended for date nights due to its cozy and intimate setting with an open kitchen.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source reviews do not mention an open kitchen or describe the venue as cozy and intimate."
+    }
+   ]
+  },
+  {
+   "id": "rt17240",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 98,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "If you are unable to access Apple Music Radio on your iPhone, make sure that you have updated your device to the latest version of iOS. Additionally, ensure that your Apple Music subscription is active.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source does not mention iOS updates or the need for an active Apple Music subscription."
+    }
+   ]
+  },
+  {
+   "id": "rt8723",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 182,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Overall, the restaurant seems to have mixed reviews, but it is still open for business and offers convenient takeout services.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source does not state whether the restaurant is currently open; two reviews claim it was closed."
+    }
+   ]
+  },
+  {
+   "id": "rt10195",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 184,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt12064",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 76,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "the flow rate of the fluid also play a role in regulating the reabsorption process.",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source mentions concentration affecting reabsorption but does not mention flow rate."
+    }
+   ]
+  },
+  {
+   "id": "rt10482",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 115,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt112",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 90,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Don McLean's iconic song \"American Pie\" has sold for $1.2 million at auction, 44 years after its release.",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "Source says the manuscript sold for $1.2 million and that the song is 44 years old, not that it sold 44 years after its release."
+    },
+    {
+     "quote": "The song, which has become an essential part of American culture, is a poignant reflection on the loss of innocence and the changing times of the 1950s and 60s.",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source does not explicitly describe the song as a \"poignant reflection on the loss of innocence and the changing times of the 1950s and 60s\"."
+    },
+    {
+     "quote": "The song's enduring popularity is a testament to its timeless themes and McLean's skill as a songwriter and performer.",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source does not state that the song's popularity is a testament to McLean's skill; this is an evaluative claim not present in the source."
+    }
+   ]
+  },
+  {
+   "id": "rt16953",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 291,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Season the roast with salt and pepper.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source passages do not mention seasoning with salt and pepper."
+    },
+    {
+     "quote": "Let the roast rest for 10-15 minutes before slicing and serving.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source passages do not include any instruction about resting the roast after cooking."
+    }
+   ]
+  },
+  {
+   "id": "rt1068",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 131,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Vin Diesel has predicted that his latest film will win an Oscar for Best Picture, due to its ethnic diversity.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source reports Diesel predicted a win but does not attribute the prediction to the film's ethnic diversity."
+    }
+   ]
+  },
+  {
+   "id": "rt794",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 108,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The city's police chief and mayor have called for an independent investigation into the case.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source does not state that the police chief or mayor called for an independent investigation."
+    },
+    {
+     "quote": "The shooting has sparked protests in the city, calling for justice for Scott and accountability for police brutality.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source makes no mention of any protests."
+    }
+   ]
+  },
+  {
+   "id": "rt11810",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 110,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The ambiance of the restaurant is described as casual",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source lists all ambience attributes as false; no indication of a casual ambiance."
+    },
+    {
+     "quote": "some customers have expressed frustration with the lack of business hours",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source shows hours as null; no mention of frustration about business hours."
+    },
+    {
+     "quote": "the closure of the restaurant",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Only one review mentions it being closed; source does not state the restaurant is closed overall."
+    }
+   ]
+  },
+  {
+   "id": "rt3946",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 66,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Eric's doctor fears he's dying",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source says doctor is afraid to confirm, not that he fears Eric is dying"
+    },
+    {
+     "quote": "Donna begs him to tell his family",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "Source states Donna asks the doctor if Eric is dying; she does not beg Eric to tell his family"
+    },
+    {
+     "quote": "Fans speculate if Eric is dying, with some believing he will pass away after the show.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source only asks fans if Eric is dying; it does not mention any fans believing he will die after the show"
+    }
+   ]
+  },
+  {
+   "id": "rt17097",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 164,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Create an easy graduation cap card with a pocket to hold a gift card or money. You can decorate the card with school colors and fill it with treats like candy or small toys for electronics.",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source mentions a cap card with a pocket and treats, but does not specify decorating the card with school colors or filling it with small toys for electronics."
+    },
+    {
+     "quote": "If the graduate is college-bound, fill a large container with items they can use in a dorm or apartment, such as a gift card, snacks, or personal care items. You can also decorate the container with school colors or a personalized message.",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source mentions filling a can with dorm-use items and adding a gift card or cash, but does not mention snacks, personal care items, or decorating the container with school colors or a personalized message."
+    },
+    {
+     "quote": "Unable to answer based on given passages. The passages do not provide specific instructions or recommendations for making kids' graduation gifts.",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "The response earlier provides specific instructions, contradicting the claim that the passages do not provide such information."
+    }
+   ]
+  },
+  {
+   "id": "rt14127",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 174,
+   "pred": false,
+   "agree": 0.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt5305",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 115,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt8538",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 128,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13882",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 189,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 6,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Vitamin C: found in citrus fruits, berries, and leafy greens, it helps to boost the immune system and protect against infection.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source does not mention specific food sources for vitamin C nor its role in immune health."
+    },
+    {
+     "quote": "Vitamin E: found in nuts, seeds, and vegetable oils, it helps to protect cells from damage and support the immune system.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source does not provide these food sources or describe immune benefits of vitamin E."
+    },
+    {
+     "quote": "Zinc: found in oysters, beef, and fortified cereals, it plays a crucial role in activating the body's immune cells and fighting off infections.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source lists zinc as a mineral but gives no food sources or immune function details."
+    },
+    {
+     "quote": "Selenium: found in Brazil nuts, fish, and turkey, it acts as an antioxidant and helps to protect cells from damage.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source mentions selenium as a mineral but does not specify foods or antioxidant role."
+    },
+    {
+     "quote": "Manganese: found in spinach, pumpkin seeds, and almonds, it supports the immune system and helps to fight off harmful bacteria.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source lists manganese as a mineral without food sources or immune function claims."
+    },
+    {
+     "quote": "Copper: found in shellfish, beef liver, and lentils, it plays a role in the production of white blood cells, which help to fight off infections.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source includes copper as a mineral but does not provide these food sources or describe its role in white blood cell production."
+    }
+   ]
+  },
+  {
+   "id": "rt9336",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 133,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt12367",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 57,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt10621",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 247,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt3373",
+   "gold": true,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 143,
+   "pred": false,
+   "agree": 0.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt12781",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 105,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13427",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 100,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "allows employees to choose from a variety of benefits, such as health insurance, life insurance, and retirement plans",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source only mentions health insurance; life insurance and retirement plans are not stated."
+    },
+    {
+     "quote": "The name \"cafeteria\" comes from the idea that employees can pick and choose their benefits like they would pick food from a cafeteria menu.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source does not explain the origin of the term \"cafeteria\"."
+    }
+   ]
+  },
+  {
+   "id": "rt8722",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 146,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The menu includes Mexican dishes such as sopes, tacos, burritos, and quesadillas.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source only mentions sopes, chips, and salsa; tacos, burritos, and quesadillas are not listed in the provided data."
+    }
+   ]
+  },
+  {
+   "id": "rt7931",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 151,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "menu offers a variety of options, including chilaquiles, omelets, pancakes, and sandwiches",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Pancakes and sandwiches are not mentioned in the source data or reviews"
+    },
+    {
+     "quote": "the restaurant is open for breakfast, lunch, and dinner",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source lists hours but does not specify meal periods such as dinner"
+    },
+    {
+     "quote": "the restaurant offers ... wheelchair accessible",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "No information about wheelchair accessibility is provided in the source"
+    }
+   ]
+  },
+  {
+   "id": "rt10771",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 185,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt3506",
+   "gold": false,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 110,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt9634",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 127,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "open Monday to Sunday from 11:30am to 23:00pm",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "Hours differ; Monday‑Thursday close at 22:00, not 23:00"
+    },
+    {
+     "quote": "The restaurant has a garage parking lot but no validated parking, street parking, or valet service.",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "Source shows garage parking is false and street parking is true"
+    },
+    {
+     "quote": "The restaurant accepts credit cards and has a menu available online.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "No information about credit‑card acceptance or online menu is provided in the source"
+    }
+   ]
+  },
+  {
+   "id": "rt15766",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 94,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "However, it's important to note that these symptoms can also be caused by other conditions, and only a qualified medical professional can accurately diagnose leukemia based on a comprehensive evaluation.",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "The source does not mention the need for professional diagnosis or that symptoms may be caused by other conditions."
+    }
+   ]
+  },
+  {
+   "id": "rt2589",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 72,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "BFMTV maintains that it only mentioned the location of a single hostage on the basis of police sources, and did not intentionally endanger anyone's safety.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source states BFMTV said it mentioned the location once and regretted any concern, but does not claim BFMTV asserted it did not intentionally endanger anyone."
+    }
+   ]
+  },
+  {
+   "id": "rt3174",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 78,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt1723",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 147,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13083",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 195,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 6,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Bradykinesia: Slowness of movement, including a reduced arm swing on one side when walking.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source mentions reduced arm swing but does not label it as bradykinesia or describe slowness of movement."
+    },
+    {
+     "quote": "Fatigue: Feeling tired or weak, which can interfere with daily activities.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source does not mention fatigue as a symptom."
+    },
+    {
+     "quote": "Difficulty with coordination and balance: Trouble performing smooth and coordinated movements, such as walking, dressing, or using utensils.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source does not mention coordination or balance problems."
+    },
+    {
+     "quote": "Difficulty with swallowing: Trouble swallowing food, liquids, or medications, which can lead to choking or pneumonia.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source does not mention swallowing difficulties."
+    },
+    {
+     "quote": "Urinary problems: Difficulty starting or stopping urination, or leaking of urine.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source does not mention urinary problems."
+    },
+    {
+     "quote": "Sexual dysfunction: Decreased sexual desire or ability, due to the disease itself or its treatment.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source does not mention sexual dysfunction."
+    }
+   ]
+  },
+  {
+   "id": "rt2396",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 98,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "completed the 2018 Boston Marathon",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source does not specify the year of the marathon; adding '2018' is not supported."
+    }
+   ]
+  },
+  {
+   "id": "rt17345",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 217,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "You should now be able to copy the cell contents you want to lock, but unable to paste them anywhere else on the worksheet.",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "Source states you can paste copied contents in any unlocked cell, not that pasting is prevented everywhere."
+    },
+    {
+     "quote": "After doing these steps, the cells you selected will be locked and cannot be copied or pasted anywhere else on the worksheet.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source does not say locked cells cannot be copied; it only restricts pasting into unlocked cells."
+    }
+   ]
+  },
+  {
+   "id": "rt5367",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 85,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt10276",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 153,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 2,
+   "error": null,
+   "problems": [
+    {
+     "quote": "with outdoor seating and WiFi available.",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "Source lists WiFi as \"no\", indicating no WiFi available."
+    },
+    {
+     "quote": "The business has a casual and relaxed atmosphere",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source ambience marks \"casual\": false and does not describe the atmosphere as casual or relaxed."
+    }
+   ]
+  },
+  {
+   "id": "rt3483",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 134,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 4,
+   "error": null,
+   "problems": [
+    {
+     "quote": "which he had previously fought and beaten as a teenager",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source says remission at age 20, not as a teenager"
+    },
+    {
+     "quote": "he is currently undergoing chemotherapy as part of a clinical trial",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "Source says he was ineligible for a trial and is on generalized chemotherapy"
+    },
+    {
+     "quote": "a highly aggressive form of brain cancer that had spread to her spine",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "Source describes the tumor as lodged in the spine, not spread from brain"
+    },
+    {
+     "quote": "She has started a blog to document her journey and raise money for her medical expenses, and has also become an advocate for cancer research",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source makes no mention of a blog or advocacy activities"
+    }
+   ]
+  },
+  {
+   "id": "rt4814",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 109,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "The new tribes will be formed based on the castaways' reactions to the change.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source does not state how the new tribes are formed; this is an added claim."
+    },
+    {
+     "quote": "Some people are excited about the changes, while others are scared.",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source does not mention any reactions or emotions of people."
+    },
+    {
+     "quote": "The next episode will reveal the final four players.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source does not say the next episode will reveal the final four; it only describes the episode synopsis."
+    }
+   ]
+  },
+  {
+   "id": "rt13404",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 87,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Symptoms of jaw and eye pain could be indicative of TMJ conditions.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source does not state that jaw pain indicates TMJ conditions; it only describes eye symptoms as indicators of TMJ."
+    }
+   ]
+  },
+  {
+   "id": "rt5366",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 64,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "In an attempt to prove herself, Sheila accepts a job as a bartender.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source says Deacon offers Sheila a bartender job; it does not state that she accepts it."
+    }
+   ]
+  },
+  {
+   "id": "rt5627",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 85,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Rivera has pleaded not guilty to both cases",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "The source states Rivera pleaded Not Guilty to the reduced charge in the earlier case, but does not specify his plea in the new shoplifting case."
+    }
+   ]
+  },
+  {
+   "id": "rt11177",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 102,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 5,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Located in downtown Santa Barbara",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source gives address but does not state the business is in downtown."
+    },
+    {
+     "quote": "offers a unique combination of fresh seafood market and restaurant",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source lists categories including seafood market and restaurant, but does not explicitly describe it as a unique combination."
+    },
+    {
+     "quote": "high-quality and delicious meals at reasonable prices",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source does not provide any information about price level or quality judgments."
+    },
+    {
+     "quote": "seasoned steak fries",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "One review mentions seasoned steak fries, but the response presents it as a menu item without source confirmation of it being on the menu."
+    },
+    {
+     "quote": "Overall, Kanaloa Seafood receives a rating of 4.0 stars",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source gives business_stars 4.0, so this is supported; however, phrasing as 'receives a rating' is a summary, not a contradiction."
+    }
+   ]
+  },
+  {
+   "id": "rt13201",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 57,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt13993",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 102,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt17263",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 249,
+   "pred": true,
+   "agree": 0.0,
+   "n_problems": 1,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Note: The passages do not mention using a wrench, so it is assumed that a wrench can be used to loosen the nut.",
+     "type": "contradiction",
+     "severity": "major",
+     "why": "Passage 1 explicitly mentions using a wrench to loosen the nut (Step 6). The response incorrectly claims the passages do not mention a wrench."
+    }
+   ]
+  },
+  {
+   "id": "rt1873",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 141,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 0,
+   "error": null,
+   "problems": []
+  },
+  {
+   "id": "rt6707",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 113,
+   "pred": false,
+   "agree": 1.0,
+   "n_problems": 4,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Shintori Sushi Factory is a popular Japanese restaurant",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Popularity is not mentioned in the source data."
+    },
+    {
+     "quote": "The atmosphere is casual and welcoming",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source lists \"casual\" but does not describe the atmosphere as \"welcoming\"."
+    },
+    {
+     "quote": "making it a great spot for both date nights and family dinners",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "The source provides no information about suitability for date nights or family dinners."
+    },
+    {
+     "quote": "fusion dishes can be hit or miss",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "Source includes one negative review but does not characterize overall fusion dishes as \"hit or miss\"."
+    }
+   ]
+  },
+  {
+   "id": "rt10173",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 118,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "While the business has received mixed reviews, the majority of customers have expressed disappointment with the quality of their products, particularly their ice cream which has been described as stale.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source contains only three 1-star reviews, all negative; there is no indication of mixed reviews or a majority expressing disappointment, only one mention of stale ice cream."
+    },
+    {
+     "quote": "Some customers have also criticized the business for laying off long-time employees after a recent merger.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source mentions layoffs but does not mention a merger; adding 'after a recent merger' is not supported."
+    },
+    {
+     "quote": "Despite this, Haggen remains popular among locals and visitors alike, with many rating it as their go-to destination for groceries and other essentials.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source provides a low overall rating (1.5 stars) and only negative reviews; there is no evidence of popularity or being a go-to destination."
+    }
+   ]
+  },
+  {
+   "id": "rt8272",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 208,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 4,
+   "error": null,
+   "problems": [
+    {
+     "quote": "Merci To Go is a popular food establishment located at the Montecito Country Mart in Santa Barbara, California.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source gives the address as 1024 Coast Village Rd; it does not state the business is at Montecito Country Mart."
+    },
+    {
+     "quote": "It is open Tuesday through Saturday from 11:00 am to 5:00 pm, with extended hours during the summer.",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "The source lists hours as 11:00‑18:00 on weekdays and 11:00‑17:00 on Saturday; the response incorrectly states a 5:00 pm closing and adds unmentioned \"extended hours during the summer\"."
+    },
+    {
+     "quote": "including their famous purple worms (according to one review).",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "The review mentions \"purple worms\" but does not confirm they are a menu item or that they are famous."
+    },
+    {
+     "quote": "masks are currently required due to the COVID-19 pandemic",
+     "type": "unsupported",
+     "severity": "minor",
+     "why": "The source notes masks were required at the time of the review, not that they are currently required."
+    }
+   ]
+  },
+  {
+   "id": "rt2307",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict",
+    "Subtle Conflict"
+   ],
+   "response_words": 132,
+   "pred": true,
+   "agree": 1.0,
+   "n_problems": 3,
+   "error": null,
+   "problems": [
+    {
+     "quote": "the rate of heavy drinking among women increased by 17.2% during this period",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source states overall heavy drinking rose 17.2%, not specifically women’s rate"
+    },
+    {
+     "quote": "while the rate among men increased by 23%",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Source does not provide a 23% increase for men"
+    },
+    {
+     "quote": "women experiencing a 36% increase in binge drinking rates compared to a 23% increase among men",
+     "type": "unsupported",
+     "severity": "major",
+     "why": "Those percentages refer to Santa Clara County, not nationwide, and the source does not give a 23% national increase for men"
+    }
+   ]
+  }
+ ],
+ "metrics": {
+  "agree": {
+   "value": 0.7666666666666667,
+   "ci_low": 0.6456348865960799,
+   "ci_high": 0.8556056838156894,
+   "n": 60
+  },
+  "n_errors": {
+   "value": 0.0,
+   "n": 60
+  },
+  "kappa": {
+   "value": 0.5333333333333334,
+   "n": 60
+  },
+  "kappa_ci_low": {
+   "value": 0.31266495973290614,
+   "n": 60
+  },
+  "kappa_ci_high": {
+   "value": 0.7324414715719064,
+   "n": 60
+  },
+  "f1": {
+   "value": 0.7741935483870969,
+   "n": 60
+  },
+  "f1_ci_low": {
+   "value": 0.6530612244897959,
+   "n": 60
+  },
+  "f1_ci_high": {
+   "value": 0.875,
+   "n": 60
+  },
+  "precision": {
+   "value": 0.75,
+   "n": 60
+  },
+  "precision_ci_low": {
+   "value": 0.6,
+   "n": 60
+  },
+  "precision_ci_high": {
+   "value": 0.8890350877192981,
+   "n": 60
+  },
+  "recall": {
+   "value": 0.8,
+   "n": 60
+  },
+  "recall_ci_low": {
+   "value": 0.6551392572944297,
+   "n": 60
+  },
+  "recall_ci_high": {
+   "value": 0.9333333333333333,
+   "n": 60
+  },
+  "balanced_accuracy": {
+   "value": 0.7666666666666666,
+   "n": 60
+  },
+  "balanced_accuracy_ci_low": {
+   "value": 0.6570863395863396,
+   "n": 60
+  },
+  "balanced_accuracy_ci_high": {
+   "value": 0.8665183537263625,
+   "n": 60
+  },
+  "accuracy": {
+   "value": 0.7666666666666667,
+   "n": 60
+  },
+  "accuracy_ci_low": {
+   "value": 0.66625,
+   "n": 60
+  },
+  "accuracy_ci_high": {
+   "value": 0.8666666666666667,
+   "n": 60
+  },
+  "tp": {
+   "value": 24.0,
+   "n": 60
+  },
+  "fp": {
+   "value": 8.0,
+   "n": 60
+  },
+  "fn": {
+   "value": 6.0,
+   "n": 60
+  },
+  "tn": {
+   "value": 22.0,
+   "n": 60
+  }
+ },
+ "config": {
+  "rubric": "faithfulness/severity@1",
+  "model": "openai/gpt-oss-120b",
+  "extra_body": {
+   "reasoning_effort": "low"
+  },
+  "max_tokens": 2000,
+  "usage": {
+   "calls": 47,
+   "cache_hits": 13,
+   "prompt_tokens": 56587,
+   "completion_tokens": 16149,
+   "seconds": 491.8778808116913,
+   "waits": 44
+  }
+ },
+ "env": {
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_count": 4,
+  "git_commit": "37a2c50",
+  "git_dirty": false
+ },
+ "created": "2026-11-23T10:57:56+00:00"
+}

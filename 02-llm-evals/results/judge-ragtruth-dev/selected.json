@@ -1,0 +1,14 @@
+{
+ "name": "faithfulness-direct__qwen_qwen3.8-27b",
+ "rubric": "faithfulness/direct",
+ "model": "qwen/qwen3.8-27b",
+ "extra_body": null,
+ "max_tokens": null,
+ "kappa": 0.6333333333333333,
+ "kappa_ci_low": 0.4373958333333332,
+ "f1": 0.835820895522388,
+ "coverage": 1.0,
+ "n": 60,
+ "tokens": 60692,
+ "rule": " (written down before the dev runs finished):\n1. Only LLM-judge runs on the dev split, with verdicts on at least 95% of cases (a judge that often fails to\n   answer is not usable, whatever its kappa on the rest).\n2. Highest Cohen's kappa with the human labels.\n3. Tie (kappa within 0.02): the higher lower bound of the 95% CI, then the cheaper configuration (fewer tokens)."
+}

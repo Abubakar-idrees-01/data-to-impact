@@ -21,7 +21,9 @@ pytestmark = pytest.mark.skipif(not (SAMPLE_INDEX / "manifest.json").exists() or
 
 def test_real_server_over_stdio():
     async def run():
-        env = {**os.environ, "STUDYRAG_STORAGE_DIR": str(SAMPLE_INDEX), "PYTHONPATH": os.pathsep.join(sys.path)}
+        # No PYTHONPATH: the server must start the way a real client launches it (the package must be installed;
+        # an earlier version of this test passed sys.path along and hid exactly that bug).
+        env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"} | {"STUDYRAG_STORAGE_DIR": str(SAMPLE_INDEX)}
         params = StdioServerParameters(command=sys.executable, args=["-m", "studyrag_mcp"], env=env)
         async with Client(params, read_timeout_seconds=180) as c:
             init_tools = await c.list_tools()

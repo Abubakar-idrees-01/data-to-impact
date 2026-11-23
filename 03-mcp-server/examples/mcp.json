@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "studyrag": {
+      "type": "stdio",
+      "command": "/ABSOLUTE/PATH/TO/03-mcp-server/.venv/bin/python",
+      "args": ["-m", "studyrag_mcp"],
+      "env": {
+        "STUDYRAG_STORAGE_DIR": "/optional/path/to/a/studyrag/index"
+      }
+    }
+  }
+}

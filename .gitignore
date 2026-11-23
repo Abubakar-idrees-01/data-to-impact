@@ -68,3 +68,6 @@ desktop.ini
 
 # eval scratch indexes
 **/eval/.cache/
+
+# ---- Local MCP client config (machine-specific paths) ----
+.mcp.json

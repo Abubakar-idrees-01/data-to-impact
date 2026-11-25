@@ -63,3 +63,9 @@ follow.
 ## E4. Claim support in digest notes
 *Running.* 8 notes per model; each claim judged against the snippets and passages the agent actually saw, with
 project 2's validated judge, plus a number-swap probe of the judge.
+
+First observation (gpt-oss-20b, run 2, topic "evaluating LLM applications"): the model settled on "AgentBoard", a
+name it most likely knew from memory, and attributed it to an unrelated arXiv paper on schema-validated workflows.
+`write_note` refused the draft because only one read source backed it; four more searches found no second one and
+the budget ran out. The note was never written. This is the two-source rule (D8) doing its job, and it counts as a
+failed digest in E4's *written* rate.

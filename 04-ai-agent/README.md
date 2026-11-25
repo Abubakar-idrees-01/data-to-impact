@@ -15,6 +15,8 @@ every model call, tool call, result and token, including the runs that failed an
 
 [![Trace viewer](docs/images/trace-viewer.png)](https://abubakar-idrees-01.github.io/data-to-impact/scout/)
 
+**PDFs:** [Overview](docs/pdf/Scout-Overview.pdf) · [Timeline](docs/pdf/Scout-Timeline.pdf) · [Setup](docs/pdf/Scout-Setup-Guide.pdf) · [How it works](docs/pdf/Scout-How-It-Works.pdf) · [Results](docs/pdf/Scout-Results.pdf) · [Decisions](docs/pdf/Scout-Design-Decisions.pdf) · [Concepts](docs/pdf/Scout-Concepts-Handbook.pdf)
+
 ## What it does
 A real run (answer shortened):
 ```
@@ -68,6 +70,7 @@ Full guide (keys, settings, daily timer, evaluations, troubleshooting): **[docs/
 ## Documentation
 | | |
 |---|---|
+| [Overview](docs/OVERVIEW.md) | Scout in one page |
 | [How it works](docs/HOW_IT_WORKS.md) | Architecture and one digest end to end |
 | [Results](docs/RESULTS.md) | Research accuracy, prompt injection, checkup accuracy, claim support, cost |
 | [Design decisions](docs/DECISIONS.md) | Why each choice, with what we measured |
@@ -80,7 +83,7 @@ src/scout/    agent.py (loop) · llm.py · tools.py (registry + approval gate) �
               web.py · mcp_tools.py · repo.py · changes.py · routines.py · memory.py · cli.py
 tests/        47 tests: scripted model, fake internet, throwaway git repos
 experiments/  simpleqa.py (E1) · injection.py (E2) · checkup_eval.py (E3) · digest_eval.py (E4) · pipelines
-scripts/      build_site.py (trace viewer) · get_data.sh · install_timer.sh
+scripts/      build_site.py (trace viewer) · build_pdfs.py · get_data.sh · install_timer.sh
 site/         the trace viewer (GitHub Pages)
 ```
 

@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
-from .agent import Agent, RunResult
+from .agent import Agent, RunResult, normalize_citations
 from .approval import Approver
 from .changes import ChangeSet, edit_tools, slugify
 from .config import Settings
@@ -47,10 +47,12 @@ class RoutineResult:
     pending_path: str | None = None
 
 
-def _agent(settings: Settings, registry: Registry, llm: LLM | None, on_event, max_steps: int | None = None) -> Agent:
+def _agent(settings: Settings, registry: Registry, llm: LLM | None, on_event, max_steps: int | None = None,
+           token_budget: int | None = None) -> Agent:
     return Agent(llm or LLM.from_settings(settings), registry, max_steps=max_steps or settings.max_steps,
-                 token_budget=settings.token_budget, max_tokens_per_call=settings.max_tokens_per_call,
-                 traces_dir=settings.traces_dir, on_event=on_event)
+                 token_budget=token_budget or settings.token_budget, max_tokens_per_call=settings.max_tokens_per_call,
+                 traces_dir=settings.traces_dir, on_event=on_event,
+                 context_limit=settings.context_limit)
 
 
 def repo_root_of(path: Path) -> Path:
@@ -80,10 +82,14 @@ async def _finish(cs: ChangeSet, settings: Settings, approver: Approver, prepare
 # ------------------------------------------------------------------ digest
 DIGEST_TASK = """Write today's learning-log note for me.
 
-1. Pick ONE specific, recent development (ideally from the last few months) in one of these areas: {topics}.
+Today is {today}. "Recent" means published after {since}. Don't put a year in search queries unless a source
+gave it to you, and take every date in the note from a source, never from memory.
+
+1. Pick ONE specific, recent development in one of these areas: {topics}.
    Not something earlier notes covered. Earlier notes: {recent}.
-2. Research it: search, then read at least two sources (web_read) to check the facts. Prefer primary sources
-   (official docs, papers, release notes, the authors' blog) over news summaries.
+2. Research it: search, then read at least two different sources (web_read) to check the facts. Searches look at
+   primary sources first (papers, code, official docs and blogs); prefer those over secondary write-ups.
+   Pick something concrete: a paper, a release, a spec change, a tool, not a general trend.
 3. Call write_note exactly once, with a specific title (not "Recent advances in RAG") and a markdown body
    with these sections:
    ## What happened   (2-4 sentences)
@@ -98,6 +104,7 @@ def digest_tools(cs: ChangeSet, web: Web, journal_dir: Path, today: date, repo_r
     rel_dir = journal_dir.resolve().relative_to(repo_root).as_posix()
 
     def write_note(title: str, body: str) -> dict:
+        body = normalize_citations(body)
         if any(c.path.endswith(".md") and c.path != f"{rel_dir}/README.md" for c in cs.changes):
             raise ToolError("a note was already written in this task; reply with its title")
         nums = {int(n) for n in re.findall(r"\[(\d+)\]", body)}
@@ -109,6 +116,9 @@ def digest_tools(cs: ChangeSet, web: Web, journal_dir: Path, today: date, repo_r
             raise ToolError(f"you cited {unread} without reading them; web_read them first or remove those claims")
         if not nums:
             raise ToolError("the note has no citations; cite the sources you read as [n]")
+        if len(nums) < 2:
+            raise ToolError("cite at least two different sources you read (a second source confirms the facts); "
+                            "search for and read another one, ideally a primary source")
         body = re.sub(r"\n#+\s*Sources\b.*", "", body.strip(), flags=re.S | re.I)   # we add our own list
         sources = "\n".join(f"{s.n}. [{s.title or s.url}]({s.url})" for s in web.book.sources if s.n in nums)
         title = title.strip().strip("#").strip()
@@ -140,7 +150,8 @@ async def digest(settings: Settings, approver: Approver, *, topic: str | None = 
     today = today or date.today()
     memory = Memory(settings.memory_path)
     repo_root = repo_root_of(settings.journal_dir)
-    web = web or Web(settings.tavily_key, page_chars=settings.page_chars)
+    web = web or Web(settings.tavily_key, page_chars=settings.page_chars, time_range="month",
+                     domains=settings.digest_domains or None)
     cs = ChangeSet(str(repo_root), kind="digest")
     registry = Registry(approver).add(*web.tools(), *digest_tools(cs, web, settings.journal_dir, today, repo_root))
     recent = [e["title"] for e in memory.recent("digest", 30) if e.get("title")]
@@ -148,9 +159,12 @@ async def digest(settings: Settings, approver: Approver, *, topic: str | None = 
     index = settings.journal_dir / "README.md"
     if index.exists():
         recent += re.findall(r"^- [\d-]+ · \[([^\]]+)\]", index.read_text(encoding="utf-8"), flags=re.M)
-    task = DIGEST_TASK.format(topics="; ".join([topic] if topic else settings.topics),
+    since = date.fromordinal(today.toordinal() - 92).strftime("%B %Y")
+    task = DIGEST_TASK.format(today=today.strftime("%d %B %Y"), since=since,
+                              topics="; ".join([topic] if topic else settings.topics),
                               recent="; ".join(dict.fromkeys(recent)) or "none yet")
-    run = await _agent(settings, registry, llm, on_event, max_steps=max(settings.max_steps, 10)).run(task)
+    run = await _agent(settings, registry, llm, on_event, max_steps=max(settings.max_steps, 12),
+                       token_budget=max(settings.token_budget, 60_000)).run(task)
     title = cs.message.removeprefix("Learning log: ")
     if not cs.changes:
         memory.record("digest", status="failed", reason=run.answer[:300], tokens=run.total_tokens)
@@ -187,7 +201,8 @@ async def checkup(settings: Settings, approver: Approver, *, focus: str = "", ma
     links = repo.check_links()["broken"]
     task = CHECKUP_TASK.format(links=", ".join(f"{b['file']}:{b['line']} -> {b['link']}" for b in links) or "none",
                                focus=f"Focus on: {focus}\n" if focus else "", max_fixes=max_fixes)
-    run = await _agent(settings, registry, llm, on_event, max_steps=max(settings.max_steps, 12)).run(task)
+    run = await _agent(settings, registry, llm, on_event, max_steps=max(settings.max_steps, 12),
+                       token_budget=max(settings.token_budget, 60_000)).run(task)
     if cs.changes:
         reasons = [c.reason for c in cs.changes if c.reason]
         first = reasons[0] if reasons else "small fixes"

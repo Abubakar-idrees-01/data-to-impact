@@ -21,7 +21,8 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .llm import LLM, LLMError
+from .context import ContextWindow
+from .llm import LLM, LLMError, Reply
 from .tools import Registry
 
 SYSTEM_PROMPT = """You are Scout, a careful research and developer assistant working for one person.
@@ -44,6 +45,9 @@ def normalize_citations(text: str) -> str:
     """Turn model-specific citation marks into our [n] form."""
     return _NATIVE_CITE.sub(lambda m: f"[{m.group(1)}]", text)
 
+
+BUDGET_WARNING = ("(Note: this task has almost used its budget. Finish now: complete the required tool call "
+                  "if there is one, then give your final answer.)")
 
 FINALIZE = ("You have used your step budget. Write your final answer now from the information you already have, "
             "citing sources by number. If something is still unknown, say what.")
@@ -76,7 +80,7 @@ class RunResult:
 class Agent:
     def __init__(self, llm: LLM, registry: Registry, *, system_prompt: str = SYSTEM_PROMPT, max_steps: int = 8,
                  token_budget: int = 40_000, max_tokens_per_call: int = 2048, traces_dir: str | Path | None = None,
-                 on_event=None):
+                 on_event=None, context_limit: int | None = None):
         self.llm = llm
         self.registry = registry
         self.system_prompt = system_prompt
@@ -85,6 +89,27 @@ class Agent:
         self.max_tokens_per_call = max_tokens_per_call
         self.traces_dir = Path(traces_dir) if traces_dir else None
         self.on_event = on_event          # callback(event dict) for live progress in the CLI
+        self.context_limit = context_limit  # max tokens per request (prompt + max_tokens); None = no limit
+
+    async def _chat(self, result: "RunResult", messages: list[dict], tools: list[dict] | None) -> Reply:
+        """One model call that fits the request limit: trim old tool results first, retry smaller if refused."""
+        for attempt in range(3):
+            n = self.window.fit(messages, tools, reserve=self.max_tokens_per_call)
+            if n:
+                self._event(result, {"type": "trim", "trimmed": n, "estimate": self.window.estimate(messages, tools)})
+            try:
+                reply = await self.llm.chat(messages, tools, max_tokens=self.max_tokens_per_call)
+            except LLMError as e:
+                too_large = "413" in str(e) or "too large" in str(e).lower() or "context length" in str(e).lower()
+                if not too_large or attempt == 2:
+                    raise
+                limit = self.window.limit or self.window.estimate(messages, tools) + self.max_tokens_per_call
+                self.window.limit = int(limit * 0.75)
+                self.window.keep_recent = 1
+                continue
+            self.window.calibrate(messages, tools, reply.prompt_tokens)
+            return reply
+        raise LLMError("unreachable")
 
     async def run(self, task: str, *, context: str = "") -> RunResult:
         t0 = time.time()
@@ -96,11 +121,13 @@ class Agent:
                            run_id=datetime.now().strftime("%Y%m%d-%H%M%S-") + uuid.uuid4().hex[:6])
         start_tokens = (self.llm.usage.prompt_tokens, self.llm.usage.completion_tokens)
         seen_calls: dict[str, str] = {}
+        warned = False
+        self.window = ContextWindow(self.context_limit)
         self._event(result, {"type": "task", "task": task, "model": self.llm.model, "tools": list(self.registry.tools)})
 
         try:
             for step in range(1, self.max_steps + 1):
-                reply = await self.llm.chat(messages, self.registry.schemas(), max_tokens=self.max_tokens_per_call)
+                reply = await self._chat(result, messages, self.registry.schemas())
                 result.steps = step
                 self._event(result, {"type": "llm", "step": step, "content": reply.content,
                                      "tool_calls": [{"name": c.name, "arguments": c.arguments} for c in reply.tool_calls],
@@ -130,9 +157,13 @@ class Agent:
                 if used > self.token_budget:
                     result.stopped = "budget"
                     break
+                if not warned and (used > 0.75 * self.token_budget or step == self.max_steps - 1):
+                    warned = True              # say so while the model can still act on it (e.g. save its result)
+                    messages.append({"role": "user", "content": BUDGET_WARNING})
+                    self._event(result, {"type": "warning", "used_tokens": used})
             if result.stopped != "answer":
                 messages.append({"role": "user", "content": FINALIZE})
-                reply = await self.llm.chat(messages, None, max_tokens=self.max_tokens_per_call)
+                reply = await self._chat(result, messages, None)
                 result.answer = reply.content
                 self._event(result, {"type": "llm", "step": result.steps + 1, "content": reply.content, "tool_calls": [],
                                      "prompt_tokens": reply.prompt_tokens, "completion_tokens": reply.completion_tokens,

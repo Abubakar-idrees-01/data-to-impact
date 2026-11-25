@@ -175,8 +175,13 @@ def check_public_url(url: str) -> str:
 # ------------------------------------------------------------------ the tools
 class Web:
     def __init__(self, tavily_key: str, book: SourceBook | None = None, *, page_chars: int = 4000,
-                 transport: httpx.AsyncBaseTransport | None = None, url_check=check_public_url):
+                 transport: httpx.AsyncBaseTransport | None = None, url_check=check_public_url,
+                 time_range: str | None = None, domains: list[str] | None = None):
+        """time_range ("week"/"month"/"year") and domains restrict every search (e.g. recent primary sources);
+        if a restricted search finds nothing, it's repeated without the domain list."""
         self.key = tavily_key
+        self.time_range = time_range
+        self.domains = domains
         self.book = book or SourceBook()
         self.page_chars = page_chars
         self.transport = transport
@@ -190,8 +195,28 @@ class Web:
     async def search(self, query: str, max_results: int = 5) -> dict:
         if not self.key:
             raise ToolError("web search isn't configured (TAVILY_API_KEY is not set)")
-        self.searches += 1
         body = {"query": query, "max_results": max_results, "search_depth": "basic"}
+        if self.time_range:
+            body["time_range"] = self.time_range
+        widened = False
+        data = await self._search(body | ({"include_domains": self.domains} if self.domains else {}))
+        if not data.get("results") and self.domains:
+            data, widened = await self._search(body), True
+        results = []
+        for item in data.get("results", []):
+            s = self.book.add(item["url"], item.get("title", ""))
+            results.append({"n": s.n, "title": item.get("title", ""), "url": s.url,
+                            "snippet": " ".join((item.get("content") or "").split())[:500]})
+        if not results:
+            return {"query": query, "results": [], "note": "no results; try different words"}
+        note = "snippets are short excerpts; web_read a source to check details before relying on it"
+        if self.domains:
+            note = ("nothing on the preferred primary-source sites, so these are from the whole web; " if widened else
+                    "results are from preferred primary-source sites; ") + note
+        return {"query": query, "results": results, "note": note}
+
+    async def _search(self, body: dict) -> dict:
+        self.searches += 1
         async with self._client(timeout=30) as c:
             for attempt in range(3):
                 try:
@@ -210,15 +235,7 @@ class Web:
             if r.status_code in (401, 403):
                 detail = "invalid or exhausted Tavily key"
             raise ToolError(f"search failed ({r.status_code}): {detail}")
-        results = []
-        for item in r.json().get("results", []):
-            s = self.book.add(item["url"], item.get("title", ""))
-            results.append({"n": s.n, "title": item.get("title", ""), "url": s.url,
-                            "snippet": " ".join((item.get("content") or "").split())[:500]})
-        if not results:
-            return {"query": query, "results": [], "note": "no results; try different words"}
-        return {"query": query, "results": results,
-                "note": "snippets are short excerpts; web_read a source to check details before relying on it"}
+        return r.json()
 
     async def read_page(self, source: str, question: str = "") -> dict:
         """source: a source number from a search ("3") or a URL."""

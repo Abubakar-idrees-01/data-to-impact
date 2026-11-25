@@ -95,3 +95,18 @@ def test_search_errors_are_explained():
 def test_source_book_dedupes_urls():
     b = SourceBook()
     assert b.add("https://a.example/x#frag").n == b.add("https://a.example/x/").n == 1 and b.add("https://b.example").n == 2
+
+
+def test_restricted_search_widens_when_primary_sites_have_nothing():
+    bodies = []
+
+    def handler(req):
+        body = json.loads(req.content)
+        bodies.append(body)
+        hits = [] if "include_domains" in body else SEARCH["results"]
+        return httpx.Response(200, json={"results": hits})
+    web = Web("k", transport=httpx.MockTransport(handler), url_check=lambda u: u, time_range="month", domains=["arxiv.org"])
+    res = asyncio.run(web.search("mcp news"))
+    assert bodies[0]["include_domains"] == ["arxiv.org"] and bodies[0]["time_range"] == "month"
+    assert "include_domains" not in bodies[1] and bodies[1]["time_range"] == "month"
+    assert len(res["results"]) == 2 and res["note"].startswith("nothing on the preferred")

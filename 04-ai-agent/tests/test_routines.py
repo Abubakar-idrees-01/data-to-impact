@@ -18,7 +18,7 @@ from scout.web import Web
 PAGE = "<html><title>MCP 2026-07-28</title><body>" + "<p>The 2026-07-28 MCP revision makes the protocol stateless.</p>" * 10 + "</body></html>"
 SEARCH = {"results": [{"title": "MCP changelog", "url": "https://mcp.example/changelog", "content": "stateless"},
                       {"title": "Blog", "url": "https://blog.example/mcp", "content": "discover"}]}
-BODY = ("## What happened\nThe MCP spec went stateless [1].\n\n## Why it matters for my projects\nMy server must support "
+BODY = ("## What happened\nThe MCP spec went stateless 【1†L3-L5】.\n\n## Why it matters for my projects\nMy server must support "
         "server/discover [2].\n\n## Key details\n- No initialize handshake [1]\n- server/discover is required [2]\n\n"
         "## Try it\nProbe my server with server/discover.\n\n## Sources\n1. made-up list that must be dropped")
 
@@ -73,6 +73,7 @@ def test_digest_drafts_a_cited_note_and_commits_after_approval(fake_api, setup):
     assert r.status == "applied" and r.title == "MCP goes stateless in 2026-07-28"
     refusal = [e["result"] for e in r.run.events if e["type"] == "tool" and e["name"] == "write_note"][0]
     assert "without reading them" in refusal
+    assert "Today is 25 November 2026" in api.requests[0]["messages"][1]["content"] and "after August 2026" in api.requests[0]["messages"][1]["content"]
     note = (root / "learning-log" / "2026-11-25-mcp-goes-stateless-in-2026-07-28.md").read_text()
     assert note.startswith("# MCP goes stateless in 2026-07-28\n\n*2026-11-25 · drafted by Scout")
     assert "made-up list" not in note and "1. [MCP changelog](https://mcp.example/changelog)" in note
@@ -121,3 +122,12 @@ def test_checkup_with_nothing_to_fix(fake_api, setup):
     settings, root, origin = setup
     r = asyncio.run(checkup(settings, DenyAll(), llm=fake_api([text("All good.")]).llm()))
     assert r.status == "nothing" and r.detail["report"] == "All good."
+
+
+def test_note_needs_two_read_sources(fake_api, setup):
+    settings, root, origin = setup
+    one = BODY.replace("[2]", "[1]")
+    api = fake_api([calls(("web_search", {"query": "MCP"})), calls(("web_read", {"source": "1"})),
+                    calls(("write_note", {"title": "MCP goes stateless in 2026-07-28", "body": one})), text("gave up")])
+    r = asyncio.run(digest(settings, DenyAll(), llm=api.llm(), web=fake_web()))
+    assert r.status == "failed" and "at least two different sources" in r.run.events[-3]["result"]

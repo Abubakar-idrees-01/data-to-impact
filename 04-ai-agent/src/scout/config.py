@@ -24,6 +24,14 @@ DEFAULT_TOPICS = [
 ]
 
 
+# where digests look first: primary sources (papers, code, official docs and the labs' own blogs)
+PRIMARY_DOMAINS = [
+    "arxiv.org", "github.com", "huggingface.co", "modelcontextprotocol.io", "anthropic.com", "openai.com",
+    "deepmind.google", "ai.meta.com", "mistral.ai", "qwenlm.github.io", "pytorch.org", "blog.langchain.dev",
+    "llamaindex.ai", "simonwillison.net",
+]
+
+
 def load_dotenv(path: str | Path, override: bool = False) -> None:
     """Read KEY=VALUE lines into os.environ (no python-dotenv dependency)."""
     p = Path(path)
@@ -57,13 +65,15 @@ class Settings:
     reasoning_effort: str | None = "low"      # gpt-oss on Groq: low/medium/high; None to omit
     max_steps: int = 8                        # model calls per task before it must answer
     token_budget: int = 40_000                # prompt + completion tokens per task
-    max_tokens_per_call: int = 2048
-    page_chars: int = 4000                    # how much of a web page the model gets to read
+    max_tokens_per_call: int = 1536
+    context_limit: int | None = 6000          # max tokens per request; Groq free tier allows 8,000 per minute
+    page_chars: int = 3000                    # how much of a web page the model gets to read
     workspace: Path = REPO_ROOT               # the repo the repo tools may read (and propose changes to)
     journal_dir: Path = REPO_ROOT / "learning-log"
     state_dir: Path = PROJECT_ROOT / ".scout"     # traces and task memory (gitignored)
     mcp_command: list[str] | None = field(default_factory=default_mcp_command)
     topics: list[str] = field(default_factory=lambda: list(DEFAULT_TOPICS))
+    digest_domains: list[str] = field(default_factory=lambda: list(PRIMARY_DOMAINS))
 
     @property
     def traces_dir(self) -> Path:
@@ -92,8 +102,12 @@ class Settings:
             s.journal_dir = Path(env("SCOUT_JOURNAL_DIR")).expanduser()
         if env("SCOUT_STATE_DIR"):
             s.state_dir = Path(env("SCOUT_STATE_DIR")).expanduser()
+        if env("SCOUT_CONTEXT_LIMIT") is not None:
+            s.context_limit = int(env("SCOUT_CONTEXT_LIMIT")) or None
         if env("SCOUT_TOPICS"):
             s.topics = [t.strip() for t in env("SCOUT_TOPICS").split(";") if t.strip()]
+        if env("SCOUT_DIGEST_DOMAINS") is not None:
+            s.digest_domains = [d.strip() for d in env("SCOUT_DIGEST_DOMAINS").split(",") if d.strip()]
         if env("SCOUT_MCP_COMMAND") is not None:
             s.mcp_command = env("SCOUT_MCP_COMMAND").split() or None
         for k, v in overrides.items():

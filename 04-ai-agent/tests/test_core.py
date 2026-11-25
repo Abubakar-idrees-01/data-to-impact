@@ -116,3 +116,34 @@ def test_native_citation_marks_are_normalized(fake_api):
     api = fake_api([text("Version 2026-07-28 【1†L13-L22】 is stateless 【2】.")])
     r = run(Agent(api.llm(), Registry()))
     assert r.answer == "Version 2026-07-28 [1] is stateless [2]."
+
+
+BIG = Tool("page", "Read a page.", {"type": "object", "properties": {"n": {"type": "integer"}}, "required": ["n"]},
+           lambda n: f"PAGE {n} " + "lorem ipsum dolor sit amet " * 200)
+
+
+def test_old_tool_results_are_trimmed_to_fit_the_request_limit(fake_api):
+    api = fake_api([calls(("page", {"n": i})) for i in range(1, 5)] + [text("done")])
+    r = run(Agent(api.llm(), Registry().add(BIG), context_limit=3500, max_tokens_per_call=500))
+    last = api.requests[-1]["messages"]
+    tool_msgs = [m["content"] for m in last if m["role"] == "tool"]
+    assert r.answer == "done" and len(tool_msgs) == 4
+    assert all("trimmed to save context" in m for m in tool_msgs[:2]) and tool_msgs[0].startswith("PAGE 1")
+    assert "trimmed" not in tool_msgs[-1]                                       # the newest result stays whole
+    assert len(json.dumps(last)) / 3.5 + 500 <= 3500
+    assert any(e["type"] == "trim" for e in r.events)
+
+
+def test_request_too_large_is_retried_smaller(fake_api):
+    too_big = (413, {"error": {"message": "Request too large for model on tokens per minute (TPM): Limit 8000, Requested 9042"}}, {})
+    api = fake_api([calls(("page", {"n": 1})), calls(("page", {"n": 2})), calls(("page", {"n": 3})), too_big, text("ok")])
+    r = run(Agent(api.llm(), Registry().add(BIG)))
+    assert r.answer == "ok" and r.stopped == "answer"
+    assert len(json.dumps(api.requests[-1]["messages"])) < len(json.dumps(api.requests[-2]["messages"]))
+
+
+def test_budget_warning_comes_while_the_model_can_still_act(fake_api):
+    api = fake_api([calls(("add", {"a": 1, "b": 1}), prompt=800), calls(("add", {"a": 2, "b": 2})), text("saved")])
+    r = run(Agent(api.llm(), Registry().add(ADD), token_budget=1000))
+    assert "almost used its budget" in api.requests[1]["messages"][-1]["content"] and r.answer == "saved"
+    assert sum(e["type"] == "warning" for e in r.events) == 1

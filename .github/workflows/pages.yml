@@ -1,9 +1,11 @@
-# Publish evalkit's report (02-llm-evals/site) to GitHub Pages: the portfolio's live demo.
+# Publish the portfolio's live demos to GitHub Pages:
+#   /        evalkit's report (02-llm-evals/site)
+#   /scout/  the agent's trace viewer (04-ai-agent/site)
 name: pages
 on:
   push:
     branches: [main]
-    paths: ["02-llm-evals/site/**", ".github/workflows/pages.yml"]
+    paths: ["02-llm-evals/site/**", "04-ai-agent/site/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -21,8 +23,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v6
+      - name: Assemble the site
+        run: |
+          mkdir -p _site/scout
+          cp -r 02-llm-evals/site/. _site/
+          cp -r 04-ai-agent/site/. _site/scout/
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: 02-llm-evals/site
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v5

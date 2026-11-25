@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scout trace viewer</title>
+<meta name="description" content="Real runs of a research agent built from scratch, replayed step by step: tool calls, results, approvals, tokens.">
+<style>
+:root {
+  --bg: #f7f6f3; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6a66; --line: #e4e2dc;
+  --accent: #2f5bd3; --ok: #1f7a4d; --bad: #b3261e; --warn: #9a6700; --code: #f1efe9;
+  --tool: #eef2fd; --model: #faf8f3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141413; --panel: #1d1d1b; --ink: #ecebe6; --muted: #a09e97; --line: #33322f;
+    --accent: #8aa8ff; --ok: #5cc78f; --bad: #ff8a80; --warn: #e3b341; --code: #262523;
+    --tool: #1e2433; --model: #22211f;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141413; --panel: #1d1d1b; --ink: #ecebe6; --muted: #a09e97; --line: #33322f;
+  --accent: #8aa8ff; --ok: #5cc78f; --bad: #ff8a80; --warn: #e3b341; --code: #262523;
+  --tool: #1e2433; --model: #22211f;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: var(--accent); }
+header, main { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+header { padding-top: 32px; padding-bottom: 8px; }
+h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: -0.01em; }
+.lede { color: var(--muted); max-width: 760px; margin: 0; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 22px 0 8px; }
+.tile { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.tile .k { color: var(--muted); font-size: 13px; }
+.tile .v { font-size: 22px; font-weight: 650; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.tile .s { color: var(--muted); font-size: 12.5px; }
+.layout { display: grid; grid-template-columns: 290px 1fr; gap: 18px; margin: 22px 0 40px; align-items: start; }
+nav { position: sticky; top: 12px; display: flex; flex-direction: column; gap: 8px; }
+nav button { text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
+  color: var(--ink); font: inherit; cursor: pointer; }
+nav button[aria-current="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+nav .t { font-weight: 600; font-size: 14px; display: block; }
+nav .m { color: var(--muted); font-size: 12.5px; }
+.run { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; min-width: 0; }
+.run h2 { margin: 0 0 6px; font-size: 19px; }
+.note { margin: 0 0 14px; color: var(--muted); }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.task { background: var(--code); border-radius: 8px; padding: 10px 12px; white-space: pre-wrap; font-size: 13px; max-height: 160px; overflow: auto; }
+ol.steps { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-direction: column; gap: 8px; }
+.ev { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--model); min-width: 0; }
+.ev.tool { background: var(--tool); }
+.ev.err { border-color: var(--bad); }
+.ev.warn { border-color: var(--warn); }
+.ev .h { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; font-size: 13px; }
+.ev .h .who { font-weight: 650; }
+.ev .h .meta { color: var(--muted); font-variant-numeric: tabular-nums; }
+.tag { font-size: 11.5px; padding: 1px 7px; border-radius: 99px; border: 1px solid currentColor; }
+.tag.bad { color: var(--bad); } .tag.ok { color: var(--ok); } .tag.warn { color: var(--warn); }
+code, pre { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 12.5px; }
+pre { background: var(--code); padding: 8px 10px; border-radius: 8px; margin: 8px 0 0; white-space: pre-wrap; word-break: break-word; max-height: 260px; overflow: auto; }
+details summary { cursor: pointer; color: var(--muted); font-size: 12.5px; margin-top: 6px; }
+.answer { margin-top: 4px; font-size: 14px; overflow-x: auto; }
+.answer p { margin: 6px 0; } .answer ul { margin: 6px 0; padding-left: 20px; }
+.answer table { border-collapse: collapse; margin: 8px 0; font-size: 13px; }
+.answer th, .answer td { border: 1px solid var(--line); padding: 4px 8px; text-align: left; vertical-align: top; }
+footer { max-width: 1100px; margin: 0 auto; padding: 0 16px 40px; color: var(--muted); font-size: 13px; }
+.theme { float: right; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 8px; padding: 4px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+@media (max-width: 820px) { .layout { grid-template-columns: 1fr; } nav { position: static; } }
+</style>
+</head>
+<body>
+<header>
+  <button class="theme" id="theme" type="button">Theme</button>
+  <h1>Scout: an AI agent, replayed step by step</h1>
+  <p class="lede">Real runs of a research and developer agent built from scratch (project 4 of
+  <a href="https://github.com/Abubakar-idrees-01/data-to-impact">data-to-impact</a>). Each card is one model call or tool
+  call, with what came back and what it cost. Some runs failed: each failure led to a fix, described with the run.
+  Everything outward needs a human "yes". <a href="https://github.com/Abubakar-idrees-01/data-to-impact/tree/main/04-ai-agent">Code and docs</a>.</p>
+  <div class="tiles" id="tiles"></div>
+</header>
+<main>
+  <div class="layout">
+    <nav id="nav" aria-label="Runs"></nav>
+    <section class="run" id="run" aria-live="polite"></section>
+  </div>
+</main>
+<footer>Traces are recorded by the agent itself (<code>.scout/traces/*.jsonl</code>); page texts are shown as the model saw them,
+shortened. Account identifiers are removed. Built by <code>scripts/build_site.py</code>.</footer>
+<script>
+const DATA = /*DATA*/null;
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = (n) => Number(n || 0).toLocaleString("en");
+
+function pct(x) { return x == null ? "–" : Math.round(x * 100) + "%"; }
+function metric(key, m) { const r = DATA.results[key]; return r && r.metrics[m] ? r.metrics[m].value : null; }
+
+function tiles() {
+  const out = [];
+  const keys = Object.keys(DATA.results);
+  const agent = keys.find((k) => k.startsWith("scout-simpleqa/agent"));
+  const closed = keys.find((k) => k.startsWith("scout-simpleqa/closed"));
+  if (agent && closed) out.push(["SimpleQA accuracy", `${pct(metric(closed, "correct"))} → ${pct(metric(agent, "correct"))}`,
+    `model alone → with web research (n=${DATA.results[agent].n})`]);
+  const inj = keys.filter((k) => k.startsWith("scout-injection/hardened"));
+  for (const k of inj) out.push([`Injection (${k.split("-").slice(-2).join("-")})`,
+    `${pct(metric(k, "attack_attempt_rate"))} tried · ${pct(metric(k, "harm_executed_rate"))} harm`,
+    "attacks the model tried to obey · that actually did anything"]);
+  const chk = keys.filter((k) => k.startsWith("scout-checkup/"));
+  for (const k of chk) out.push([`Docs checkup (${k.split("/")[1]})`, `${pct(metric(k, "fixed"))} fixed`,
+    `planted errors fixed · ${(metric(k, "decoys_broken") ?? 0).toFixed(1)} decoys wrongly changed per run`]);
+  if (!out.length) out.push(["Evaluations", "running", "results appear here when the runs finish"]);
+  $("#tiles").innerHTML = out.map(([k, v, s]) => `<div class="tile"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div><div class="s">${esc(s)}</div></div>`).join("");
+}
+
+function summary(run) {
+  const done = run.events.find((e) => e.type === "done") || {};
+  const models = [...new Set(run.events.filter((e) => e.model).map((e) => e.model))];
+  return { done, models, tokens: (done.prompt_tokens || 0) + (done.completion_tokens || 0) };
+}
+
+function md(src) {
+  // a small, safe markdown renderer for answers: escape first, then bold/code/links, lists and tables
+  const inline = (s) => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+  const lines = String(src || "").split("\n"), out = [];
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i];
+    if (/^\s*\|.*\|\s*$/.test(l)) {
+      const rows = [];
+      while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) rows.push(lines[i++]);
+      i--;
+      const cells = (r) => r.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
+      const body = rows.filter((r) => !/^\s*\|[\s:|-]+\|\s*$/.test(r));
+      out.push(`<table>${body.map((r, j) => `<tr>${cells(r).map((c) => j ? `<td>${inline(c)}</td>` : `<th>${inline(c)}</th>`).join("")}</tr>`).join("")}</table>`);
+    } else if (/^\s*[-*] /.test(l)) {
+      const items = [];
+      while (i < lines.length && /^\s*[-*] /.test(lines[i])) items.push(lines[i++].replace(/^\s*[-*] /, ""));
+      i--;
+      out.push(`<ul>${items.map((x) => `<li>${inline(x)}</li>`).join("")}</ul>`);
+    } else if (/^#{1,4} /.test(l)) out.push(`<p><b>${inline(l.replace(/^#+ /, ""))}</b></p>`);
+    else if (l.trim()) out.push(`<p>${inline(l)}</p>`);
+  }
+  return out.join("");
+}
+
+function args(a) { try { return Object.entries(JSON.parse(a)).map(([k, v]) => `${k}=${JSON.stringify(v).slice(0, 160)}`).join(", "); } catch { return a; } }
+
+function card(e) {
+  if (e.type === "task") return "";
+  if (e.type === "llm") {
+    const calls = e.tool_calls.map((c) => `<code>${esc(c.name)}(${esc(args(c.arguments))})</code>`).join("<br>");
+    const body = e.tool_calls.length ? `<div style="margin-top:4px">${calls}</div>` : `<div class="answer">${md(e.content)}</div>`;
+    return `<li class="ev"><div class="h"><span class="who">model${e.finalize ? " · final answer (no tools)" : ""}</span>
+      <span class="meta">step ${e.step}${e.model ? " · " + esc(e.model.split("/").pop()) : ""} · ${fmt(e.prompt_tokens)} in / ${fmt(e.completion_tokens)} out · ${e.seconds}s</span></div>${body}</li>`;
+  }
+  if (e.type === "tool") {
+    const tag = e.approved === false ? `<span class="tag bad">declined by the approver</span>` : e.is_error ? `<span class="tag bad">error</span>` : e.repeat ? `<span class="tag warn">repeat, not re-run</span>` : "";
+    return `<li class="ev tool ${e.is_error ? "err" : ""}"><div class="h"><span class="who">${esc(e.name)}</span><span class="meta">tool result</span>${tag}</div>
+      <details ${e.is_error || e.approved === false ? "open" : ""}><summary>${esc(e.result.slice(0, 120))}${e.result.length > 120 ? "…" : ""}</summary><pre>${esc(e.result)}</pre></details></li>`;
+  }
+  if (e.type === "trim") return `<li class="ev warn"><div class="h"><span class="who">context</span><span class="meta">trimmed ${e.trimmed} old tool result(s) to fit the request limit (~${fmt(e.estimate)} tokens)</span></div></li>`;
+  if (e.type === "warning") return `<li class="ev warn"><div class="h"><span class="who">budget</span><span class="meta">${fmt(e.used_tokens)} tokens used: the model is told to finish</span></div></li>`;
+  if (e.type === "error") return `<li class="ev err"><div class="h"><span class="who">error</span><span class="tag bad">run stopped</span></div><pre>${esc(e.message)}</pre></li>`;
+  if (e.type === "done") return `<li class="ev"><div class="h"><span class="who">done</span><span class="meta">stopped: ${esc(e.stopped)}</span></div></li>`;
+  return "";
+}
+
+function show(i) {
+  const run = DATA.runs[i];
+  const { done, models, tokens } = summary(run);
+  const task = run.events.find((e) => e.type === "task");
+  $("#run").innerHTML = `<h2>${esc(run.title)}</h2><p class="note">${esc(run.note)}</p>
+    <div class="stats"><span>model calls <b>${done.steps ?? "–"}</b></span><span>tool calls <b>${done.tool_calls ?? "–"}</b></span>
+    <span>tokens <b>${fmt(tokens)}</b></span><span>time <b>${Math.round(done.seconds || 0)} s</b></span>
+    <span>outcome <b>${esc(done.stopped)}</b></span><span>model <b>${esc(models.map((m) => m.split("/").pop()).join(" → "))}</b></span></div>
+    <div class="task">${esc(task ? task.task : "")}</div><ol class="steps">${run.events.map(card).join("")}</ol>`;
+  document.querySelectorAll("nav button").forEach((b, j) => b.setAttribute("aria-current", String(j === i)));
+}
+
+function nav() {
+  $("#nav").innerHTML = DATA.runs.map((r, i) => {
+    const { done, tokens } = summary(r);
+    return `<button type="button" data-i="${i}"><span class="t">${esc(r.title)}</span><span class="m">${esc(done.stopped)} · ${done.steps ?? "–"} calls · ${fmt(tokens)} tokens</span></button>`;
+  }).join("");
+  $("#nav").addEventListener("click", (ev) => { const b = ev.target.closest("button"); if (b) show(Number(b.dataset.i)); });
+}
+
+$("#theme").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+});
+tiles(); nav(); if (DATA.runs.length) show(0);
+</script>
+</body>
+</html>

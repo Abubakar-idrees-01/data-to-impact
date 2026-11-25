@@ -110,3 +110,15 @@ def test_server_picks_up_files_synced_after_it_started(notes, evals, tmp_path):
     os.utime(manifest, (time.time() + 5, time.time() + 5))      # make the change visible on coarse-mtime filesystems
     assert call(server, "list_documents").structured_content["count"] == 3
     assert "Pay per click" in call(server, "search_notes", {"query": "pay per click ads"}).structured_content["passages"][0]["citation"]
+
+
+def test_eval_tools_explain_when_evalkit_is_missing(notes, evals, monkeypatch):
+    import builtins
+    real_import = builtins.__import__
+    def no_evalkit(name, *args, **kwargs):
+        if name.startswith("evalkit"):
+            raise ImportError(name)
+        return real_import(name, *args, **kwargs)
+    monkeypatch.setattr(builtins, "__import__", no_evalkit)
+    r = call(build_server(notes, evals), "eval_run_summary", {"run": "demo/v1"})
+    assert r.is_error and "need evalkit" in r.content[0].text

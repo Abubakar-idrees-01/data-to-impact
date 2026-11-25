@@ -38,15 +38,24 @@ class Evals:
                       if p.name != "selected.json")
         return {"results_dir": str(self.root), "count": len(runs), "runs": runs}
 
+    @staticmethod
+    def _evalkit():
+        try:
+            import evalkit.compare
+            import evalkit.runs
+            return evalkit
+        except ImportError:
+            raise EvalsError("evaluation tools need evalkit (project 2): pip install -e path/to/02-llm-evals") from None
+
     def summary(self, run: str) -> dict:
-        from evalkit.runs import Run
+        Run = self._evalkit().runs.Run
         r = Run.load(self._path(run))
         return {"run": f"{r.suite}/{r.name}", "items": len(r.items), "created": r.created,
                 "config": r.config, "metrics": r.metrics, "table": r.summary_table()}
 
     def compare(self, base: str, new: str, metrics: list[str] | None = None) -> dict:
-        from evalkit.compare import compare
-        from evalkit.runs import Run
+        ek = self._evalkit()
+        compare, Run = ek.compare.compare, ek.runs.Run
         c = compare(Run.load(self._path(base)), Run.load(self._path(new)), metrics or None)
         if not c.diffs:
             raise EvalsError("the two runs share no metrics/items to compare")

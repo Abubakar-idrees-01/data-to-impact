@@ -31,6 +31,7 @@ sys.path.insert(0, str(ROOT.parent / "02-llm-evals" / "src"))
 from scout.approval import DenyAll                   # noqa: E402
 from scout.config import Settings                    # noqa: E402
 from scout.routines import checkup                   # noqa: E402
+from simpleqa import wait_for_quota                  # noqa: E402
 
 FILES = {
     "pyproject.toml": '[project]\nname = "tidy"\nversion = "0.4.0"\nrequires-python = ">=3.11"\n',
@@ -101,10 +102,13 @@ async def main_async(a) -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
     done = len(out.read_text().splitlines()) if out.exists() else 0
     for i in range(done + 1, a.runs + 1):
-        rec = await one_run(s, i)
-        if rec["stopped"] == "error":
-            print(f"  run{i}: model error, stopping: {rec['report'][:200]}")
-            return
+        while True:
+            rec = await one_run(s, i)
+            if rec["stopped"] != "error":
+                break
+            if not await wait_for_quota(Exception(rec["report"])):
+                print(f"  run{i}: model error, stopping: {rec['report'][:200]}")
+                return
         with out.open("a", encoding="utf-8") as f:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
         print(f"  run{i}: fixed {rec['fixed']:.0%}  decoys broken {rec['decoys_broken']}  "

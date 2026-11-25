@@ -1,0 +1,10 @@
+# Prepares today's learning-log note. It never commits or pushes: you approve with `scout review`.
+[Unit]
+Description=Scout: prepare today's learning-log note
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/PATH/TO/data-to-impact/04-ai-agent
+ExecStart=%h/PATH/TO/data-to-impact/04-ai-agent/.venv/bin/scout digest --prepare --quiet
+Nice=10

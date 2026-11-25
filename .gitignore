@@ -71,3 +71,7 @@ desktop.ini
 
 # ---- Local MCP client config (machine-specific paths) ----
 .mcp.json
+
+# ---- Package builds ----
+dist/
+build/

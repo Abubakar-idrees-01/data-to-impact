@@ -33,7 +33,8 @@ class Evals:
 
     def list_runs(self) -> dict:
         if not self.root.exists():
-            return {"results_dir": str(self.root), "runs": []}
+            return {"results_dir": None, "runs": [],
+                    "note": "no evalkit results directory found; set STUDYRAG_MCP_EVAL_RESULTS to one"}
         runs = sorted(str(p.relative_to(self.root).with_suffix("")) for p in self.root.glob("*/*.json")
                       if p.name != "selected.json")
         return {"results_dir": str(self.root), "count": len(runs), "runs": runs}

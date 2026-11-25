@@ -1,18 +1,31 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "studyrag-mcp"
 version = "0.1.0"
-description = "MCP server: search, read and fact-check your own study notes (StudyRAG) and read evaluation runs (evalkit) from any AI assistant."
-readme = "README.md"
+description = "MCP server: search, read and fact-check your own study notes (StudyRAG) from Claude Code, Claude Desktop, Cursor or any MCP client."
+readme = "PYPI.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
-dependencies = ["mcp>=2.3,<3", "pydantic>=2"]
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Abubakar Idrees" }]
+keywords = ["mcp", "model-context-protocol", "rag", "claude", "study", "notes"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Intended Audience :: Education",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = ["mcp>=2.3,<3", "pydantic>=2", "studyrag>=0.1.0"]
 
 [project.optional-dependencies]
 dev = ["pytest"]
+
+[project.urls]
+Homepage = "https://github.com/Abubakar-idrees-01/data-to-impact/tree/main/03-mcp-server"
+Source = "https://github.com/Abubakar-idrees-01/data-to-impact"
+Documentation = "https://github.com/Abubakar-idrees-01/data-to-impact/blob/main/03-mcp-server/docs/SETUP.md"
 
 [project.scripts]
 studyrag-mcp = "studyrag_mcp.server:main"

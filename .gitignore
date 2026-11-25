@@ -75,3 +75,6 @@ desktop.ini
 # ---- Package builds ----
 dist/
 build/
+
+# project 4: agent traces and task memory (personal; may contain private data)
+.scout/

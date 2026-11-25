@@ -87,8 +87,11 @@ def show_routine(r) -> int:
         print(f"\n({run.steps} model calls, {run.tool_calls} tool calls, {run.total_tokens:,} tokens, {run.seconds:.0f} s)",
               file=sys.stderr)
     d = r.detail or {}
-    if r.kind == "checkup" and d.get("report"):
-        print("\n" + d["report"].strip())
+    if r.kind == "checkup":
+        proposed = d.get("proposed") or []
+        print(f"\nActually proposed: {len(proposed)} edit(s)" + "".join(f"\n  - {x}" for x in proposed))
+        if d.get("report"):
+            print("\nThe agent's report (its own words; the list above is what was really proposed):\n" + d["report"].strip())
     msg = {"applied": f"✓ committed {d.get('commit', '')}" + (f" and pushed to {d['pushed']}" if d.get("pushed") else ""),
            "declined": "declined: nothing was changed",
            "prepared": f"prepared for review (run `scout review`): {d.get('pending')}",

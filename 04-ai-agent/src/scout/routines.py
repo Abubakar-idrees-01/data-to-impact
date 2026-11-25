@@ -189,8 +189,10 @@ Look for concrete, verifiable problems in the markdown docs:
 - status lines that are out of date, and obvious typos.
 {focus}
 Rules: propose at most {max_fixes} fixes with propose_edit, only ones you've verified by reading the files.
+A fix exists only if you called propose_edit for it: describing a fix in your report does nothing.
 Don't change code, results or meaning. If you find nothing worth fixing, say so: that's a fine outcome.
-Finish with a short report: what you checked, each fix and why, and anything you noticed but didn't fix."""
+Finish with a short report: what you checked, the fixes you proposed with propose_edit and why, and, separately,
+anything you noticed but didn't fix."""
 
 
 async def checkup(settings: Settings, approver: Approver, *, focus: str = "", max_fixes: int = 3, prepare: bool = False,
@@ -209,11 +211,15 @@ async def checkup(settings: Settings, approver: Approver, *, focus: str = "", ma
         first = reasons[0] if reasons else "small fixes"
         cs.message = f"Docs checkup: {first[0].lower() + first[1:]}" + (f" (+{len(reasons) - 1} more)" if len(reasons) > 1 else "")
         cs.message = cs.message[:100]
-        cs.summary = run.answer
+    # what you see first is generated from what was actually proposed, not from the model's description of it
+    proposed = [f"{c.path}: {c.reason}" for c in cs.changes]
+    cs.summary = ("Proposed edits (from the actual proposals):\n" + "\n".join(f"  - {x}" for x in proposed)
+                  + "\n\nThe agent's report:\n" + run.answer) if proposed else run.answer
     status, detail = await _finish(cs, settings, approver, prepare, push)
     memory.record("checkup", status=status, title=cs.message, tokens=run.total_tokens, trace=run.trace_path,
                   files=[c.path for c in cs.changes], links_broken=len(links))
-    return RoutineResult("checkup", status, cs.message, {**detail, "report": run.answer}, run, detail.get("pending"), cs)
+    return RoutineResult("checkup", status, cs.message, {**detail, "report": run.answer, "proposed": proposed}, run,
+                         detail.get("pending"), cs)
 
 
 # ------------------------------------------------------------------ review

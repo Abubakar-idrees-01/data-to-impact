@@ -115,6 +115,8 @@ def test_checkup_proposes_verified_doc_fixes(fake_api, setup):
     assert "docs/GONE.md" in api.requests[0]["messages"][1]["content"]       # the deterministic check is given to it
     assert r.status == "applied" and (root / "README.md").read_text() == "# Repo\n15 tests pass.\n"
     assert r.title == "Docs checkup: remove a link to a file that doesn't exist"
+    assert r.detail["proposed"] == ["README.md: Remove a link to a file that doesn't exist"]
+    assert r.changes.summary.startswith("Proposed edits (from the actual proposals):")
     assert any("not a tracked file" in e["result"] or "limited to" in e["result"] for e in r.run.events if e["type"] == "tool")
 
 

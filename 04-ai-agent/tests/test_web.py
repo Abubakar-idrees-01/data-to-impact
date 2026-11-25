@@ -119,3 +119,17 @@ def test_tracking_parameters_and_title_junk_are_removed():
     assert s.url == "https://github.com/modelcontextprotocol/go-sdk?tab=readme"
     assert s.title == "GitHub - modelcontextprotocol/go-sdk · GitHub"
     assert b.add("https://github.com/modelcontextprotocol/go-sdk?tab=readme").n == 1
+
+
+def test_excluded_domains_are_never_searched_or_read():
+    bodies = []
+
+    def handler(req):
+        bodies.append(json.loads(req.content))
+        return httpx.Response(200, json={"results": [{"title": "answers", "url": "https://huggingface.co/datasets/x", "content": "a"},
+                                                     {"title": "ok", "url": "https://en.wikipedia.org/wiki/X", "content": "b"}]})
+    web = Web("k", transport=httpx.MockTransport(handler), url_check=lambda u: u, exclude_domains=["huggingface.co"])
+    res = asyncio.run(web.search("question"))
+    assert bodies[0]["exclude_domains"] == ["huggingface.co"] and [r["url"] for r in res["results"]] == ["https://en.wikipedia.org/wiki/X"]
+    with pytest.raises(ToolError, match="excluded"):
+        asyncio.run(web.read_page("https://cdn.huggingface.co/datasets/x"))

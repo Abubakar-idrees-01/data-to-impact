@@ -187,18 +187,24 @@ def check_public_url(url: str) -> str:
 class Web:
     def __init__(self, tavily_key: str, book: SourceBook | None = None, *, page_chars: int = 4000,
                  transport: httpx.AsyncBaseTransport | None = None, url_check=check_public_url,
-                 time_range: str | None = None, domains: list[str] | None = None):
+                 time_range: str | None = None, domains: list[str] | None = None,
+                 exclude_domains: list[str] | None = None):
         """time_range ("week"/"month"/"year") and domains restrict every search (e.g. recent primary sources);
         if a restricted search finds nothing, it's repeated without the domain list."""
         self.key = tavily_key
         self.time_range = time_range
         self.domains = domains
+        self.exclude_domains = exclude_domains or []      # never searched or read (e.g. sites hosting an eval's answers)
         self.book = book or SourceBook()
         self.page_chars = page_chars
         self.transport = transport
         self.url_check = url_check
         self.searches = 0
         self.reads = 0
+
+    def _excluded(self, url: str) -> bool:
+        host = (urlparse(url).hostname or "").lower()
+        return any(host == d or host.endswith("." + d) or (("/" in d) and d in url) for d in self.exclude_domains)
 
     def _client(self, **kw) -> httpx.AsyncClient:
         return httpx.AsyncClient(transport=self.transport, **kw)
@@ -209,12 +215,16 @@ class Web:
         body = {"query": query, "max_results": max_results, "search_depth": "basic"}
         if self.time_range:
             body["time_range"] = self.time_range
+        if self.exclude_domains:
+            body["exclude_domains"] = self.exclude_domains
         widened = False
         data = await self._search(body | ({"include_domains": self.domains} if self.domains else {}))
         if not data.get("results") and self.domains:
             data, widened = await self._search(body), True
         results = []
         for item in data.get("results", []):
+            if self._excluded(item["url"]):
+                continue
             s = self.book.add(item["url"], item.get("title", ""))
             results.append({"n": s.n, "title": item.get("title", ""), "url": s.url,
                             "snippet": " ".join((item.get("content") or "").split())[:500]})
@@ -259,6 +269,8 @@ class Web:
         else:
             url = source
         url = self.url_check(url)
+        if self._excluded(url):
+            raise ToolError("that site is excluded for this task; use another source")
         self.reads += 1
         title, text = await self._fetch(url)
         if not text.strip():

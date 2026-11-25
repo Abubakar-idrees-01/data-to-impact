@@ -1,0 +1,23 @@
+# Scout (04-ai-agent): loop, tools, approval gate, context trimming, web tools, MCP client, repo tools, routines.
+# Tests use a scripted model and a fake internet: no API keys, no network.
+name: agent
+on:
+  push:
+    paths: ["04-ai-agent/**", ".github/workflows/agent.yml"]
+  pull_request:
+    paths: ["04-ai-agent/**"]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 04-ai-agent
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: pip install --no-deps -e .
+      - run: python -m pytest -q -rs

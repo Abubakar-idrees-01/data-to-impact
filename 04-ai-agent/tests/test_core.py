@@ -110,3 +110,9 @@ def test_think_blocks_are_stripped_and_effort_only_for_gpt_oss(fake_api):
     api = fake_api([text("<think>hmm</think>Answer.")])
     r = run(Agent(api.llm(model="qwen/qwen3.8-27b"), Registry()))
     assert r.answer == "Answer." and "reasoning_effort" not in api.requests[0]
+
+
+def test_native_citation_marks_are_normalized(fake_api):
+    api = fake_api([text("Version 2026-07-28 【1†L13-L22】 is stateless 【2】.")])
+    r = run(Agent(api.llm(), Registry()))
+    assert r.answer == "Version 2026-07-28 [1] is stateless [2]."

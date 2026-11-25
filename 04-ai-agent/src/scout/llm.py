@@ -163,9 +163,19 @@ class LLM:
                     await self.sleep(wait)
                     continue
                 if r.status_code == 400 and "tool_use_failed" in text and malformed < 2:
-                    malformed += 1                     # the model wrote an invalid tool call: sample again
-                    log.warning("model produced a malformed tool call, retrying (%d/2)", malformed)
-                    body = {**body, "temperature": max(body.get("temperature", 0.0), 0.3)}
+                    # the model wrote an invalid tool call (bad JSON, or a tool that doesn't exist). The provider
+                    # rejects it before we see it, so tell the model what went wrong and sample again.
+                    malformed += 1
+                    try:
+                        why = r.json().get("error", {}).get("message", "")
+                    except ValueError:
+                        why = ""
+                    names = [t["function"]["name"] for t in body.get("tools", [])]
+                    log.warning("model produced an invalid tool call, retrying (%d/2): %s", malformed, why[:120])
+                    note = {"role": "user", "content": f"(Your last tool call was rejected: {why[:300]} "
+                                                       f"Use only these tools, with valid JSON arguments: {', '.join(names)}.)"}
+                    body = {**body, "messages": body["messages"] + [note],
+                            "temperature": max(body.get("temperature", 0.0), 0.3)}
                     continue
                 try:
                     detail = r.json().get("error", {}).get("message") or text

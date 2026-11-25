@@ -69,9 +69,10 @@ Full guide (keys, settings, daily timer, evaluations, troubleshooting): **[docs/
 | | |
 |---|---|
 | [How it works](docs/HOW_IT_WORKS.md) | Architecture and one digest end to end |
-| [Results](docs/RESULTS.md) | Research accuracy, prompt injection, checkup accuracy, cost |
+| [Results](docs/RESULTS.md) | Research accuracy, prompt injection, checkup accuracy, claim support, cost |
 | [Design decisions](docs/DECISIONS.md) | Why each choice, with what we measured |
-| Concepts | 1. [The agent loop](docs/concepts/01-the-agent-loop.md) · 2. [Tools and schemas](docs/concepts/02-tools-and-schemas.md) · 3. [Approval and prompt injection](docs/concepts/03-approval-and-safety.md) · 4. [Context and budgets](docs/concepts/04-context-and-budgets.md) · 5. [Research with citations](docs/concepts/05-research-with-citations.md) |
+| [Timeline](docs/TIMELINE.md) | How it was built, what went wrong and how it was solved |
+| Concepts | 1. [The agent loop](docs/concepts/01-the-agent-loop.md) · 2. [Tools and schemas](docs/concepts/02-tools-and-schemas.md) · 3. [Approval and prompt injection](docs/concepts/03-approval-and-safety.md) · 4. [Context and budgets](docs/concepts/04-context-and-budgets.md) · 5. [Research with citations](docs/concepts/05-research-with-citations.md) · 6. [Evaluating an agent](docs/concepts/06-evaluating-an-agent.md) |
 
 ## Layout
 ```

@@ -117,7 +117,8 @@ class Agent:
                     else:
                         outcome = await self.registry.call(call.name, call.arguments)
                         text = outcome.text
-                        seen_calls[key] = text
+                        if not outcome.is_error:       # errors may depend on state (e.g. a source not read yet): allow retries
+                            seen_calls[key] = text
                         result.tool_calls += 1
                         result.tool_errors += outcome.is_error
                         result.declined += outcome.approved is False

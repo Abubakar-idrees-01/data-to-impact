@@ -45,6 +45,7 @@ class RoutineResult:
     detail: dict | None = None
     run: RunResult | None = None
     pending_path: str | None = None
+    changes: ChangeSet | None = None      # what was proposed (whether or not it was approved)
 
 
 def _agent(settings: Settings, registry: Registry, llm: LLM | None, on_event, max_steps: int | None = None,
@@ -173,7 +174,7 @@ async def digest(settings: Settings, approver: Approver, *, topic: str | None = 
     status, detail = await _finish(cs, settings, approver, prepare, push)
     memory.record("digest", status=status, title=title, tokens=run.total_tokens, trace=run.trace_path,
                   sources=[s.url for s in web.book.sources if s.read])
-    return RoutineResult("digest", status, title, detail, run, detail.get("pending"))
+    return RoutineResult("digest", status, title, detail, run, detail.get("pending"), cs)
 
 
 # ------------------------------------------------------------------ checkup
@@ -212,7 +213,7 @@ async def checkup(settings: Settings, approver: Approver, *, focus: str = "", ma
     status, detail = await _finish(cs, settings, approver, prepare, push)
     memory.record("checkup", status=status, title=cs.message, tokens=run.total_tokens, trace=run.trace_path,
                   files=[c.path for c in cs.changes], links_broken=len(links))
-    return RoutineResult("checkup", status, cs.message, {**detail, "report": run.answer}, run, detail.get("pending"))
+    return RoutineResult("checkup", status, cs.message, {**detail, "report": run.answer}, run, detail.get("pending"), cs)
 
 
 # ------------------------------------------------------------------ review

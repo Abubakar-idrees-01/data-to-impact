@@ -1,0 +1,25 @@
+# evalkit (02-llm-evals): unit tests + quality gates on committed evaluation runs.
+name: evalkit
+on:
+  push:
+    paths: ["02-llm-evals/**", ".github/workflows/evalkit.yml"]
+  pull_request:
+    paths: ["02-llm-evals/**"]
+jobs:
+  test-and-gate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 02-llm-evals
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - name: Unit tests (no network, no API key)
+        run: python -m pytest -q
+      - name: "Quality gate: StudyRAG answers v2 vs v1"
+        env:
+          PYTHONPATH: src
+        run: python -m evalkit gate results/studyrag-answers/v2.json --rules gates/studyrag.toml --baseline results/studyrag-answers/v1.json

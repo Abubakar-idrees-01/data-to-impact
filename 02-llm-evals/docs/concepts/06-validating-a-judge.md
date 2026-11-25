@@ -56,7 +56,13 @@ The 95% coverage condition matters: a judge that fails on half the cases can loo
   replies for half the cases; its kappa on the other half looked best of all. The coverage rule excluded it.
   Fix: `reasoning_effort: low` and a larger budget, then re-run.
 - **A severity field** (major vs minor problems, only major counts) was added to keep the evidence without the
-  nitpicking; its dev results are in [RESULTS.md](../RESULTS.md).
+  nitpicking. It helped (Qwen 0.31 → 0.43) but verdict-only still won, for both models.
+
+## 5b. The held-out result
+The rule picked Qwen3.8-27B with the verdict-only rubric (dev kappa 0.633). On the 240 test answers: **kappa 0.625
+(0.525–0.714)**, recall 0.95, precision 0.75; word overlap reached 0.233. Dev and test agree, so the selection didn't
+overfit. Its errors are mostly false alarms (39 vs 6 misses), concentrated on fluent answers (GPT-4's: precision
+0.44) and on QA: the judge is stricter than the annotators about paraphrase and inference.
 
 ## 6. Reading the final number
 Report kappa **with its 95% interval**, recall (share of human-marked hallucinations caught), precision (share

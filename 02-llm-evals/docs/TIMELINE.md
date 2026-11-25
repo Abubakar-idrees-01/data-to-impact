@@ -57,13 +57,30 @@ plus three baselines. Then four judge configurations on the dev set.
 README, setup guide, architecture, six concept notes, decisions D1–D13, results (dev final), the HTML report and
 this timeline.
 
-### Still running
-The selected judge on the 240 held-out cases, and the grading of StudyRAG's answers. *(This section is updated
-when they finish.)*
+### Phase 6: The long run (22–25 November)
+**What happened:** the selected judge ran on the 240 held-out cases, then graded StudyRAG's answers.
 
-## Lessons so far
+| Difficulty | How we solved it |
+|---|---|
+| Groq's daily cap is a **rolling 24-hour window**: the quota used on 22 Nov only came back the next afternoon. | Moved StudyRAG's correctness grading to a third model (gpt-oss-20b) with its own quota. |
+| The pipeline **stopped when the Claude Code session ended** (22 Nov, 17:33): background jobs belong to the session. | Relaunched fully detached (`setsid nohup ... & disown`); the rule is in the project's CLAUDE.md. |
+| The **laptop shut down** mid-run (23 Nov, 21:15), with 190 of 240 test cases done. | Nothing was lost: on 25 Nov a restart replayed 204 cases from the cache and finished in ~40 minutes. |
+| Internet dropped several times (DNS failures, closed connections). | Network errors retry with backoff; nothing was recorded as a verdict without an answer. |
+
+**Results:** test kappa **0.625** (0.525–0.714) vs dev 0.633; word overlap 0.233. StudyRAG v1 → v2: citation gain and
+speed-up real, correctness and faithfulness within noise. CI added: evalkit's tests and the StudyRAG quality gate run
+on every push. Whole study: 715 calls, ~807k tokens, $0.
+
+## Where we ended
+- evalkit: metrics with intervals, paired comparisons, CI gates, an LLM judge validated on 240 held-out human-labelled
+  answers (kappa 0.625), a report page, and StudyRAG as its first user.
+- 36 tests, a CI workflow (tests + quality gate), seven PDFs.
+
+## Lessons
 1. **Validate the evaluator.** Two judge setups that looked reasonable were no better than word counting, or failed
    half the time; only comparison with human labels showed it.
 2. **Coverage is a metric.** A judge's score on the cases it answered says nothing about the ones it didn't.
 3. **Decide the selection rule before you see the results.**
 4. **Free tiers are fine for a study if the code is patient:** cache everything, wait as asked, make restarts free.
+5. **Detach long jobs from the session that starts them,** and keep the machine awake.
+6. **The format of a judge's answer changes its judgement:** a list to fill gets filled.

@@ -53,10 +53,11 @@ budget reasoning, and scored the highest kappa (0.73) *on the half it answered*.
 selection would have picked a judge that fails half the time.
 
 ### D10. Severity-rated problems instead of "list every problem" — measured
-**Measured:** with the "quote every problem" rubric, Qwen3.8-27B flagged 15 of 22 clean dev answers (kappa 0.31,
+**Measured:** with the "quote every problem" rubric, Qwen3.8-27B flagged 20 of 29 clean dev answers (kappa 0.31,
 no better than word overlap at 0.30), mostly for wording ("tasty" for a dish a reviewer liked). Verdict-only
-reached 0.63. The severity rubric keeps the quoted evidence but only *major* problems count. Which variant won is
-decided by D8's rule; see RESULTS.
+reached 0.63. The severity rubric keeps the quoted evidence but only *major* problems count. **Outcome:** severity
+helped (0.31 → 0.43 for Qwen) but verdict-only won for both models (Qwen 0.63, gpt-oss 0.57 vs 0.53), so D8's rule
+chose Qwen verdict-only. On the held-out test it scored 0.625. The cost: its verdicts come without quoted evidence.
 
 ### D11. Reasoning models: larger budget, low effort, explicit empty-reply error
 **Measured:** with a 700-token budget gpt-oss-120b returned empty content on 26 of 60 cases and truncated JSON on 4.
@@ -73,3 +74,8 @@ wait) instead of failing, and `pipeline.sh` chains every step, so the study fini
 **Why:** an evaluation report is read, not interacted with. One self-contained HTML file (inline SVG, no
 JavaScript) can be hosted free on GitHub Pages, never goes to sleep like a free app server, and can be attached
 to an email. Every chart shows its values and confidence intervals as text too.
+
+### D14. A separate model for StudyRAG correctness grading
+**Why:** free-tier quotas are per model. Grading StudyRAG's answers for correctness on gpt-oss-20b, in parallel with the
+judge study on the other two models, saved most of a day. Correctness grading isn't covered by the RAGTruth
+validation either way, which RESULTS states.

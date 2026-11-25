@@ -47,7 +47,7 @@ plus three baselines. Then four judge configurations on the dev set.
 
 | Problem found by checking the dev results | Fix |
 |---|---|
-| **The evidence rubric made Qwen a nitpicker:** 15 of 22 clean answers flagged, for wording like "tasty" or "highlight". Kappa 0.31, no better than counting words. | A verdict-only rubric (0.63), and a severity rubric where only *major* problems count. |
+| **The evidence rubric made Qwen a nitpicker:** 20 of 29 clean answers flagged, for wording like "tasty" or "highlight". Kappa 0.31, no better than counting words. | A verdict-only rubric (0.63), and a severity rubric where only *major* problems count. |
 | **gpt-oss returned nothing for half the cases:** its hidden reasoning used the whole 700-token budget. Its kappa on the other half looked best (0.73). | A coverage rule (≥ 95% verdicts) in the pre-registered selection; re-run with low reasoning effort and a 2,000-token budget; empty replies now raise a clear error. |
 | `pkill -f <pattern>` killed its own shell, because the pattern appeared in its own command line. | Stop processes by PID only. |
 | **Groq's free daily quota** (200k tokens per model per day) ran out with ~750k tokens of work left. | With the owner: stay free. Each model has its own quota, so two work in parallel; the client waits as long as Groq asks; `pipeline.sh` runs every step unattended. Cached calls make restarts free. |

@@ -24,12 +24,13 @@ with people. A version can look better and be no better, or worse.
 3. **Compare and gate:** pair cases between versions, test significance, apply the rules.
 4. **Trust, but verify:** measure the judge's agreement with humans before using its scores.
 
-## Results so far
+## Results
 | | |
 |---|---|
-| Best judge on the tuning set | kappa **0.63** with human annotators (non-LLM baseline: 0.30) |
-| Held-out test (240 answers) | running on the free API tier (pending) |
-| StudyRAG v1 → v2 | citation gain real (p = 0.008); key-fact change is noise (p = 0.74) |
+| Judge vs humans, 240 held-out answers | kappa **0.625** (CI 0.53–0.71); catches 95% of hallucinations, 75% of alarms real |
+| Best non-LLM baseline | kappa 0.233 |
+| StudyRAG v1 → v2 | citation gain and speed-up real; correctness and faithfulness within noise |
+| Cost | 715 API calls, ~807k tokens, $0 (free tier) |
 
 ## Built with
 Python standard library only (statistics, HTTP, caching, SVG charts by hand) · Groq API (free tier) for the

@@ -10,6 +10,7 @@ It is the shared evaluation layer of this portfolio: [StudyRAG](../01-rag-from-s
 ![The evalkit report](docs/images/report.png)
 
 *The report page ([`site/index.html`](site/index.html)) is self-contained: open it in any browser.*
+**PDFs:** [Overview](docs/pdf/evalkit-Overview.pdf) · [Timeline](docs/pdf/evalkit-Timeline.pdf) · [Setup](docs/pdf/evalkit-Setup-Guide.pdf) · [How it works](docs/pdf/evalkit-How-It-Works.pdf) · [Results](docs/pdf/evalkit-Results.pdf) · [Decisions](docs/pdf/evalkit-Design-Decisions.pdf) · [Concepts](docs/pdf/evalkit-Concepts-Handbook.pdf)
 
 ## What it does
 | | |
@@ -22,24 +23,25 @@ It is the shared evaluation layer of this portfolio: [StudyRAG](../01-rag-from-s
 | ✅ **Judge validation** | Agreement with human hallucination labels (RAGTruth) on a held-out set, against non-LLM baselines, with a selection rule fixed in advance |
 | 📄 **Report** | One HTML file, inline SVG charts with confidence intervals, light/dark, no JavaScript |
 
-## Results so far
-**Tuning (dev set, 60 human-labelled answers):** kappa with human annotators
+## Results
+**Judge vs human annotators, 240 held-out RAGTruth answers** (never used for tuning):
 
-| detector | kappa (95% CI) |
-|---|---|
-| **Qwen3.8-27B, verdict-only rubric** | **0.63** (0.44 – 0.83) |
-| Qwen3.8-27B, "quote every problem" rubric | 0.31 (0.15 – 0.49) |
-| Word overlap (no LLM) | 0.30 (0.10 – 0.51) |
-| Always "hallucinated" | 0.00, although its F1 is 0.67 |
+| detector | kappa (95% CI) | catches | alarms that are real |
+|---|---|---|---|
+| **Qwen3.8-27B, verdict-only rubric** (chosen on the dev set) | **0.625** (0.525 – 0.714) | **95%** | **75%** |
+| Word overlap (no LLM) | 0.233 (0.127 – 0.339) | 87% | 58% |
+| Always "hallucinated" | 0.000, although its F1 is 0.67 | 100% | 50% |
 
-**Held-out test (240 answers) and StudyRAG grading:** running on the free API tier, results pending
-([status](docs/RESULTS.md)).
+Dev kappa was 0.633, so the choice didn't overfit. The judge errs on the strict side (39 false alarms vs 6
+misses), most on fluent answers from GPT-4.
 
-**StudyRAG v1 → v2 (paired, 34 questions):** citation precision +0.16 is real (p = 0.008); the key-fact change
-(−0.015, p = 0.74) is noise.
+**StudyRAG v1 → v2 (paired, 34 questions):** citation precision +0.16 (p = 0.008) and −3.4 s per answer are real;
+correctness (both by the LLM judge and by key-fact matching) and faithfulness changed within noise.
+
+Cost of the whole study: 715 API calls, ~807k tokens, **$0** (Groq free tier). Details: [docs/RESULTS.md](docs/RESULTS.md).
 
 **Things the evaluation caught in the evaluator** (see [DECISIONS](docs/DECISIONS.md)):
-- **The evidence rubric made a judge a nitpicker:** asking it to list problems got wording like "tasty" for "liked" flagged as hallucinations.
+- **Asking for evidence made the judges worse:** with a "list every problem" rubric, Qwen flagged 20 of 29 clean answers (kappa 0.31); verdict-only scored 0.63, for both models.
 - **A judge that fails half the time topped the table:** a reasoning model returned empty replies for half the cases, and its kappa looked best on the half it answered.
 - **F1 rewards a detector that always says "hallucinated":** F1 0.67, kappa 0.
 
@@ -80,7 +82,10 @@ docs/          setup, architecture, concepts, decisions, results
   the headline metrics for that reason.
 - Human labels are a single annotation per answer; inter-annotator agreement (the ceiling for any judge) is not
   measured here.
-- Free-tier API limits make a full validation take about two days; with a paid tier it takes about an hour.
+- The judge is stricter than the annotators (39 false alarms vs 6 misses on the test set), especially on fluent
+  answers; read its faithfulness scores as a lower bound.
+- The StudyRAG correctness judge (gpt-oss-20b) is not itself validated against human labels.
+- Free-tier API limits made the full study take three days; with a paid tier it takes about an hour.
 
 ## License
 Code: MIT. RAGTruth: MIT (Niu et al., 2024), downloaded at setup time.

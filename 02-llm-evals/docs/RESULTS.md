@@ -91,8 +91,8 @@ generated from.
 - **v2's only real gains are citations and speed.** Both correctness measures agree that answer quality didn't move,
   which confirms project 1's statement "correctness moved within noise" with a second, independent method.
 - **The word-matching key-fact metric holds up.** It agrees with the LLM correctness judge on "mostly correct" for
-  33 of 34 answers. The exception (s01) scored 0 on key facts while the judge called it partially correct, a
-  paraphrase the word matcher missed.
+  33 of 34 answers. The exception (s01) described payment *methods* but not the *commission* the reference
+  expects: key facts scored it 0, the judge gave partial credit. Both are defensible.
 - **The LLM judge is stricter about faithfulness than project 1's verifier** (82% vs 95% for v2). It flags answers
   whose every sentence overlaps a source, which fits its test-set behaviour of over-flagging fluent paraphrase.
   Read StudyRAG's faithfulness as "between 82% and 95%".

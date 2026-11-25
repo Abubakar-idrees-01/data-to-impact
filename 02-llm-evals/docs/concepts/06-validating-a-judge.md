@@ -49,7 +49,7 @@ The 95% coverage condition matters: a judge that fails on half the cases can loo
 
 ## 5. What the dev set taught us
 - **Asking for evidence made one model a nitpicker.** Qwen3.8-27B with the "quote every problem" rubric caught
-  every hallucination but also flagged 15 of 22 clean answers. It objected to things like "tasty Bloody Mary" for
+  every hallucination but also flagged 20 of 29 clean answers. It objected to things like "tasty Bloody Mary" for
   "they make a Bloody Mary". Kappa 0.31, no better than word overlap. The verdict-only rubric scored **0.63**.
   Lesson: a format that forces a list encourages the model to fill it.
 - **Reasoning models can return nothing.** gpt-oss-120b spent its whole token budget thinking and returned empty

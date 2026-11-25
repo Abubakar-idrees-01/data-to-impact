@@ -147,3 +147,21 @@ def test_budget_warning_comes_while_the_model_can_still_act(fake_api):
     r = run(Agent(api.llm(), Registry().add(ADD), token_budget=1000))
     assert "almost used its budget" in api.requests[1]["messages"][-1]["content"] and r.answer == "saved"
     assert sum(e["type"] == "warning" for e in r.events) == 1
+
+
+DAILY_429 = (429, {"error": {"message": "Rate limit reached for model on tokens per day (TPD): Limit 200000, Used 199000. "
+                                        "Please try again in 10m5.6s."}}, {})
+
+
+def test_daily_limit_switches_to_the_fallback_model(fake_api):
+    api = fake_api([DAILY_429, text("answer from the fallback")])
+    llm = api.llm(fallback_model="openai/gpt-oss-20b")
+    r = run(Agent(llm, Registry()))
+    assert r.answer == "answer from the fallback" and api.requests[1]["model"] == "openai/gpt-oss-20b"
+    assert llm.switched == "openai/gpt-oss-120b" and llm.usage.waits == []           # no pointless waiting
+
+
+def test_daily_limit_without_fallback_fails_fast_with_a_clear_message(fake_api):
+    api = fake_api([DAILY_429])
+    r = run(Agent(api.llm(), Registry()))
+    assert r.stopped == "error" and "daily token limit reached" in r.answer and "10m5.6s" in r.answer

@@ -61,6 +61,7 @@ class Settings:
     api_base_url: str = ""
     api_model: str = ""
     api_key: str = ""
+    fallback_model: str | None = None         # used when the main model's daily quota runs out
     tavily_key: str = ""
     reasoning_effort: str | None = "low"      # gpt-oss on Groq: low/medium/high; None to omit
     max_steps: int = 8                        # model calls per task before it must answer
@@ -92,6 +93,7 @@ class Settings:
             api_base_url=env("SCOUT_API_BASE_URL", "https://api.groq.com/openai/v1"),
             api_model=env("SCOUT_API_MODEL", "openai/gpt-oss-120b"),
             api_key=env("SCOUT_API_KEY", ""),
+            fallback_model=env("SCOUT_FALLBACK_MODEL", "openai/gpt-oss-20b") or None,
             tavily_key=env("TAVILY_API_KEY", ""),
         )
         if env("SCOUT_REASONING_EFFORT") is not None:

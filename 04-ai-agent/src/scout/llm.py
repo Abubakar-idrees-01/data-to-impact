@@ -25,6 +25,7 @@ log = logging.getLogger(__name__)
 
 RETRY_STATUS = {429, 500, 502, 503, 504}
 _THINK = re.compile(r"<think>.*?</think>\s*", re.S)
+DAILY = re.compile(r"per day|\(TPD\)|\(RPD\)", re.I)
 
 
 class LLMError(RuntimeError):
@@ -100,7 +101,8 @@ class LLM:
 
     def __init__(self, base_url: str, model: str, api_key: str = "", *, reasoning_effort: str | None = None,
                  timeout: float = 120.0, max_retries: int = 8, max_wait: float = 65.0,
-                 sleep: Callable[[float], Awaitable[None]] = asyncio.sleep, transport: httpx.AsyncBaseTransport | None = None):
+                 sleep: Callable[[float], Awaitable[None]] = asyncio.sleep, transport: httpx.AsyncBaseTransport | None = None,
+                 fallback_model: str | None = None):
         self.url = base_url.strip().rstrip("/") + "/chat/completions"
         self.model = model.strip()
         self.api_key = api_key.strip()
@@ -111,12 +113,15 @@ class LLM:
         self.sleep = sleep
         self.transport = transport
         self.usage = Usage()
+        self.fallback_model = (fallback_model or "").strip() or None
+        self.switched: str | None = None          # set when the daily quota forced a switch to the fallback
 
     @classmethod
     def from_settings(cls, s, **kwargs) -> "LLM":
         if not s.api_key and "localhost" not in s.api_base_url and "127.0.0.1" not in s.api_base_url:
             raise LLMError("set SCOUT_API_KEY in 04-ai-agent/.env (see docs/SETUP.md)")
-        return cls(s.api_base_url, s.api_model, s.api_key, reasoning_effort=s.reasoning_effort, **kwargs)
+        return cls(s.api_base_url, s.api_model, s.api_key, reasoning_effort=s.reasoning_effort,
+                   fallback_model=getattr(s, "fallback_model", None), **kwargs)
 
     async def chat(self, messages: list[dict], tools: list[dict] | None = None, *, max_tokens: int = 2048,
                    temperature: float = 0.0) -> Reply:
@@ -156,6 +161,20 @@ class LLM:
                 if r.status_code == 200:
                     return r.json()
                 text = r.text
+                if r.status_code == 429 and DAILY.search(text):
+                    # a daily quota: waiting a minute won't help. Switch to the fallback model (its own quota) or stop.
+                    if self.fallback_model and self.model != self.fallback_model:
+                        log.warning("daily token limit reached on %s, switching to %s", self.model, self.fallback_model)
+                        self.switched, self.model = self.model, self.fallback_model
+                        if "gpt-oss" not in self.model:
+                            self.reasoning_effort = None
+                            body.pop("reasoning_effort", None)
+                        body = {**body, "model": self.model}
+                        continue
+                    hint = re.search(r"try again in ([\dhms.]+)", text)
+                    raise LLMError(f"daily token limit reached for {self.model}" +
+                                   (f"; it frees up in {hint.group(1)}" if hint else "") +
+                                   " (set SCOUT_FALLBACK_MODEL to another model to continue)")
                 if r.status_code in RETRY_STATUS and attempt < self.max_retries:
                     wait = retry_wait(dict(r.headers), text, attempt, self.max_wait)
                     log.warning("API %s, waiting %.1f s (attempt %d/%d)", r.status_code, wait, attempt + 1, self.max_retries)

@@ -110,3 +110,12 @@ def test_restricted_search_widens_when_primary_sites_have_nothing():
     assert bodies[0]["include_domains"] == ["arxiv.org"] and bodies[0]["time_range"] == "month"
     assert "include_domains" not in bodies[1] and bodies[1]["time_range"] == "month"
     assert len(res["results"]) == 2 and res["note"].startswith("nothing on the preferred")
+
+
+def test_tracking_parameters_and_title_junk_are_removed():
+    b = SourceBook()
+    s = b.add("https://github.com/modelcontextprotocol/go-sdk?ref=blog.getzep.com&utm_source=x&tab=readme#top",
+              "GitHub - modelcontextprotocol/go-sdk at blog.getzep.com · GitHub")
+    assert s.url == "https://github.com/modelcontextprotocol/go-sdk?tab=readme"
+    assert s.title == "GitHub - modelcontextprotocol/go-sdk · GitHub"
+    assert b.add("https://github.com/modelcontextprotocol/go-sdk?tab=readme").n == 1

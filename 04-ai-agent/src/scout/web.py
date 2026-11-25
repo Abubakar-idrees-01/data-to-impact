@@ -18,7 +18,7 @@ import re
 import socket
 from dataclasses import dataclass, field
 from html.parser import HTMLParser
-from urllib.parse import urldefrag, urlparse
+from urllib.parse import parse_qsl, urldefrag, urlencode, urlparse, urlunparse
 
 import httpx
 
@@ -28,6 +28,16 @@ TAVILY = "https://api.tavily.com"
 _WORD = re.compile(r"[a-z0-9]+")
 STOP = set("a an the of to in on for and or is are was were be by with as at from that this it its what which who "
            "when where how why does do did can will about into than then there their they them".split())
+
+
+TRACKING = re.compile(r"^(utm_\w+|ref|ref_src|source|fbclid|gclid|mc_cid|mc_eid)$", re.I)
+
+
+def clean_url(url: str) -> str:
+    """Drop the #fragment and tracking parameters (?ref=..., utm_*), so one page has one URL."""
+    p = urlparse(urldefrag(url.strip())[0])
+    query = urlencode([(k, v) for k, v in parse_qsl(p.query, keep_blank_values=True) if not TRACKING.match(k)])
+    return urlunparse(p._replace(query=query))
 
 
 @dataclass
@@ -43,7 +53,8 @@ class SourceBook:
     sources: list[Source] = field(default_factory=list)
 
     def add(self, url: str, title: str = "") -> Source:
-        url = urldefrag(url.strip())[0]
+        url = clean_url(url)
+        title = re.sub(r"\s+at\s+\S+\s+·\s+GitHub$", " · GitHub", title.strip())     # "repo at explainx · GitHub"
         for s in self.sources:
             if s.url.rstrip("/") == url.rstrip("/"):
                 if title and not s.title:

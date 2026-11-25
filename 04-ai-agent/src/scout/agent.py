@@ -129,7 +129,7 @@ class Agent:
             for step in range(1, self.max_steps + 1):
                 reply = await self._chat(result, messages, self.registry.schemas())
                 result.steps = step
-                self._event(result, {"type": "llm", "step": step, "content": reply.content,
+                self._event(result, {"type": "llm", "step": step, "model": self.llm.model, "content": reply.content,
                                      "tool_calls": [{"name": c.name, "arguments": c.arguments} for c in reply.tool_calls],
                                      "prompt_tokens": reply.prompt_tokens, "completion_tokens": reply.completion_tokens,
                                      "seconds": round(reply.seconds, 2)})

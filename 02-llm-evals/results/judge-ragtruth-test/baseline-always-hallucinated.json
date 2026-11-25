@@ -1,0 +1,2779 @@
+{
+ "suite": "judge-ragtruth-test",
+ "name": "baseline-always-hallucinated",
+ "items": [
+  {
+   "id": "rt16852",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 128,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt7446",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 147,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt16056",
+   "gold": true,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 55,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt4196",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 99,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt5531",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 55,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt7021",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 214,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt12220",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 129,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt12447",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 129,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14290",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 220,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt9768",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 113,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt926",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 193,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt10115",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 140,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15555",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 221,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14097",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 167,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt16794",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 59,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt182",
+   "gold": false,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 159,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt6142",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 173,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14703",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 183,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt9777",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 94,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt480",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 99,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15554",
+   "gold": false,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 66,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt12518",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 84,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt16469",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 57,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13155",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 156,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13917",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 90,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt16881",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 291,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt7006",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 158,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14702",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 98,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13292",
+   "gold": false,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 75,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt9201",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 179,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt6408",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 134,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt7778",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 103,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13719",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 207,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt7087",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 219,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt16895",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 105,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12012",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 113,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt6918",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 129,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt13340",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 139,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt779",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 74,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt5528",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 125,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12842",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 284,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt9877",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 209,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt485",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 98,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt15345",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 185,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14323",
+   "gold": true,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 75,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt7000",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 228,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14201",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 98,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15270",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 50,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt16689",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 116,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt9159",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 133,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13443",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 173,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt4261",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 88,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt7236",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 157,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt5821",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 222,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt2800",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 119,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt7009",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 253,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt180",
+   "gold": true,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 106,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt729",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 34,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt17060",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 92,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt15199",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 73,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14291",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 158,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14135",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 120,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt5763",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 82,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt5683",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 218,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt911",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 204,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt10739",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 134,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14199",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 141,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt10800",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 137,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt13433",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 235,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt7062",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 125,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt13104",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 129,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt4950",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 89,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt7324",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 112,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt16799",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 95,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt8779",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 205,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt7293",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 133,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt10005",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 137,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt184",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 124,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14691",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 235,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt12903",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 322,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13070",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 119,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt16775",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 90,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt8080",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 210,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt15933",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 226,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15203",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 102,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt12183",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 163,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt6763",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 151,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14133",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 156,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt1602",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 72,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt16419",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 209,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt885",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 120,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt11484",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 144,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt2239",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 214,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14745",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 162,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt16511",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 274,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt9002",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 156,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12845",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 197,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15729",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 231,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14714",
+   "gold": false,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 45,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt12136",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 149,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt12343",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 103,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt16060",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 101,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt543",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 157,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt8476",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 196,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt2674",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 123,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt9214",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 166,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt8238",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 133,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14325",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 83,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt13162",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 196,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt6785",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 280,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt1826",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 146,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt9542",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 131,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt10333",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 208,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14296",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 101,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt2534",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 149,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt5827",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 190,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt11181",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 82,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt1751",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 49,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14378",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 183,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13263",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 139,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt4801",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 96,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt11102",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 86,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14847",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 234,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt4802",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 75,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt8148",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 132,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt540",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 192,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt17102",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 95,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13293",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 102,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12601",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 76,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt604",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 122,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt9872",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 103,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt15273",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 132,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12694",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 160,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt1750",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 66,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt6714",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 134,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14364",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 120,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt12523",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 67,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15753",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 171,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt10878",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 121,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt722",
+   "gold": false,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 90,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt4229",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 99,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt1109",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict",
+    "Subtle Conflict"
+   ],
+   "response_words": 136,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt10070",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 129,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt16853",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 176,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14098",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 190,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt16667",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 128,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15651",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 129,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12471",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 333,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt2246",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 41,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt645",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 120,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt4117",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 118,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14753",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 143,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt16664",
+   "gold": false,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 92,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt1728",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 155,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14889",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 94,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14208",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 74,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt1517",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 169,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt17199",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 124,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt3980",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 128,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13039",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 37,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt17201",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 70,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15195",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 226,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12521",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 156,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt852",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 39,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15462",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 80,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt13364",
+   "gold": false,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 117,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt9870",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 130,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15346",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 75,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt17283",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 79,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14844",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 106,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt275",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 115,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt4955",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 76,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt29",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 108,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt6859",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 167,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt1967",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 132,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12242",
+   "gold": false,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 77,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt12298",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 60,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt16057",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 36,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14717",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 109,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt11193",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 130,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt2469",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 142,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15465",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 164,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt2471",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 130,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt4588",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 123,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt17104",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 181,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14396",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 55,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt615",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 131,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15929",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 49,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt9918",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 127,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt15728",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 178,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt8770",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 216,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt8218",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict"
+   ],
+   "response_words": 187,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt7157",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 131,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt16418",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 264,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt316",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 67,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt17062",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 100,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt1644",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 199,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14860",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 198,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt8937",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 119,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt16356",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 37,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt3249",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 120,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt16898",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 155,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14470",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [],
+   "response_words": 171,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt14280",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 64,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt12219",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 228,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt15271",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 24,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt13105",
+   "gold": true,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 199,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt14806",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 57,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt6998",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 141,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt603",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 101,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13914",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 82,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt5820",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 141,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt247",
+   "gold": false,
+   "task": "Summary",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 169,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt213",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 83,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt6930",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 127,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt10002",
+   "gold": false,
+   "task": "Data2txt",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 118,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt17105",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 212,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt69",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 112,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt15709",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [],
+   "response_words": 36,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt5851",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "gpt-3.5-turbo-0613",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 219,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt16662",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 90,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt3608",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 164,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12297",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 135,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt4298",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 101,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt1622",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 98,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12228",
+   "gold": false,
+   "task": "QA",
+   "generator": "gpt-4-0613",
+   "label_types": [],
+   "response_words": 105,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt17565",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 89,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt11908",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 115,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt4209",
+   "gold": false,
+   "task": "Summary",
+   "generator": "llama-2-7b-chat",
+   "label_types": [],
+   "response_words": 89,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt16798",
+   "gold": true,
+   "task": "QA",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 156,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt3082",
+   "gold": true,
+   "task": "Summary",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 126,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12602",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 70,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13535",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 77,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt5674",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Baseless Info",
+    "Evident Conflict",
+    "Subtle Baseless Info"
+   ],
+   "response_words": 241,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt12707",
+   "gold": false,
+   "task": "QA",
+   "generator": "llama-2-70b-chat",
+   "label_types": [],
+   "response_words": 165,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt962",
+   "gold": true,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Baseless Info"
+   ],
+   "response_words": 73,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt7510",
+   "gold": true,
+   "task": "Data2txt",
+   "generator": "llama-2-13b-chat",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 131,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt13532",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Evident Conflict"
+   ],
+   "response_words": 111,
+   "pred": true,
+   "agree": 1.0
+  },
+  {
+   "id": "rt878",
+   "gold": false,
+   "task": "Summary",
+   "generator": "mistral-7B-instruct",
+   "label_types": [],
+   "response_words": 80,
+   "pred": true,
+   "agree": 0.0
+  },
+  {
+   "id": "rt13160",
+   "gold": true,
+   "task": "QA",
+   "generator": "mistral-7B-instruct",
+   "label_types": [
+    "Subtle Baseless Info"
+   ],
+   "response_words": 145,
+   "pred": true,
+   "agree": 1.0
+  }
+ ],
+ "metrics": {
+  "agree": {
+   "value": 0.5,
+   "ci_low": 0.43724155475169957,
+   "ci_high": 0.5627584452483004,
+   "n": 240
+  },
+  "n_errors": {
+   "value": 0.0,
+   "n": 240
+  },
+  "kappa": {
+   "value": 0.0,
+   "n": 240
+  },
+  "kappa_ci_low": {
+   "value": 0.0,
+   "n": 240
+  },
+  "kappa_ci_high": {
+   "value": 0.0,
+   "n": 240
+  },
+  "f1": {
+   "value": 0.6666666666666666,
+   "n": 240
+  },
+  "f1_ci_low": {
+   "value": 0.6086956521739131,
+   "n": 240
+  },
+  "f1_ci_high": {
+   "value": 0.7165775401069518,
+   "n": 240
+  },
+  "precision": {
+   "value": 0.5,
+   "n": 240
+  },
+  "precision_ci_low": {
+   "value": 0.4375,
+   "n": 240
+  },
+  "precision_ci_high": {
+   "value": 0.5583333333333333,
+   "n": 240
+  },
+  "recall": {
+   "value": 1.0,
+   "n": 240
+  },
+  "recall_ci_low": {
+   "value": 1.0,
+   "n": 240
+  },
+  "recall_ci_high": {
+   "value": 1.0,
+   "n": 240
+  },
+  "balanced_accuracy": {
+   "value": 0.5,
+   "n": 240
+  },
+  "balanced_accuracy_ci_low": {
+   "value": 0.5,
+   "n": 240
+  },
+  "balanced_accuracy_ci_high": {
+   "value": 0.5,
+   "n": 240
+  },
+  "accuracy": {
+   "value": 0.5,
+   "n": 240
+  },
+  "accuracy_ci_low": {
+   "value": 0.4375,
+   "n": 240
+  },
+  "accuracy_ci_high": {
+   "value": 0.5583333333333333,
+   "n": 240
+  },
+  "tp": {
+   "value": 120.0,
+   "n": 240
+  },
+  "fp": {
+   "value": 120.0,
+   "n": 240
+  },
+  "fn": {
+   "value": 0.0,
+   "n": 240
+  },
+  "tn": {
+   "value": 0.0,
+   "n": 240
+  }
+ },
+ "config": {
+  "detector": "baseline-always-hallucinated",
+  "lexical_threshold": 0.55
+ },
+ "env": {
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_count": 4,
+  "git_commit": "3ed3114",
+  "git_dirty": true
+ },
+ "created": "2026-11-25T03:22:30+00:00"
+}

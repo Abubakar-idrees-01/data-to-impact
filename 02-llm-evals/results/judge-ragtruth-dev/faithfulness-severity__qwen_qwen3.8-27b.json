@@ -1811,12 +1811,12 @@
   "extra_body": null,
   "max_tokens": 900,
   "usage": {
-   "calls": 24,
-   "cache_hits": 36,
-   "prompt_tokens": 27856,
-   "completion_tokens": 5231,
-   "seconds": 251.44930720329285,
-   "waits": 17
+   "calls": 1,
+   "cache_hits": 59,
+   "prompt_tokens": 1070,
+   "completion_tokens": 303,
+   "seconds": 1.6578664779663086,
+   "waits": 0
   }
  },
  "env": {
@@ -1824,8 +1824,8 @@
   "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
   "machine": "x86_64",
   "cpu_count": 4,
-  "git_commit": "37a2c50",
-  "git_dirty": false
+  "git_commit": "0729e66",
+  "git_dirty": true
  },
- "created": "2026-11-23T10:54:18+00:00"
+ "created": "2026-11-25T03:18:39+00:00"
 }

@@ -21,11 +21,11 @@ use our tools. Packaged and published so others can install it.
 - Default library: owner's own notes (project 1's storage/), locally; public sample index for tests/screenshots.
 - Tools are read-only and call no LLM: the client (Claude) is the model. No API key needed.
 
-## Status (2026-11-25)
-- Built: 8 tools (search_notes, list_documents, document_outline, get_passage, check_answer, list_eval_runs,
-  eval_run_summary, compare_eval_runs), 2 resources, 3 prompts; path-safe eval access; index auto-reload when
-  the app/CLI syncs. 15 tests incl. a stdio end-to-end test with real models (no PYTHONPATH: package must be
-  installed, `pip install --no-deps -e .`).
-- Connected to the owner's Claude Code via workspace-root `.mcp.json` (gitignored; template in examples/).
-- TODO: docs (README, SETUP, HOW_IT_WORKS, concepts incl. "MCP on the wire" from scratch.py, DECISIONS,
-  RESULTS e.g. latency, TIMELINE, OVERVIEW, PDFs), demo screenshot/transcript, CI, PyPI publish (ask owner).
+## Status (2026-11-25): complete (publishing open)
+- 8 read-only tools, 2 resources, 3 prompts; from-scratch MCP (scratch.py) conformance-tested with the official client;
+  index auto-reload; 15 tests (stdio e2e with real models skips in CI). CI: .github/workflows/mcp-server.yml.
+- Measured (docs/benchmark.json): handshake 1.8 s, first call 14 s (model load), search 0.94 s, check_answer 1.26 s.
+- Docs final: README (real demo session, docs/DEMO.md + images/demo.png), SETUP, HOW_IT_WORKS, 4 concepts,
+  DECISIONS D1-D10, RESULTS, OVERVIEW, TIMELINE, 7 PDFs (build with project 1's venv: scripts/build_pdfs.py).
+- Owner uses it from Claude Code via workspace-root .mcp.json (gitignored).
+- Open (owner's call): PyPI publishing. Blocker: depends on `studyrag` (project 1), which isn't on PyPI.

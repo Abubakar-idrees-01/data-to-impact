@@ -11,6 +11,7 @@ It connects two other projects in this portfolio: [StudyRAG](../01-rag-from-scra
 
 *A real session, on the public sample corpus. The assistant searches, drafts an answer, and checks it. The invented
 last sentence (added on purpose) is caught and removed. Full transcript: [docs/DEMO.md](docs/DEMO.md).*
+**PDFs:** [Overview](docs/pdf/studyrag-mcp-Overview.pdf) · [Timeline](docs/pdf/studyrag-mcp-Timeline.pdf) · [Setup](docs/pdf/studyrag-mcp-Setup-Guide.pdf) · [How it works](docs/pdf/studyrag-mcp-How-It-Works.pdf) · [Results](docs/pdf/studyrag-mcp-Results.pdf) · [Decisions](docs/pdf/studyrag-mcp-Design-Decisions.pdf) · [Concepts](docs/pdf/studyrag-mcp-Concepts-Handbook.pdf)
 
 ## Tools
 | | tool | what it does |

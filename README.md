@@ -9,8 +9,8 @@ Everything is designed to run on modest, CPU-only hardware.
 | # | Project | Problem | Key ideas | Status |
 |---|---------|---------|-----------|--------|
 | 1 | [StudyRAG: RAG from Scratch](01-rag-from-scratch) | Trustworthy study assistant over your own course material | Hand-built BM25 + vector search, hybrid retrieval, OCR, verified citations, MCQ generation | ✅ v1 done: 100% top-3 retrieval, 14/14 refusals, 0.94 key-fact recall on real slides |
-| 2 | [evalkit: LLM Evals](02-llm-evals) | "Is my AI system actually good?" | Metrics with confidence intervals, paired version comparison, CI gates, LLM judge validated against human labels | 🔄 built; judge validation running (dev: kappa 0.63 vs 0.30 baseline) |
-| 3 | [MCP Server](03-mcp-server) | Give AI assistants access to private knowledge and tools | Model Context Protocol, published package | 🚧 planned |
+| 2 | [evalkit: LLM Evals](02-llm-evals) | "Is my AI system actually good?" | Metrics with confidence intervals, paired version comparison, CI quality gates, LLM judge validated against human labels | ✅ done: judge agrees with human hallucination labels at kappa 0.625 on 240 held-out answers (best non-LLM baseline 0.233) |
+| 3 | [studyrag-mcp: MCP Server](03-mcp-server) | Give AI assistants access to private knowledge and tools | Model Context Protocol (official SDK + built from scratch), cited search, answer fact-checking, safe read-only tools | ✅ done: used from Claude Code; search ~1 s on a 2015 CPU; 15 tests incl. real stdio end to end |
 | 4 | [AI Agent](04-ai-agent) | Automate research and dev chores safely | Tool use, planning, memory, human-in-the-loop | 🚧 planned |
 | 5 | [Adaptive LLM](05-adaptive-llm) | Fast local chat on weak hardware | Tiny GPT with MoE + early exit, hardware-aware routing, speculative decoding | 🚧 planned |
 

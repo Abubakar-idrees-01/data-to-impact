@@ -30,19 +30,12 @@ claim in a README ("RAG is 85% faithful", "router saves 60% latency") is backed 
 ## Consumers
 01-rag (retrieval + answers), 04-ai-agent (task success), 05-adaptive-llm (quality vs speed).
 
-## Status (2026-11-22 16:40)
-- Phases 1-3, 6 (report) and docs done; 36 tests. Docs: README, SETUP, HOW_IT_WORKS, 6 concept notes,
-  DECISIONS D1-D13, RESULTS (dev final; test + StudyRAG pending), OVERVIEW, TIMELINE (in progress).
-- RUNNING unattended. ALWAYS launch detached, or it dies when the Claude Code session ends (lost a night on 11-22):
-  `setsid nohup bash experiments/pipeline.sh > logs/pipeline.log 2>&1 < /dev/null & disown`
-  (logs/ dev_qwen.log, dev_gptoss.log, studyrag_correctness.log). StudyRAG correctness: done, 68/68 cached.
-  Groq free tier = 200k tokens/model/day (TPD) -> ~2 days. Owner chose to stay free. Restart is safe (cache).
-  Order: dev severity (qwen) + dev severity/direct (gpt-oss-120b, effort low, 2000 tok) + StudyRAG correctness
-  (gpt-oss-20b, own quota; TPD is a rolling 24h window, quota used 14-16h on 11-22 frees ~14h on 11-23)
-  -> select_judge.py (pre-registered rule) -> test run of selected -> test baselines -> studyrag_eval.py.
-- When it finishes: update RESULTS §2-4, README results, TIMELINE "still running", OVERVIEW table; rebuild
-  site (build_report.py) + docs/images/report.png; add CI workflow (.github/workflows/evalkit.yml is written
-  but UNCOMMITTED until results/studyrag-answers/v1,v2 exist); commit selected.json + results; build PDFs with
-  `../01-rag-from-scratch/.venv/bin/python scripts/build_pdfs.py`; ask owner before enabling GitHub Pages.
-- Dev results: qwen direct 0.633 [0.44,0.83] (current pick), qwen claims 0.314, lexical 0.30, gpt-oss claims
-  (700 tok) 50% coverage -> excluded.
+## Status (2026-11-25): complete
+- Judge study finished: chosen judge (qwen3.8-27b, verdict-only) test kappa 0.625 [0.525, 0.714], recall 0.95,
+  precision 0.75 (dev 0.633); word-overlap baseline 0.233. StudyRAG v1->v2: citation precision +0.157 (p=0.008) and
+  -3.4 s real; judge correctness/faithfulness within noise. Cost 715 calls, ~807k tokens, $0.
+- Docs final: README, SETUP, HOW_IT_WORKS, 6 concepts, DECISIONS D1-D14, RESULTS, OVERVIEW, TIMELINE, 7 PDFs,
+  report site/index.html (+ docs/images/report.png). 36 tests. CI: .github/workflows/evalkit.yml (tests + gate).
+- Long runs: ALWAYS launch detached (`setsid nohup bash experiments/pipeline.sh > logs/pipeline.log 2>&1 < /dev/null & disown`);
+  Groq TPD is a rolling 24 h window, quotas are per model.
+- Open (owner's call): publish site/ on GitHub Pages; strip the accidentally pushed RAGTruth files from git history.

@@ -77,8 +77,8 @@ Full guide (keys, settings, daily timer, evaluations, troubleshooting): **[docs/
 ```
 src/scout/    agent.py (loop) · llm.py · tools.py (registry + approval gate) · approval.py · context.py
               web.py · mcp_tools.py · repo.py · changes.py · routines.py · memory.py · cli.py
-tests/        42 tests: scripted model, fake internet, throwaway git repos
-experiments/  simpleqa.py (E1) · injection.py (E2) · checkup_eval.py (E3) · pipelines
+tests/        47 tests: scripted model, fake internet, throwaway git repos
+experiments/  simpleqa.py (E1) · injection.py (E2) · checkup_eval.py (E3) · digest_eval.py (E4) · pipelines
 scripts/      build_site.py (trace viewer) · get_data.sh · install_timer.sh
 site/         the trace viewer (GitHub Pages)
 ```

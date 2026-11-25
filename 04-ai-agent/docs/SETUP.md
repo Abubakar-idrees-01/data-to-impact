@@ -62,6 +62,7 @@ macOS/Windows: schedule `scout digest --prepare --quiet` with launchd or Task Sc
 ```bash
 bash scripts/get_data.sh                                  # SimpleQA (MIT) into data/raw/ (gitignored)
 setsid nohup bash experiments/pipeline.sh > logs/pipeline.log 2>&1 < /dev/null & disown
+setsid nohup bash experiments/pipeline_digest.sh >> logs/pipeline_digest.log 2>&1 < /dev/null & disown   # E4
 ```
 Long runs must be launched detached like this: they take hours on a free tier and must survive the terminal closing.
 They resume where they stopped, and wait when the daily quota runs out. Grading uses project 2 (`02-llm-evals/.env`).

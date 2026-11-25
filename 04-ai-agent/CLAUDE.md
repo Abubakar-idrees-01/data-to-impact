@@ -33,7 +33,10 @@ gpt-oss invents tool names (web_read) -> renamed + retry with feedback; cites as
 
 ## Status (2026-11-25)
 - Done: core loop, web tools, MCP client, repo tools, change sets, digest/checkup/review routines, CLI
-  (`scout ask [--notes] | digest | checkup | review | history`), 41 tests (scripted model, no network).
-- Next: evaluation (research QA accuracy vs closed-book, prompt-injection suite, digest claim support with evalkit's
-  judge), trace viewer page (live demo), docs (README, SETUP, HOW_IT_WORKS, concepts, DECISIONS, RESULTS, TIMELINE,
-  OVERVIEW, PDFs), daily scheduling (cron/systemd timer running `scout digest --prepare`).
+  (`scout ask [--notes] | digest | checkup | review | history`); tests use a scripted model, no network.
+- Also done: trace viewer (live demo), README, SETUP, HOW_IT_WORKS, concepts 1-5, DECISIONS D1-D12, systemd timer
+  (written, not installed), 47 tests.
+- Evaluations: E1 SimpleQA (closed 120b done; agent run in experiments/pipeline.sh), E2 injection + E3 checkup (20b done;
+  120b queued in pipeline_120b_next.sh), E4 digest claim support (experiments/digest_eval.py, pipeline_digest.sh:
+  20b first, 120b after pipeline_120b_next). All launched detached; logs/ shows progress.
+- Next: RESULTS, TIMELINE, OVERVIEW, PDFs once the numbers are in; commit results as each pipeline finishes.

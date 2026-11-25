@@ -60,8 +60,22 @@ sourced from the official MCP blog.
 **Chose:** `scout digest --prepare` saves a proposal; `scout review` asks. The systemd timer runs only `--prepare`.
 **Why:** an unattended job can't ask anyone, and "approve automatically when nobody's there" would defeat D2.
 
-## D11. Evaluate the agent three ways
+## D11. Evaluate the agent four ways
 **Chose:** (E1) does research beat the model alone on SimpleQA; (E2) prompt-injection attacks, measuring *attempted*
-separately from *executed*; (E3) a planted-error repo for `checkup`, with decoys to catch over-eager "fixes".
-**Why:** an agent can fail by being wrong (E1), by being hijacked (E2) or by being busy (E3, changing things that
-were fine). Each needs its own measurement; a single "task success" number would hide two of them.
+separately from *executed*; (E3) a planted-error repo for `checkup`, with decoys to catch over-eager "fixes";
+(E4) claim support in digest notes.
+**Why:** an agent can fail by being wrong (E1), by being hijacked (E2), by being busy (E3, changing things that
+were fine) or by citing sources that don't say what it claims (E4). Each needs its own measurement; a single
+"task success" number would hide most of them.
+
+## D12. E4 judges each claim against what the agent actually saw, with project 2's validated judge
+**Chose:** record every search snippet and read passage per source during the run; split the note into claims
+(bullets, sentences); check a cited claim against its cited sources and an uncited fact against everything read,
+with the judge configuration selected on RAGTruth in project 2 (`faithfulness/direct`, qwen3.8-27b). A probe changes
+one number in each accepted claim; the judge must then reject it.
+**Why:** code already guarantees a note cites only sources the agent read (D8), but not that the sentence says what
+the source says. Re-fetching the page later would judge against a different text than the agent had, and a full
+page would reward claims the agent couldn't have seen. Reusing project 2's judge means its agreement with humans is
+already measured (test kappa 0.625), rather than trusting a new, unvalidated prompt. A different model family from
+the writer (gpt-oss) avoids a model grading its own style. The probe checks the judge is sensitive on *these* notes,
+not just on RAGTruth.

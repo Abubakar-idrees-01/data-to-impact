@@ -61,3 +61,5 @@ DECISIONS D1-D21, RESULTS §1-8, TIMELINE, OVERVIEW), README with screenshots. 2
 - venv at `.venv` on NTFS; PyPI downloads are very slow (~30-80 KB/s), Hugging Face is fast (~1 MB/s).
 - llama-cpp-python compiled with CMAKE_ARGS GGML_NATIVE=OFF + AVX2/FMA/F16C.
 - Shell is zsh: use ${=var} to word-split variables in loops.
+- Published on PyPI 2026-11-25: https://pypi.org/project/studyrag/ 0.1.0 (search + CLI; app needs the clone;
+  data in ~/.studyrag when pip-installed, STUDYRAG_HOME overrides; `[local-llm]` extra adds llama-cpp-python).

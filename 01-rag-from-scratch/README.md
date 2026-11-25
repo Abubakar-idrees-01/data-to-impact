@@ -1,5 +1,7 @@
 # 📚 StudyRAG: a private study assistant that only answers from *your* material
 
+[![PyPI](https://img.shields.io/pypi/v/studyrag)](https://pypi.org/project/studyrag/)
+
 Upload your lecture slides, PDFs and notes. Ask questions, get **summaries**, and practise with
 **MCQs, short-answer questions and flashcards**. Every answer cites the exact slide or page it came from,
 and when the answer isn't in your material it says so instead of making something up.
@@ -82,7 +84,9 @@ pip install --no-deps -e .                            # the studyrag package + c
 python scripts/download_models.py                     # ~1.5 GB, resumable
 streamlit run app/streamlit_app.py
 ```
-Put your files in `data/my_docs/` (never pushed to git) and click **Sync**. Full guide, Windows/macOS notes and
+Put your files in `data/my_docs/` (never pushed to git) and click **Sync**.
+Just the search engine and command line, no clone: `pip install studyrag` (add `[local-llm]` for offline answers),
+then `studyrag sync ~/my-notes`. The web app needs the clone. Full guide, Windows/macOS notes and
 troubleshooting: **[docs/SETUP.md](docs/SETUP.md)**
 
 ## Results

@@ -1,5 +1,7 @@
 # 🔌 studyrag-mcp: your study notes as tools for any AI assistant
 
+[![PyPI](https://img.shields.io/pypi/v/studyrag-mcp)](https://pypi.org/project/studyrag-mcp/) [![tests](https://github.com/Abubakar-idrees-01/data-to-impact/actions/workflows/mcp-server.yml/badge.svg)](https://github.com/Abubakar-idrees-01/data-to-impact/actions/workflows/mcp-server.yml)
+
 An **MCP server** that lets Claude Code, Claude Desktop, Cursor or any MCP client search your own lecture slides
 and notes, read them slide by slide, and **fact-check answers against them**, with citations. It also gives the
 assistant read access to your evaluation results. It runs locally on a CPU, needs no API key, and only reads.
@@ -30,22 +32,23 @@ Also **resources** (`notes://documents`, `notes://documents/{name}` for a whole 
 - **The server does no generation:** the assistant is the model. The server adds private search and claim checking.
 - **Safe to call:** every tool is read-only, inputs are bounded, file access is confined (path traversal is refused
   and tested), and expected errors tell the model how to fix its call.
-- **Measured:** 15 tests, including the installed server over real stdio with real models. Search takes 0.94 s;
+- **Measured:** 16 tests, including the installed server over real stdio with real models. Search takes 0.94 s;
   the first call takes 14 s to load models ([results](docs/RESULTS.md)).
 - **Never stale:** when you sync new files in StudyRAG, the next tool call sees them.
 
 ## Quickstart
+From PyPI (no clone needed):
 ```bash
-cd 03-mcp-server
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt && pip install --no-deps -e .
+python3 -m venv ~/.venvs/studyrag && source ~/.venvs/studyrag/bin/activate
+pip install studyrag-mcp                 # also installs studyrag (project 1's search)
+studyrag sync ~/my-notes                 # index a folder; downloads the 150 MB search models once
 ```
 Then add it to your assistant: for Claude Code, put this in `.mcp.json` at your workspace root and reload.
 ```json
-{"mcpServers": {"studyrag": {"type": "stdio",
-  "command": "/ABSOLUTE/PATH/TO/03-mcp-server/.venv/bin/python", "args": ["-m", "studyrag_mcp"]}}}
+{"mcpServers": {"studyrag": {"type": "stdio", "command": "/HOME/YOU/.venvs/studyrag/bin/studyrag-mcp"}}}
 ```
-You need a StudyRAG index first (project 1). Full guide, plus Claude Desktop and HTTP setup: **[docs/SETUP.md](docs/SETUP.md)**.
+The index lives in `~/.studyrag` (set `STUDYRAG_HOME` to move it). Working from a clone of this repo instead,
+with project 1's index: [docs/SETUP.md](docs/SETUP.md), which also covers Claude Desktop and HTTP.
 
 ## Documentation
 | | |

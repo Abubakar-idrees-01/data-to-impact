@@ -3,7 +3,19 @@
 The server needs **Python 3.11+**, project 1 (StudyRAG) with an index and its search models, and an MCP-capable
 assistant. No GPU, no API key.
 
-## 1. Set up StudyRAG first
+## 0. The short way: install from PyPI
+If you only want to use the server (not work on its code), skip steps 1–2:
+```bash
+python3 -m venv ~/.venvs/studyrag && source ~/.venvs/studyrag/bin/activate   # Windows: ...\Scripts\Activate.ps1
+pip install studyrag-mcp           # pulls in studyrag (project 1) and the MCP SDK
+studyrag sync ~/my-notes           # index your files; the search models (≈150 MB) download on first run
+```
+Your index is kept in `~/.studyrag` (override with `STUDYRAG_HOME`; the evaluation tools also need
+project 2 installed from a clone, `pip install -e 02-llm-evals`, and `STUDYRAG_MCP_EVAL_RESULTS`). In step 3 use
+`"command": "/ABSOLUTE/PATH/TO/.venvs/studyrag/bin/studyrag-mcp"` with no `args`. If you set `STUDYRAG_HOME`, pass it
+to the server too, with `"env": {"STUDYRAG_HOME": "/path"}`: assistants start servers with a minimal environment.
+
+## 1. Set up StudyRAG first (working from a clone)
 Follow [project 1's setup guide](../../01-rag-from-scratch/docs/SETUP.md) far enough to have its models downloaded
 (`python scripts/download_models.py`) and your documents indexed (put files in `01-rag-from-scratch/data/my_docs/`,
 then click **Sync** in the app, or run `python -m studyrag sync data/my_docs`). The local LLM is **not** needed.
@@ -15,7 +27,7 @@ python3 -m venv .venv
 source .venv/bin/activate                       # Windows: .venv\Scripts\Activate.ps1
 pip install -r requirements.txt                 # MCP SDK + StudyRAG's search stack (no llama.cpp, no Streamlit)
 pip install --no-deps -e .                      # the server itself: `studyrag-mcp` / `python -m studyrag_mcp`
-pip install -r requirements-dev.txt && python -m pytest -q    # optional: 15 tests
+pip install -r requirements-dev.txt && python -m pytest -q    # optional: 16 tests
 ```
 On a slow connection the first install takes a while (≈ 12 minutes at 30–80 KB/s); packages already in pip's cache
 from project 1 are reused.

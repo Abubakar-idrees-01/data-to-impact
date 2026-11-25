@@ -21,11 +21,13 @@ use our tools. Packaged and published so others can install it.
 - Default library: owner's own notes (project 1's storage/), locally; public sample index for tests/screenshots.
 - Tools are read-only and call no LLM: the client (Claude) is the model. No API key needed.
 
-## Status (2026-11-25): complete (publishing open)
+## Status (2026-11-25): complete, published on PyPI
 - 8 read-only tools, 2 resources, 3 prompts; from-scratch MCP (scratch.py) conformance-tested with the official client;
-  index auto-reload; 15 tests (stdio e2e with real models skips in CI). CI: .github/workflows/mcp-server.yml.
+  index auto-reload; 16 tests (stdio e2e with real models skips in CI). CI: .github/workflows/mcp-server.yml.
 - Measured (docs/benchmark.json): handshake 1.8 s, first call 14 s (model load), search 0.94 s, check_answer 1.26 s.
 - Docs final: README (real demo session, docs/DEMO.md + images/demo.png), SETUP, HOW_IT_WORKS, 4 concepts,
   DECISIONS D1-D10, RESULTS, OVERVIEW, TIMELINE, 7 PDFs (build with project 1's venv: scripts/build_pdfs.py).
 - Owner uses it from Claude Code via workspace-root .mcp.json (gitignored).
-- Open (owner's call): PyPI publishing. Blocker: depends on `studyrag` (project 1), which isn't on PyPI.
+- Published 2026-11-25: https://pypi.org/project/studyrag-mcp/ 0.1.0 (depends on studyrag 0.1.0, also on PyPI).
+  Verified by installing from PyPI into a fresh venv. Release: bump version in pyproject.toml, `python -m build`,
+  `twine upload dist/*` (token in ~/.pypirc). Upload studyrag before studyrag-mcp when both change.

@@ -1,0 +1,12 @@
+{
+ "machine": "x86_64, 4 threads",
+ "index": "project 1 public sample corpus (10 Wikipedia articles, 250 chunks)",
+ "start_and_handshake_ms": 1812.6,
+ "list_tools_ms": 9.1,
+ "first_call_loads_models_ms": 14132.5,
+ "search_notes_median_ms": 938.3,
+ "search_notes_max_ms": 1214.0,
+ "check_answer_median_ms": 1257.4,
+ "list_documents_median_ms": 4.8,
+ "n_queries": 10
+}

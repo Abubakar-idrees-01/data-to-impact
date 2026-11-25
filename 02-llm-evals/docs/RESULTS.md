@@ -111,3 +111,8 @@ All on Groq's free tier: **$0**, at the price of time. The daily cap (200k token
 (a session ending, the laptop shutting down) stretched the study over three days; the disk cache meant no call was
 ever paid for twice. Note how gpt-oss spends more tokens *thinking* (76k completion tokens for 196 calls) than Qwen
 does answering (33k for 452).
+
+*Note on reproducibility:* each run file records the git commit it was produced from (`env.git_commit`). On
+25 November 2026 the repository history was rewritten once to remove an accidentally committed dataset; the file
+contents of every commit stayed identical, but commit IDs from 22 November onward changed, so IDs recorded before
+that date refer to the pre-rewrite history.

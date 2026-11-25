@@ -1,0 +1,141 @@
+{
+ "suite": "scout-checkup",
+ "name": "gpt-oss-20b",
+ "items": [
+  {
+   "id": "run1",
+   "fixed": 0.2,
+   "decoys_broken": 0,
+   "P1-broken-link": true,
+   "P2-test-count": false,
+   "P3-python-version": false,
+   "P4-typo": false,
+   "P5-pinned-version": false,
+   "D1-anchor": true,
+   "D2-british": true,
+   "D3-code-block": true,
+   "D4-matching-number": true,
+   "files_changed": [
+    "README.md"
+   ],
+   "proposals": 1,
+   "tokens": 10900,
+   "steps": 7,
+   "seconds": 71.75,
+   "stopped": "answer",
+   "report": "**Proposed fixes (verified by reading the files)**\n\n| File | Current text | Proposed change | Reason |\n|------|--------------|-----------------|--------|\n| `README.md` | `- Usage: [docs/USAGE.md](docs/USAGE.md)` | `- Usage: [docs/usage-guide.md](docs/usage-guide.md)` | The target file is `usage-guide.md`; the old link is broken. |\n| `README.md` | `12 tests pass (`pytest`).` | `15 tests pass (`pytest`).` | There are 10 tests in `tests/test_clean.py` and 5 in `tests/test_cli.py` – a total of 15. |\n| `docs/usage-guide.md` | `Call \\`clean(text)\\` to recieve a normalised string.` | `Call \\`clean(text)\\` to receive a normalised string.` | Correct spelling of “receive”. |\n| `docs/usage-guide.md` | ```markdown\\nSee [example](missing.md) for a sample document.\\n``` | ```markdown\\nSee [example](#) for a sample document.\\n``` | `missing.md` does not exist; the link is removed to avoid a broken reference. |\n| `docs/usage-guide.md` | `See [example](missing.md) for a sample document.` | `See [example](#) for a sample document.` | Same as above – the link is replaced with a placeholder to keep the section readable. |\n\n**Short report**\n\nI inspected all markdown files in the repository.  \n* The broken link in `README.md` pointed to a non‑existent `USAGE.md`.  \n* The test count in `README.md` was outdated (12 vs. 15).  \n* `usage-guide.md` contained a typo (“recieve”) and a broken link to `missing.md`.  \n* No other status lines or version numbers were inconsistent.  \n\nAll proposed edits are sma",
+   "trace": "/media/abubakar/study material/Major Projects/04-ai-agent/.scout/traces/20261125-164206-462b73.jsonl"
+  },
+  {
+   "id": "run2",
+   "fixed": 0.2,
+   "decoys_broken": 0,
+   "P1-broken-link": true,
+   "P2-test-count": false,
+   "P3-python-version": false,
+   "P4-typo": false,
+   "P5-pinned-version": false,
+   "D1-anchor": true,
+   "D2-british": true,
+   "D3-code-block": true,
+   "D4-matching-number": true,
+   "files_changed": [
+    "README.md"
+   ],
+   "proposals": 1,
+   "tokens": 25965,
+   "steps": 13,
+   "seconds": 158.17,
+   "stopped": "max_steps",
+   "report": "**What I checked**\n\n1. **Broken link** – `README.md` line 6 points to `docs/USAGE.md`, which does not exist. The correct file is `docs/usage-guide.md`[1].  \n2. **Test count** – `README.md` claims “12 tests pass”, but the repository contains 14 test functions (`test_clean_0`‑`test_clean_8` and `test_cli_0`‑`test_cli_4`)[4][5].  \n3. **Usage description typo** – In `docs/usage-guide.md` the sentence “Call `clean(text)` to recieve a normalised string.” contains a spelling error: “recieve” → “receive”[3].  \n4. **Missing example link** – The usage guide references `missing.md` which is not present; it should be removed or replaced with an actual example file.  \n5. **Status line** – The README’s “Installation” section uses `pip install tidy`, but the project name is `tidy` – correct. No other status lines are out of date.\n\n**Proposed fixes (≤5)**\n\n| File | Change | Reason |\n|------|--------|--------|\n| `README.md` | Replace the broken link: `- Usage: [docs/USAGE.md](docs/USAGE.md)` → `- Usage: [docs/usage-guide.md](docs/usage-guide.md)` | Points to existing file[1] |\n| `README.md` | Update test count: change “12 tests pass” to “14 tests pass” | Matches actual test count[4][5] |\n| `docs/usage-guide.md` | Correct typo: “recieve” → “receive” | Improves clarity[3] |\n| `docs/usage-guide.md` | Remove or replace the link to `missing.md` | Prevents broken link; no such file exists[3] |\n| `docs/usage-guide.md` | Add a short example or note that an example is forthcoming | Provides useful ref",
+   "trace": "/media/abubakar/study material/Major Projects/04-ai-agent/.scout/traces/20261125-164318-7797ac.jsonl"
+  }
+ ],
+ "metrics": {
+  "fixed": {
+   "value": 0.2,
+   "ci_low": 0.2,
+   "ci_high": 0.2,
+   "n": 2
+  },
+  "decoys_broken": {
+   "value": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.6576280471103807,
+   "n": 2
+  },
+  "P1-broken-link": {
+   "value": 1.0,
+   "ci_low": 0.34237195288961925,
+   "ci_high": 1.0,
+   "n": 2
+  },
+  "P2-test-count": {
+   "value": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.6576280471103807,
+   "n": 2
+  },
+  "P3-python-version": {
+   "value": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.6576280471103807,
+   "n": 2
+  },
+  "P4-typo": {
+   "value": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.6576280471103807,
+   "n": 2
+  },
+  "P5-pinned-version": {
+   "value": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.6576280471103807,
+   "n": 2
+  },
+  "tokens": {
+   "value": 18432.5,
+   "ci_low": 10900.0,
+   "ci_high": 25965.0,
+   "n": 2
+  },
+  "seconds": {
+   "value": 114.96,
+   "ci_low": 71.75,
+   "ci_high": 158.17,
+   "n": 2
+  },
+  "steps": {
+   "value": 10.0,
+   "ci_low": 7.0,
+   "ci_high": 13.0,
+   "n": 2
+  }
+ },
+ "config": {
+  "model": "openai/gpt-oss-20b",
+  "planted": [
+   "P1-broken-link",
+   "P2-test-count",
+   "P3-python-version",
+   "P4-typo",
+   "P5-pinned-version"
+  ],
+  "decoys": [
+   "D1-anchor",
+   "D2-british",
+   "D3-code-block",
+   "D4-matching-number"
+  ]
+ },
+ "env": {
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_count": 4,
+  "git_commit": "982e1c6",
+  "git_dirty": true
+ },
+ "created": "2026-11-25T11:45:56+00:00"
+}

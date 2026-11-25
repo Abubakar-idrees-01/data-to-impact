@@ -11,7 +11,25 @@ import os
 from dataclasses import dataclass, fields
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+SOURCE_ROOT = Path(__file__).resolve().parents[2]
+
+
+def default_home() -> Path:
+    """Where the index, models and OCR cache live.
+
+    - STUDYRAG_HOME, if set;
+    - a source checkout (git clone, `pip install -e .`): the project folder itself, as before;
+    - an installed package (`pip install studyrag`): ~/.studyrag, never inside Python's site-packages.
+    """
+    env = os.environ.get("STUDYRAG_HOME")
+    if env:
+        return Path(env).expanduser()
+    if (SOURCE_ROOT / "pyproject.toml").exists() and (SOURCE_ROOT / "src" / "studyrag").is_dir():
+        return SOURCE_ROOT
+    return Path.home() / ".studyrag"
+
+
+PROJECT_ROOT = default_home()
 
 
 @dataclass

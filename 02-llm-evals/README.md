@@ -5,11 +5,13 @@ never check whether that judge agrees with people. **evalkit** is a small evalua
 library only) that scores LLM outputs, compares versions with real significance tests, fails CI on regressions,
 and **validates its LLM judge against human labels** before trusting it.
 
+**🌐 Live report: <https://abubakar-idrees-01.github.io/data-to-impact/>**
+
 It is the shared evaluation layer of this portfolio: [StudyRAG](../01-rag-from-scratch) (project 1) is its first user.
 
 ![The evalkit report](docs/images/report.png)
 
-*The report page ([`site/index.html`](site/index.html)) is self-contained: open it in any browser.*
+*The report page: [live on GitHub Pages](https://abubakar-idrees-01.github.io/data-to-impact/), or open [`site/index.html`](site/index.html) in any browser.*
 **PDFs:** [Overview](docs/pdf/evalkit-Overview.pdf) · [Timeline](docs/pdf/evalkit-Timeline.pdf) · [Setup](docs/pdf/evalkit-Setup-Guide.pdf) · [How it works](docs/pdf/evalkit-How-It-Works.pdf) · [Results](docs/pdf/evalkit-Results.pdf) · [Decisions](docs/pdf/evalkit-Design-Decisions.pdf) · [Concepts](docs/pdf/evalkit-Concepts-Handbook.pdf)
 
 ## What it does

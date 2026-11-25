@@ -4,6 +4,8 @@ End-to-end Data Science and AI projects focused on solving real-world problems:
 from problem framing and data collection to modeling, evaluation, and deployment.
 Everything is designed to run on modest, CPU-only hardware.
 
+**🌐 Live demo:** [evalkit report: can an LLM judge spot hallucinations like a human?](https://abubakar-idrees-01.github.io/data-to-impact/)
+
 ## Projects
 
 | # | Project | Problem | Key ideas | Status |

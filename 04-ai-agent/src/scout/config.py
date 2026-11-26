@@ -65,6 +65,7 @@ class Settings:
     tavily_key: str = ""
     reasoning_effort: str | None = "low"      # gpt-oss on Groq: low/medium/high; None to omit
     max_steps: int = 8                        # model calls per task before it must answer
+    digest_max_steps: int = 16                # digests search, read 2+ sources, then write: 12 ran out (E4 run 4)
     token_budget: int = 40_000                # prompt + completion tokens per task
     max_tokens_per_call: int = 1536
     context_limit: int | None = 6000          # max tokens per request; Groq free tier allows 8,000 per minute
@@ -104,6 +105,8 @@ class Settings:
             s.journal_dir = Path(env("SCOUT_JOURNAL_DIR")).expanduser()
         if env("SCOUT_STATE_DIR"):
             s.state_dir = Path(env("SCOUT_STATE_DIR")).expanduser()
+        if env("SCOUT_DIGEST_MAX_STEPS"):
+            s.digest_max_steps = int(env("SCOUT_DIGEST_MAX_STEPS"))
         if env("SCOUT_CONTEXT_LIMIT") is not None:
             s.context_limit = int(env("SCOUT_CONTEXT_LIMIT")) or None
         if env("SCOUT_TOPICS"):

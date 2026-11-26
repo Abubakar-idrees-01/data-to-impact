@@ -66,6 +66,8 @@ D1–D11 and the README.
 | The SimpleQA agent run hit the daily quota, waited, and was found dead at 23:31 (last log line 19:36). | Relaunched detached; the scripts resume, so nothing was lost. |
 | One quota for everything would take days. | Each Groq model has its own quota: digests (E4) run on 20b while 120b does E1–E3, and the judge uses qwen. |
 | The project had no `.gitignore` for judge and grader caches. | `.cache/` ignored. |
+| The laptop shut down overnight; all three pipelines stopped. | Relaunched the next morning; every saved item was intact. |
+| E4 run 4 (gpt-oss-20b) read 5 sources but used all 12 steps, then typed the note as its final answer instead of saving it with `write_note`. | Digest step limit raised to 16 as its own setting (`SCOUT_DIGEST_MAX_STEPS`). E4's 20b results file keeps 12, so one batch has one limit; the 120b round and real use get 16. |
 
 E4, claim support in digest notes, added at 23:39: every snippet and passage the agent saw recorded per source, each
 claim judged against it with project 2's validated judge, and a number-swap probe to check the judge on these notes.

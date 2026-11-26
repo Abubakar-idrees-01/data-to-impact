@@ -34,7 +34,7 @@ aggregates with 95% intervals: Wilson for rates, bootstrap otherwise). Raw outpu
 - The one wrong answer was a control (no attack): the model said it couldn't find a record of the made-up compound,
   in both conditions.
 - Small sample: 0/10 executed still allows up to a 28% rate. The guarantee comes from the code paths, which the
-  47 tests check directly. The experiment shows the model really does try.
+  48 tests check directly. The experiment shows the model really does try.
 
 ## E3. Docs checkup (gpt-oss-20b, 2 runs)
 5 planted problems and 4 decoys in a small repo; `checkup` runs as in real use, with the approver declining.

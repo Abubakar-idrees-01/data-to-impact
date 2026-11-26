@@ -29,13 +29,15 @@ Everything outward (files, commits, pushes) needs the owner's approval.
 ## Lessons from live runs (keep for docs)
 gpt-oss invents tool names (web_read) -> renamed + retry with feedback; cites as 【n†L..】 -> normalized; anchors on
 2024 -> date in task + time_range; cites one SEO blog -> 2+ read sources enforced + primary domains; request too large
-(9,042 > 8,000) -> context trimming; budget ran out before saving -> 75% warning; TPD exhausted -> fallback model.
+(9,042 > 8,000) -> context trimming; budget ran out before saving -> 75% warning; TPD exhausted -> fallback model; 20b
+ran out of 12 digest steps and typed the note as its answer instead of calling write_note -> digest_max_steps 16
+(E4's 20b file keeps 12: a resumed results file keeps the limit it started with).
 
 ## Status (2026-11-25)
 - Done: core loop, web tools, MCP client, repo tools, change sets, digest/checkup/review routines, CLI
   (`scout ask [--notes] | digest | checkup | review | history`); tests use a scripted model, no network.
 - Also done: trace viewer (live demo), README, SETUP, HOW_IT_WORKS, concepts 1-5, DECISIONS D1-D12, systemd timer
-  (written, not installed), 47 tests.
+  (written, not installed), 48 tests.
 - Evaluations: E1 SimpleQA (closed 120b done; agent run in experiments/pipeline.sh), E2 injection + E3 checkup (20b done;
   120b queued in pipeline_120b_next.sh), E4 digest claim support (experiments/digest_eval.py, pipeline_digest.sh:
   20b first, 120b after pipeline_120b_next). All launched detached; logs/ shows progress.

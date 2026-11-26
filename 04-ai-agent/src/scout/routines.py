@@ -164,7 +164,7 @@ async def digest(settings: Settings, approver: Approver, *, topic: str | None = 
     task = DIGEST_TASK.format(today=today.strftime("%d %B %Y"), since=since,
                               topics="; ".join([topic] if topic else settings.topics),
                               recent="; ".join(dict.fromkeys(recent)) or "none yet")
-    run = await _agent(settings, registry, llm, on_event, max_steps=max(settings.max_steps, 12),
+    run = await _agent(settings, registry, llm, on_event, max_steps=max(settings.max_steps, settings.digest_max_steps),
                        token_budget=max(settings.token_budget, 60_000)).run(task)
     title = cs.message.removeprefix("Learning log: ")
     if not cs.changes:

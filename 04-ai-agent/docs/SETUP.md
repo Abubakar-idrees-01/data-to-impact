@@ -32,6 +32,7 @@ Optional settings:
 | `SCOUT_FALLBACK_MODEL` | `openai/gpt-oss-20b` | used when the main model's daily quota runs out (empty = stop instead) |
 | `SCOUT_CONTEXT_LIMIT` | `6000` | max tokens per request (Groq free tier: 8,000 per minute) |
 | `SCOUT_TOPICS` | RAG; LLM evals; MCP; small LLMs on CPU | digest topics, separated by `;` |
+| `SCOUT_DIGEST_MAX_STEPS` | `16` | model calls a digest may make before it must stop |
 | `SCOUT_DIGEST_DOMAINS` | arxiv.org, github.com, ... | where digests search first (comma-separated) |
 | `SCOUT_JOURNAL_DIR` | `<repo>/learning-log` | where notes go (must be inside a git repo) |
 | `SCOUT_WORKSPACE` | the repo root | the repo `scout checkup` reads |

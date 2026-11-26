@@ -133,3 +133,13 @@ def test_note_needs_two_read_sources(fake_api, setup):
                     calls(("write_note", {"title": "MCP goes stateless in 2026-07-28", "body": one})), text("gave up")])
     r = asyncio.run(digest(settings, DenyAll(), llm=api.llm(), web=fake_web()))
     assert r.status == "failed" and "at least two different sources" in r.run.events[-3]["result"]
+
+
+def test_digest_step_limit_is_its_own_setting(fake_api, setup):
+    settings, root, origin = setup
+    assert Settings().digest_max_steps == 16          # 12 ran out before the note was saved (E4, gpt-oss-20b run 4)
+    settings.digest_max_steps = 13
+    searching = [calls(("web_search", {"query": f"MCP news {i}"})) for i in range(13)]
+    api = fake_api(searching + [text("ran out of steps")])
+    r = asyncio.run(digest(settings, DenyAll(), llm=api.llm(), web=fake_web()))
+    assert r.status == "failed" and r.run.stopped == "max_steps" and r.run.steps == 14   # 13 + the final answer

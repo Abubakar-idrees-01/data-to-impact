@@ -185,8 +185,15 @@ async def run(a) -> None:
     model = a.model.split("/")[-1]
     out = OUT / f"digest-{model}.jsonl"
     out.parent.mkdir(parents=True, exist_ok=True)
-    done = len(out.read_text().splitlines()) if out.exists() else 0
-    print(f"digest with {a.model}: {done}/{a.runs} already done -> {out.name}", flush=True)
+    old = [json.loads(l) for l in out.read_text().splitlines()] if out.exists() else []
+    done = len(old)
+    # one step limit per results file: a resumed file keeps the limit it started with (12 before it was a setting)
+    if old:
+        s.digest_max_steps = old[0].get("max_steps", 12)
+    elif a.max_steps:
+        s.digest_max_steps = a.max_steps
+    print(f"digest with {a.model}: {done}/{a.runs} already done -> {out.name} (step limit {s.digest_max_steps})",
+          flush=True)
     for i in range(done + 1, a.runs + 1):
         topic = s.topics[(i - 1) % len(s.topics)]
         while True:
@@ -201,7 +208,8 @@ async def run(a) -> None:
                 return
         note = next((c.new_text for c in (r.changes.changes if r.changes else [])
                      if c.path.endswith(".md") and not c.path.endswith("README.md")), "")
-        rec = {"id": f"run{i}", "topic": topic, "model": a.model, "date": date.today().isoformat(),
+        rec = {"id": f"run{i}", "topic": topic, "model": a.model, "max_steps": s.digest_max_steps,
+               "date": date.today().isoformat(),
                "written": bool(note), "title": r.title, "note": note, "evidence": web.evidence(),
                "sources_read": sum(e["read"] for e in web.evidence()), "searches": web.searches, "reads": web.reads,
                "tokens": r.run.total_tokens, "steps": r.run.steps, "seconds": round(time.time() - t0, 1),
@@ -286,6 +294,7 @@ def main() -> None:
     r = sub.add_parser("run")
     r.add_argument("--runs", type=int, default=8)
     r.add_argument("--model", default="openai/gpt-oss-20b")
+    r.add_argument("--max-steps", type=int, help="digest step limit for a new results file (default: the setting)")
     g = sub.add_parser("judge")
     g.add_argument("--model", default="openai/gpt-oss-20b")
     a = ap.parse_args()

@@ -47,4 +47,5 @@ B1. Hardware profiler; B2. llama.cpp runtime + model ladder; B3. complexity rout
 B4. speculative decoding; B5. benchmarks via evalkit; Scout (project 4) offline backend demo; docs
 
 ## Status
-- 2026-11-28: A1 in progress.
+- 2026-11-28: A1 done; A2 baseline done (val 2.235, ppl 9.34, 96 min). A3/A4 code done; `experiments/part_a.sh`
+  queue training moe-4x-top1 → moe-8x-top2 → exit-d256-L6 → early_exit evals (log: `logs/part_a.log`).

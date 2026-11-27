@@ -56,7 +56,30 @@ Measured before choosing ([`bench.py`](../../src/tinygpt/bench.py), full trainin
   variant makes the comparisons fair.
 
 ## Results
-*(added when the baseline finishes)*
+Baseline `dense-d256-L6`: 5.84M parameters, 1,500 steps × 8,192 tokens = 12.3M tokens, **96 minutes** on 2 threads
+(2,265 tokens/s once warm: faster than the 1,594 benchmark, which included start-up). Log: `models/dense-d256-L6/log.jsonl`.
+
+| step | tokens seen | train loss | val loss | val perplexity |
+|---|---|---|---|---|
+| 0 (random) | 0 | 8.3 | 8.3 | 4,096 |
+| 250 | 2.0M | 4.52 | 3.45 | 31.6 |
+| 500 | 4.1M | 3.12 | 2.87 | 17.6 |
+| 750 | 6.1M | 2.71 | 2.57 | 13.1 |
+| 1,000 | 8.2M | 2.48 | 2.40 | 11.0 |
+| 1,250 | 10.2M | 2.33 | 2.29 | 9.9 |
+| **1,500** | **12.3M** | **2.25** | **2.23** | **9.3** |
+
+- **Still improving at the end** (−0.06 over the last 250 steps): the model is under-trained, as planned. More tokens
+  would help more than more parameters at this budget.
+- **Validation ≈ training loss:** no over-fitting. Each training token is seen about once (12.3M of 52M), so the model
+  cannot memorise.
+- **What a perplexity of 9.3 buys** ([samples](../../results/samples/)):
+  - *Step 250* (ppl 31.6): story-shaped word salad. *"The dog, Tim, Tim had a big, but they wanted to play with his
+    new things."*
+  - *Step 1,500*: grammatical sentences, dialogue with correct quotation marks, a story arc with an ending, but weak
+    long-range consistency. *"Tim wanted to make it for his friend, Tim."*; the cat that "did not want to play with
+    the cat". Names drift within one story (Peter → Pete, Bree → Bow).
+- This is the reference every Part A variant is compared against: **val loss 2.235 at 12.3M tokens.**
 
 ## Interview questions
 - *Why does attention need a mask?* Training predicts every position at once; without the mask, position *t* could

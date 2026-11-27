@@ -7,7 +7,7 @@ A chat assistant designed for weak, GPU-less machines, built in two parts:
 - **A hardware-adaptive inference engine** that profiles the machine, routes each prompt to the smallest model that
   can handle it, and uses quantization and speculative decoding for speed.
 
-**Status:** 🚧 Part A in progress. Phase A1 (data and tokenizer) done.
+**Status:** 🚧 Part A in progress. A1 (data, tokenizer) and A2 (dense baseline) done; MoE and early-exit runs training.
 
 ## Why
 Training a ChatGPT-quality model is impossible on a CPU. Part A builds a tiny model to *show* the ideas behind
@@ -17,9 +17,9 @@ efficient models and measure them honestly; Part B applies them to real open mod
 | phase | what | status |
 |---|---|---|
 | A1 | TinyStories data + byte-level BPE tokenizer written from scratch | ✅ 4,096 tokens, 57.6M tokens of stories, 3.95 chars/token |
-| A2 | dense GPT baseline, training loop, CPU throughput | next |
-| A3 | Mixture-of-Experts layers | |
-| A4 | early exit | |
+| A2 | dense GPT baseline, training loop, CPU throughput | ✅ 5.84M params, 12.3M tokens in 96 min, val loss 2.235 (ppl 9.3); 2 threads beat 4 |
+| A3 | Mixture-of-Experts layers | code + tests done; training |
+| A4 | early exit | code + tests done; queued |
 | B1–B5 | hardware profiler, model ladder, router, speculative decoding, benchmarks | |
 
 ## Quickstart

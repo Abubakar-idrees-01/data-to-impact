@@ -89,3 +89,60 @@ def test_resume_gives_exactly_the_same_model(tmp_path):
     a = torch.load(tmp_path / "a" / "straight" / "model.pt")["model"]
     b = torch.load(tmp_path / "b" / "resumed" / "model.pt")["model"]
     assert all(torch.equal(a[k], b[k]) for k in a)
+
+
+MOE = GPTConfig(vocab_size=64, ctx=16, d=32, n_layer=2, n_head=4, n_experts=4, top_k=1, expert_mult=4)
+
+
+def test_moe_counts_and_routing():
+    from tinygpt.model import MoE
+    torch.manual_seed(0)
+    dense, moe = GPT(TINY), GPT(MOE)
+    ffn = 8 * 32 * 32                                    # one dense feed-forward: up + down
+    assert moe.n_params() == dense.n_params() + 2 * (3 * ffn + 4 * 32)        # 3 extra experts + router, per layer
+    assert moe.n_active_params() == dense.n_params() + 2 * 4 * 32             # same compute as dense, plus routers
+    logits, loss = moe(torch.randint(64, (3, 16)), torch.randint(64, (3, 16)))
+    layer = moe.blocks[0].ffn
+    assert isinstance(layer, MoE) and layer.last_counts.sum() == 3 * 16       # every token routed once
+    assert moe.aux_loss() >= 2.0 - 1e-5                                       # ≥ 1 per layer, = 1 if perfectly even
+
+
+def test_moe_top2_mixes_two_experts_and_matches_a_slow_loop():
+    torch.manual_seed(0)
+    c = GPTConfig(vocab_size=64, ctx=16, d=32, n_layer=1, n_head=4, n_experts=4, top_k=2, expert_mult=2)
+    layer = GPT(c).blocks[0].ffn.eval()
+    x = torch.randn(2, 5, 32)
+    fast = layer(x)
+    probs = torch.softmax(layer.router(x.reshape(-1, 32)), -1)
+    slow = []
+    for i, tok in enumerate(x.reshape(-1, 32)):
+        w, e = torch.topk(probs[i], 2)
+        w = w / w.sum()
+        slow.append(sum(w[j] * layer.experts[e[j]](tok[None])[0] for j in range(2)))
+    assert torch.allclose(fast.reshape(-1, 32), torch.stack(slow), atol=1e-5)
+
+
+def test_load_balancing_loss_is_one_when_even_and_large_when_collapsed():
+    from tinygpt.model import MoE
+    layer = MoE(GPTConfig(d=8, n_experts=4, top_k=1, expert_mult=1))
+    with torch.no_grad():
+        layer.router.weight.zero_()
+    layer(torch.randn(1, 8, 8))                          # equal probabilities; ties go to expert 0
+    assert layer.aux_loss.item() == pytest.approx(1.0)   # f = (1,0,0,0), P = 1/4 each -> 4 · 1/4 = 1
+    with torch.no_grad():
+        layer.router.weight.zero_()
+        layer.router.weight[0] = 100.0                   # everything strongly to expert 0
+    layer(torch.ones(1, 8, 8))
+    assert layer.aux_loss.item() == pytest.approx(4.0, rel=1e-3)
+
+
+def test_moe_trains_and_logs_expert_use(tmp_path):
+    data = make_data(tmp_path)
+    args = ["--steps", "4", "--batch", "4", "--ctx", "16", "--d", "32", "--n-layer", "2", "--n-head", "4",
+            "--n-experts", "4", "--top-k", "2", "--eval-every", "2", "--eval-windows", "8", "--threads", "1",
+            "--data", str(data)]
+    train_main(["--name", "moe", "--out", str(tmp_path / "a"), *args])
+    log = [json.loads(l) for l in (tmp_path / "a" / "moe" / "log.jsonl").read_text().splitlines()]
+    assert len(log[-1]["expert_share"]) == 2 and abs(sum(log[-1]["expert_share"][0]) - 1) < 1e-3
+    run = json.loads((tmp_path / "a" / "moe" / "run.json").read_text())
+    assert run["active_params"] < run["params"]

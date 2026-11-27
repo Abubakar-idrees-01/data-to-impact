@@ -25,7 +25,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from .model import GPT, GPTConfig
+from .model import GPT, MoE, GPTConfig
 
 ROOT = Path(__file__).resolve().parents[2]
 TOKENS = ROOT / "data" / "tokens"
@@ -120,16 +120,17 @@ def main(argv: list[str] | None = None) -> dict:
         gen.set_state(ckpt["gen"])
         step, elapsed = ckpt["step"], ckpt["elapsed"]
     run_info = {"name": a.name, "config": config.to_dict(), "params": model.n_params(),
+                "active_params": model.n_active_params(),
                 "params_no_embeddings": model.n_params(embeddings=False), "batch": a.batch, "lr": a.lr,
                 "steps": a.steps, "threads": a.threads, "tokens_per_step": a.batch * config.ctx}
     (out / "run.json").write_text(json.dumps(run_info, indent=1))
-    print(f"{a.name}: {model.n_params() / 1e6:.2f}M parameters "
-          f"({model.n_params(embeddings=False) / 1e6:.2f}M without embeddings), {a.threads} threads")
+    print(f"{a.name}: {model.n_params() / 1e6:.2f}M parameters, {model.n_active_params() / 1e6:.2f}M active per token "
+          f"({model.n_params(embeddings=False) / 1e6:.2f}M without embeddings), {a.threads} threads", flush=True)
 
     vwin = fixed_windows(valid, config.ctx, a.eval_windows)
     it = batches(train, config.ctx, a.batch, gen)
     log = (out / "log.jsonl").open("a")
-    t_start, t_window, tok_window, train_losses = time.time(), time.time(), 0, []
+    t_start, t_window, tok_window, train_losses, aux_values = time.time(), time.time(), 0, [], []
     stopped = "steps"
     model.train()
     while step < a.steps:
@@ -137,13 +138,15 @@ def main(argv: list[str] | None = None) -> dict:
             g["lr"] = lr_at(step, a.steps, a.lr, a.warmup)
         x, y = next(it)
         _, loss = model(x, y)
+        aux = model.aux_loss()
         opt.zero_grad(set_to_none=True)
-        loss.backward()
+        (loss + config.aux_coef * aux).backward()        # aux = MoE load balancing (0 for dense)
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step()
         step += 1
         tok_window += x.numel()
         train_losses.append(loss.item())
+        aux_values.append(float(aux.detach()))
         if step % a.eval_every == 0 or step == a.steps:
             now = time.time()
             elapsed += now - t_start
@@ -153,12 +156,16 @@ def main(argv: list[str] | None = None) -> dict:
                    "val_loss": round(val, 4), "val_ppl": round(math.exp(val), 2),
                    "tok_per_s": round(tok_window / (now - t_window)), "lr": round(opt.param_groups[0]["lr"], 6),
                    "elapsed_min": round(elapsed / 60, 1)}
+            moe = [b.ffn for b in model.blocks if isinstance(b.ffn, MoE)]
+            if moe:                                         # share of tokens per expert, per layer (last validation batch)
+                rec["aux"] = round(float(np.mean(aux_values)), 4)
+                rec["expert_share"] = [[round(float(c), 3) for c in f.last_counts / f.last_counts.sum()] for f in moe]
             log.write(json.dumps(rec) + "\n")
             log.flush()
             print(json.dumps(rec), flush=True)
             save_atomic({"model": model.state_dict(), "opt": opt.state_dict(), "gen": gen.get_state(), "step": step,
                          "elapsed": elapsed, "config": config.to_dict()}, ckpt_path)
-            t_window, tok_window, train_losses = time.time(), 0, []
+            t_window, tok_window, train_losses, aux_values = time.time(), 0, [], []
             if a.max_minutes and elapsed / 60 >= a.max_minutes and step < a.steps:
                 stopped = "time"
                 break

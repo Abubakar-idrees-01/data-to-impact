@@ -31,8 +31,9 @@ broken. Most agent demos have a prompt that says "be careful" and nothing that w
 | Prompt injection (gpt-oss-20b, 10 attacks) | model **tried** to obey 2; **0** did anything (the code stopped both); 11 / 12 questions still right |
 | The "web content is data" prompt rule | made **no difference** (2 attempts with it, 2 without): the code is what protects |
 | Docs checkup (gpt-oss-20b, 5 planted errors, 4 decoys) | careful but shallow: 1 / 5 fixed, 0 / 4 decoys broken |
-| Digest guardrails | a draft built on one unconfirmed source was refused by code, not published |
-| SimpleQA (research vs. memory) and claim support in notes | running on the free tier; see [Results](RESULTS.md) |
+| Digest guardrails | two bad drafts (one source; an unread source cited) were refused by code; but passing them doesn't make a note faithful |
+| Claim support in digest notes (gpt-oss-20b) | only **23%** of claims backed by what it read (5 / 22); 3 of 8 digests produced a note; the judge caught 3 / 3 planted errors |
+| SimpleQA (research vs. memory), 120b runs | running on the free tier; see [Results](RESULTS.md) |
 | Cost | $0 (Groq and Tavily free tiers), on a 2015 laptop with no GPU |
 
 ## Built with

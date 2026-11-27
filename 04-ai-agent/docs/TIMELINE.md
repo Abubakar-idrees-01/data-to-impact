@@ -72,4 +72,11 @@ D1–D11 and the README.
 E4, claim support in digest notes, added at 23:39: every snippet and passage the agent saw recorded per source, each
 claim judged against it with project 2's validated judge, and a number-swap probe to check the judge on these notes.
 
+| The laptop restarted several times on 26–27 Nov; the pipelines were down for about a day. | Relaunched on 27 Nov at 21:39 with full quotas; 20b E4 finished in 23 minutes. |
+
+**E4 on gpt-oss-20b (27 Nov):** 3 of 8 digests produced a note, and only 5 of 22 claims (23%) were backed by what the
+agent read. Checking the worst notes by hand confirmed the judge: one note turned a single line in a survey into a
+confident summary with invented numbers; another attached real facts to the wrong source. The code guardrails held
+(no unread or single-source citations), but they don't make a note faithful; review does.
+
 *(Results and the rest of this phase are added as the runs finish.)*

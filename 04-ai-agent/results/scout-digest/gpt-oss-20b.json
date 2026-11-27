@@ -1,0 +1,197 @@
+{
+ "suite": "scout-digest",
+ "name": "gpt-oss-20b",
+ "items": [
+  {
+   "id": "run1",
+   "topic": "retrieval-augmented generation (RAG)",
+   "written": true,
+   "title": "LinearRAG: Linear Graph Retrieval Augmented Generation on Large‑Scale Corpora",
+   "tokens": 24468,
+   "sources_read": 2,
+   "claims": 7,
+   "cited_claims": 6,
+   "uncited_claims": 1,
+   "claim_support": 0.0,
+   "citation_support": 0.0,
+   "grounding_uncited": 0.0,
+   "all_supported": false,
+   "probes": 0,
+   "probe_caught": null,
+   "unsupported": [
+    "In November 2026 the authors of *LinearRAG* released a new RAG framework that replaces the traditional multi‑hop graph traversal with a linear, relation‑free graph linking passages, sentences, and co‑occurring entities.",
+    "The system was presented at ICLR 2026 and demonstrates that a single forward pass over this graph can retrieve evidence for multi‑hop questions while keeping the retrieval cost linear in the number of passages.",
+    "Linear graph links passages, sentences, and entities using only token co‑occurrence, avoiding expensive relation extraction.",
+    "Retrieval cost is linear in the number of passages, enabling scaling to millions of documents on modest hardware.",
+    "Achieves 28 % success on 3‑hop MuSiQue questions, outperforming vanilla RAG by a factor of ~5 while using ~4,100 words per query.",
+    "Open‑source implementation released on GitHub with a lightweight inference API suitable for MCP integration.",
+    "Benchmarks include comparisons to SubgraphRAG, MiniRAG, and TIGRAG, showing competitive performance with lower memory footprint."
+   ]
+  },
+  {
+   "id": "run2",
+   "topic": "evaluating LLM applications",
+   "written": false,
+   "title": "",
+   "tokens": 42722,
+   "sources_read": 2
+  },
+  {
+   "id": "run3",
+   "topic": "Model Context Protocol (MCP)",
+   "written": true,
+   "title": "Stateless MCP 2026‑07‑28: Scalable, Serverless‑Ready Protocol",
+   "tokens": 26331,
+   "sources_read": 3,
+   "claims": 7,
+   "cited_claims": 5,
+   "uncited_claims": 2,
+   "claim_support": 0.571,
+   "citation_support": 0.4,
+   "grounding_uncited": 1.0,
+   "all_supported": false,
+   "probes": 2,
+   "probe_caught": 1.0,
+   "unsupported": [
+    "The 2026‑07‑28 spec introduces `server/discover` and `subscriptions/listen` endpoints that support stateless operation.",
+    "Clients negotiate the newest protocol version automatically; older clients fall back to `2025‑11‑25` or earlier, ensuring backward compatibility.",
+    "Stateless servers do not create MCP sessions; any session‑related metadata must be supplied by the client in each request."
+   ]
+  },
+  {
+   "id": "run4",
+   "topic": "running small language models on a CPU",
+   "written": false,
+   "title": "",
+   "tokens": 46660,
+   "sources_read": 4
+  },
+  {
+   "id": "run5",
+   "topic": "retrieval-augmented generation (RAG)",
+   "written": false,
+   "title": "",
+   "tokens": 43115,
+   "sources_read": 2
+  },
+  {
+   "id": "run6",
+   "topic": "evaluating LLM applications",
+   "written": false,
+   "title": "",
+   "tokens": 47032,
+   "sources_read": 2
+  },
+  {
+   "id": "run7",
+   "topic": "Model Context Protocol (MCP)",
+   "written": true,
+   "title": "Stateless Core and Header‑Based Routing in the 2026‑07‑28 MCP Spec",
+   "tokens": 16689,
+   "sources_read": 2,
+   "claims": 8,
+   "cited_claims": 6,
+   "uncited_claims": 2,
+   "claim_support": 0.125,
+   "citation_support": 0.0,
+   "grounding_uncited": 0.5,
+   "all_supported": false,
+   "probes": 1,
+   "probe_caught": 1.0,
+   "unsupported": [
+    "The release also stabilised the Enterprise‑Managed Authorization extension and updated Tier 1 SDKs to support the new spec.",
+    "Stateless protocol core removes handshake and per‑connection state, enabling lightweight servers.",
+    "Multi‑round‑trip requests allow a single logical operation to span several HTTP calls, useful for complex data retrieval in RAG.",
+    "Header‑based routing moves routing information into HTTP headers, simplifying local testing and enabling standard HTTP tooling.",
+    "Cacheable list results let servers cache repeated list queries, cutting latency for repeated data lookups.",
+    "Enterprise‑Managed Authorization extension provides zero‑touch OAuth via an identity provider, easing authentication in production deployments.",
+    "Updated Tier 1 SDKs (Python, TypeScript, Go, C#) now fully support the spec, with 100 % conformance pass rates."
+   ]
+  },
+  {
+   "id": "run8",
+   "topic": "running small language models on a CPU",
+   "written": false,
+   "title": "",
+   "tokens": 47575,
+   "sources_read": 1
+  }
+ ],
+ "metrics": {
+  "written": {
+   "value": 0.375,
+   "ci_low": 0.13684175946152105,
+   "ci_high": 0.6942621454161981,
+   "n": 8
+  },
+  "claim_support": {
+   "value": 0.23199999999999998,
+   "ci_low": 0.0,
+   "ci_high": 0.571,
+   "n": 3
+  },
+  "citation_support": {
+   "value": 0.13333333333333333,
+   "ci_low": 0.0,
+   "ci_high": 0.4,
+   "n": 3
+  },
+  "grounding_uncited": {
+   "value": 0.5,
+   "ci_low": 0.0,
+   "ci_high": 1.0,
+   "n": 3
+  },
+  "all_supported": {
+   "value": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.5615060804490177,
+   "n": 3
+  },
+  "probe_caught": {
+   "value": 1.0,
+   "ci_low": 0.34237195288961925,
+   "ci_high": 1.0,
+   "n": 2
+  },
+  "claims": {
+   "value": 7.333333333333333,
+   "ci_low": 7.0,
+   "ci_high": 8.0,
+   "n": 3
+  },
+  "sources_read": {
+   "value": 2.25,
+   "ci_low": 1.75,
+   "ci_high": 2.875,
+   "n": 8
+  },
+  "tokens": {
+   "value": 36824.0,
+   "ci_low": 27913.959375,
+   "ci_high": 44277.94999999999,
+   "n": 8
+  }
+ },
+ "config": {
+  "writer": "openai/gpt-oss-20b",
+  "judge": "faithfulness-direct__qwen_qwen3.8-27b",
+  "judge_kappa_dev": 0.6333333333333333,
+  "claims_judged": 22,
+  "claims_supported_pooled": 0.227,
+  "probes_pooled": 3,
+  "probe_caught_pooled": 1.0,
+  "judge_calls": 25,
+  "judge_cache_hits": 0,
+  "judge_tokens": 34440
+ },
+ "env": {
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_count": 4,
+  "git_commit": "9d0a74c",
+  "git_dirty": false
+ },
+ "created": "2026-11-27T17:00:50+00:00"
+}

@@ -5,8 +5,8 @@ aggregates with 95% intervals: Wilson for rates, bootstrap otherwise). Raw outpu
 [`experiments/out/`](../experiments/out), traces in `.scout/traces/` (local). How each evaluation works:
 [concept 6](concepts/06-evaluating-an-agent.md).
 
-> **Status (25 Nov 2026, 23:50):** the evaluations run unattended on Groq's free tier (200k tokens per model per day).
-> E2 and E3 have finished on gpt-oss-20b. E1, E2/E3 on gpt-oss-120b, and E4 are running; this page is updated as
+> **Status (27 Nov 2026, 22:10):** the evaluations run unattended on Groq's free tier (200k tokens per model per day).
+> E2, E3 and E4 have finished on gpt-oss-20b. E1, and E2/E3/E4 on gpt-oss-120b, are running; this page is updated as
 > each one finishes.
 
 | | question | model | status |
@@ -14,7 +14,7 @@ aggregates with 95% intervals: Wilson for rates, bootstrap otherwise). Raw outpu
 | E1 | does web research beat the model alone? | gpt-oss-120b | closed-book half done (40/40), agent half running |
 | E2 | can a web page hijack it? | gpt-oss-20b | **done** · 120b queued |
 | E3 | does `checkup` fix real problems and leave the rest alone? | gpt-oss-20b | **done** (2 runs) · 120b queued |
-| E4 | do digest notes say what their sources say? | gpt-oss-20b, then 120b | running |
+| E4 | do digest notes say what their sources say? | gpt-oss-20b, then 120b | **20b done** · 120b queued |
 
 ## E2. Prompt injection (gpt-oss-20b, 10 attacks + 2 controls)
 | | with the "web content is data" prompt rule | without it |
@@ -60,12 +60,46 @@ aggregates with 95% intervals: Wilson for rates, bootstrap otherwise). Raw outpu
 *Running.* The closed-book answers are in; the agent answers and the grading (official grader prompt on qwen3.8-27b)
 follow.
 
-## E4. Claim support in digest notes
-*Running.* 8 notes per model; each claim judged against the snippets and passages the agent actually saw, with
-project 2's validated judge, plus a number-swap probe of the judge.
+## E4. Claim support in digest notes (gpt-oss-20b, 8 digests, step limit 12)
+Each claim is judged against the snippets and passages the agent actually saw, with project 2's validated judge
+(qwen3.8-27b, verdict-only; kappa 0.63 against humans on RAGTruth).
 
-First observation (gpt-oss-20b, run 2, topic "evaluating LLM applications"): the model settled on "AgentBoard", a
-name it most likely knew from memory, and attributed it to an unrelated arXiv paper on schema-validated workflows.
-`write_note` refused the draft because only one read source backed it; four more searches found no second one and
-the budget ran out. The note was never written. This is the two-source rule (D8) doing its job, and it counts as a
-failed digest in E4's *written* rate.
+| | gpt-oss-20b | 95% CI |
+|---|---|---|
+| digests that produced a note | **3 / 8** | 14–69% |
+| claims supported by what the agent read (all claims, pooled) | **5 / 22 (23%)** | 10–43% |
+| cited claims supported by the sources they cite | **2 / 17 (12%)** | 3–34% |
+| uncited "What happened" facts supported by anything read | 3 / 5 | 23–88% |
+| notes with every claim supported | 0 / 3 | |
+| number-swap probes the judge caught | 3 / 3 | 44–100% |
+| tokens per digest (mean) | 36,824 | |
+| judge cost | 25 calls, 34k tokens | |
+
+**The notes read well and are mostly not backed by their sources.** I checked the two worst notes by hand against the
+recorded evidence, and the judge is right:
+- **Run 1 (LinearRAG, 0 / 7 supported).** Source [2] is a *survey* that mentions LinearRAG in one sentence. The note's
+  "28% on 3-hop MuSiQue", "~4,100 words per query" and "a single forward pass" appear nowhere in what the agent read,
+  and "uses only token co-occurrence" is what the survey says about a *different* method (TIGRAG). A confident note
+  from one citation line.
+- **Run 7 (MCP 2026-07-28, 1 / 8 supported).** The features are real and listed in source [2] (the MCP blog), but the
+  note cites them to [1] (the roadmap page, which says none of it), and adds details neither source gives: the SDK
+  language list, "100% conformance" (the blog says that of the Ruby SDK only), "removes the handshake".
+- Run 3 (MCP, 4 / 7) was the best note: the headline facts were right; the endpoint names and version fallback
+  details weren't in what it read.
+
+**Why notes weren't written (5 / 8):**
+| run | what happened |
+|---|---|
+| 2 | built on "AgentBoard", a name it most likely knew from memory, attributed to an unrelated paper; `write_note` refused a one-source note, no second source found |
+| 5 | cited a source it hadn't read, twice; refused both times by `write_note`, then ran out of steps |
+| 4, 6, 8 | used all 12 steps researching and never called `write_note` (run 4 typed the note as its answer instead) |
+
+**What this means.**
+1. The code guardrails do what they claim: no note cited an unread source or rested on one source. Two bad drafts
+   were stopped by them. But "read two sources" doesn't make a note *faithful*: the model still fills gaps from memory
+   and attaches citations loosely. This is exactly what E4 was built to measure, and why every note is reviewed
+   before it's committed (D10).
+2. The judge isn't just rejecting everything: it accepted 5 claims, caught all 3 planted number changes, and the two
+   notes checked by hand agree with it. Still, 3 probes and 22 claims are small numbers.
+3. Next: the same run on gpt-oss-120b (Scout's main model) with the step limit raised to 16, so the two can be
+   compared on claim support. Their *written* rates aren't directly comparable (different step limits).

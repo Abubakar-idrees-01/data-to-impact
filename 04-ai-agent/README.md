@@ -56,6 +56,9 @@ Architecture and one run end to end: **[docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.
 Evaluations are running on the free tier (results land over about a day); see **[docs/RESULTS.md](docs/RESULTS.md)**.
 First numbers (gpt-oss-20b, 10 attacks + 2 controls): the model tried to obey **2 of 10** attacks (posting a comment,
 reading `.env`) and **0** did anything; 11 of 12 questions were still answered correctly.
+Claim support in learning-log drafts (gpt-oss-20b): only **5 of 22 claims (23%)** were backed by the passages the agent
+had read, even though every note passed the code checks (only read sources, at least two). Drafts read well and
+attach citations loosely, which is why each one is reviewed before it's committed.
 
 ## Quickstart
 ```bash

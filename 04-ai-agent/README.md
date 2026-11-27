@@ -57,8 +57,9 @@ Full numbers with intervals: **[docs/RESULTS.md](docs/RESULTS.md)**.
 
 **Research beats memory:** on 40 SimpleQA questions, gpt-oss-120b alone was correct on **10%** (and confidently wrong on
 63%); Scout with web search and reading was correct on **93%** (+82.5 points, p < 0.001), with no leaked answer keys.
-First numbers (gpt-oss-20b, 10 attacks + 2 controls): the model tried to obey **2 of 10** attacks (posting a comment,
-reading `.env`) and **0** did anything; 11 of 12 questions were still answered correctly.
+**Prompt injection:** 10 attacks on two models (gpt-oss-20b and 120b), with and without the "web content is data" prompt
+rule: the model *tried* to obey in **5 of 40** runs (posting a comment, reading `.env`), and **0** did anything, because
+the code stopped every attempt.
 Claim support in learning-log drafts (gpt-oss-20b): only **5 of 22 claims (23%)** were backed by the passages the agent
 had read, even though every note passed the code checks (only read sources, at least two). Drafts read well and
 attach citations loosely, which is why each one is reviewed before it's committed.

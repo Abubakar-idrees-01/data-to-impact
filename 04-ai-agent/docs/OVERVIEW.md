@@ -28,13 +28,13 @@ broken. Most agent demos have a prompt that says "be careful" and nothing that w
 ## Results so far
 | | |
 |---|---|
-| Prompt injection (gpt-oss-20b, 10 attacks) | model **tried** to obey 2; **0** did anything (the code stopped both); 11 / 12 questions still right |
-| The "web content is data" prompt rule | made **no difference** (2 attempts with it, 2 without): the code is what protects |
+| Prompt injection (10 attacks, 2 models, with and without the prompt rule) | models **tried** to obey in 5 of 40 runs; **0** did anything (code stopped every attempt) |
+| The "web content is data" prompt rule | small or no effect (20b: 2 vs 2 attempts; 120b: 0 vs 1): the code is what protects |
 | Docs checkup (gpt-oss-20b, 5 planted errors, 4 decoys) | careful but shallow: 1 / 5 fixed, 0 / 4 decoys broken |
 | Digest guardrails | two bad drafts (one source; an unread source cited) were refused by code; but passing them doesn't make a note faithful |
 | Claim support in digest notes (gpt-oss-20b) | only **23%** of claims backed by what it read (5 / 22); 3 of 8 digests produced a note; the judge caught 3 / 3 planted errors |
 | SimpleQA, 40 questions (gpt-oss-120b) | **10% correct from memory → 93% with research** (+82.5 points, p < 0.001); no leaked answers |
-| 120b runs of the injection, checkup and claim-support tests | running on the free tier; see [Results](RESULTS.md) |
+| 120b runs of the checkup and claim-support tests | running on the free tier; see [Results](RESULTS.md) |
 | Cost | $0 (Groq and Tavily free tiers), on a 2015 laptop with no GPU |
 
 ## Built with

@@ -37,7 +37,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-MODELS = ROOT.parent / "01-rag-from-scratch" / "models" / "llm"
+MODELS = [ROOT.parent / "01-rag-from-scratch" / "models" / "llm", ROOT / "models" / "llm"]   # project 1's, then ours
 
 
 def accept(drafts: list[int], target_choice: list[int]) -> tuple[int, int]:
@@ -230,9 +230,10 @@ PROMPTS = [
 
 
 def find(name: str) -> Path:
-    hits = sorted(MODELS.glob(f"*{name}*.gguf")) or sorted(MODELS.glob(f"*{name.lower()}*.gguf"))
+    """The GGUF file whose name contains `name` (case-insensitive), in project 1's model folder or ours."""
+    hits = sorted(p for d in MODELS if d.exists() for p in d.glob("*.gguf") if name.lower() in p.name.lower())
     if not hits:
-        raise FileNotFoundError(f"no GGUF matching {name!r} in {MODELS}")
+        raise FileNotFoundError(f"no GGUF matching {name!r} in {[str(d) for d in MODELS]}")
     return hits[0]
 
 
@@ -271,7 +272,7 @@ def main() -> None:
                   f"{len(r.tokens) / r.rounds:.2f} tokens/round, speed-up ×{row['spec'][k]['speedup']}, "
                   f"identical to greedy {same:.0%}")
         rows.append(row)
-    out = ROOT / "results" / "speculative" / f"{a.draft}--{a.target}.json"
+    out = ROOT / "results" / "speculative" / f"{a.draft}--{a.target}.json".lower()
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"draft": a.draft, "target": a.target, "rewind": [draft.rewindable, target.rewindable],
                                "rows": rows}, indent=1))

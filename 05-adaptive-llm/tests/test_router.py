@@ -87,3 +87,14 @@ def test_prob_recorder_looks_up_the_chosen_token_one_step_late():
     assert rec.finish() == pytest.approx([0.2, 0.7, 0.7])      # last step: top probability
     g = Generation("x", "m", 1, 0, 3, 0.1, 1.0, 1.0, token_probs=[0.5, 0.5])
     assert g.confidence == pytest.approx(0.5)
+
+
+def test_speculative_acceptance_rule():
+    from adaptive.speculative import accept, expected_speedup
+    assert accept([5, 6, 7], [5, 6, 7, 8]) == (3, 8)        # all accepted + the target's next token as a bonus
+    assert accept([5, 6, 7], [5, 9, 7, 8]) == (1, 9)        # mismatch at the 2nd draft: emit the target's choice
+    assert accept([5, 6, 7], [1, 6, 7, 8]) == (0, 1)        # nothing accepted: still one token per round
+    assert accept([], [4]) == (0, 4)
+    assert expected_speedup(0.0, 4, 0.0) == 1.0              # free but useless drafts: no gain
+    assert expected_speedup(1.0, 4, 0.0) == 5.0              # perfect free drafts: k + 1 tokens per pass
+    assert expected_speedup(0.7, 4, 0.3) == pytest.approx((1 - 0.7 ** 5) / 0.3 / 2.2)

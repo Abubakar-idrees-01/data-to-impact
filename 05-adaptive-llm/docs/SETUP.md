@@ -82,6 +82,13 @@ PYTHONPATH=src .venv/bin/python -m adaptive.route_eval summary       # accuracy 
 PYTHONPATH=src .venv/bin/python -m adaptive.route_eval run --limit 1 --tag smoke --only "Qwen3.5-0.8B*"   # 1-minute check
 ```
 
+## 7. Part B: speculative decoding
+```bash
+PYTHONPATH=src .venv/bin/python -m adaptive.speculative --draft Qwen3.5-0.8B --target Qwen3.5-2B --k 2 4 6
+```
+Draft and target must share a tokenizer (same model family). Prints target-alone speed, speculative speed, draft
+acceptance rate and whether the output is identical to the target's own greedy output.
+
 ## Troubleshooting
 | problem | fix |
 |---|---|

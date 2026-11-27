@@ -23,7 +23,8 @@ efficient models and measure them honestly; Part B applies them to real open mod
 | B1 | hardware profiler (cores, SIMD flags, RAM, GPU, measured bandwidth), GGUF reader, model/quant planner | code + 11 tests done; measurements after Part A (needs an idle CPU) |
 | B2 | llama.cpp runtime (streaming, TTFT/decode timing, KV-cache reuse), model ladder with LRU unloading, benchmark + calibration | code + 5 tests done; measurements after Part A |
 | B3 | rule router (prompt features), confidence cascade (token probabilities via a llama.cpp logits hook), 128 auto-graded questions (capitals, arithmetic, GSM8K), offline policy simulation | code + 13 tests done; run after Part A |
-| B4–B5 | speculative decoding, benchmarks via evalkit | |
+| B4 | greedy speculative decoding on llama.cpp's batch API (draft k tokens, verify in one pass); rollback by cache removal, or per-sequence state snapshots (19.5 MB) for Qwen3.5, whose recurrent layers cannot rewind | code + test done; output identical to greedy (checked); speed run after Part A |
+| B5 | benchmarks via evalkit, Scout offline backend demo | |
 
 ## Quickstart
 ```bash

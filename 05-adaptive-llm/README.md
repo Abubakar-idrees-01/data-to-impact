@@ -44,6 +44,7 @@ Full guide: [docs/SETUP.md](docs/SETUP.md)
 | [Setup](docs/SETUP.md) | Install on Linux / Windows / macOS, data, troubleshooting |
 | [How it works](docs/HOW_IT_WORKS.md) | Architecture of both parts, data flow of one request |
 | [Decisions](docs/DECISIONS.md) | Why X over Y, with the measurements |
+| [Timeline](docs/TIMELINE.md) | What happened, in order, including the mistakes |
 | Concepts | 1. [Tokenization (BPE)](docs/concepts/01-tokenization-bpe.md) · 2. [The transformer and training](docs/concepts/02-the-transformer-and-training.md) · 3. [Mixture-of-Experts](docs/concepts/03-mixture-of-experts.md) · 4. [Early exit](docs/concepts/04-early-exit.md) · 5. [Hardware-aware model choice](docs/concepts/05-hardware-aware-model-choice.md) · 6. [Routing and cascades](docs/concepts/06-routing-and-cascades.md) · 7. [Speculative decoding](docs/concepts/07-speculative-decoding.md) |
 
 ## Data

@@ -49,3 +49,10 @@ B4. speculative decoding; B5. benchmarks via evalkit; Scout (project 4) offline 
 ## Status
 - 2026-11-28: A1 done; A2 baseline done (val 2.235, ppl 9.34, 96 min). A3/A4 code done; `experiments/part_a.sh`
   queue training moe-4x-top1 → moe-8x-top2 → exit-d256-L6 → early_exit evals (log: `logs/part_a.log`).
+- B1–B5 code written and unit-tested (49 tests) while the CPU trained; **measurements need an idle CPU**, so
+  `experiments/part_b.sh` (detached, log `logs/part_b.log`) waits for "PART-A DONE", then runs bench_models
+  (calibration), plan, route_eval run + export, speculative (Qwen3.5 0.8B→2B, Qwen2.5 0.5B→1.5B).
+- Don't run llama.cpp or other heavy jobs while part_a.sh trains: it skews the tokens/s comparison.
+- llama-cpp-python 0.3.37 was copied from project 1's venv (relocatable); Qwen2.5-0.5B draft in `models/llm/`.
+- After both queues: fill Results in concepts 3, 4, 5, 6, 7; RESULTS.md; README numbers; then the Scout offline
+  demo (OpenAI-compatible server over the engine, Qwen `<tool_call>` parsing).

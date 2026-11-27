@@ -1,0 +1,7 @@
+.tmp/
+data/raw/
+data/tokens/
+models/*
+!models/README.md
+.venv/
+__pycache__/

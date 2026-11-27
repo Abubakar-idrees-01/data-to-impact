@@ -1,0 +1,5 @@
+# Part B: llama.cpp's Python bindings. Compiled from source on install (needs a C++ compiler and cmake), see
+# docs/SETUP.md §4. Portable x86 build for CPUs with AVX2:
+#   CMAKE_ARGS="-DGGML_NATIVE=OFF -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON" pip install -r requirements-engine.txt
+llama-cpp-python==0.3.37
+diskcache==5.6.3

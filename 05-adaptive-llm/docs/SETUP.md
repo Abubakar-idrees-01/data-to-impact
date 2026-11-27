@@ -41,7 +41,25 @@ PYTHONPATH=src .venv/bin/python -m tinygpt.data           # Windows: $env:PYTHON
 .venv/bin/python -m pytest -q
 ```
 
-## 4. Part B: what can this machine run?
+## 4. Part B: the llama.cpp engine
+Part B runs real open models with `llama-cpp-python`, which **compiles llama.cpp on your machine** (~10 minutes on
+a 2-core laptop; needs a C++ compiler and cmake: `sudo apt install build-essential cmake` on Ubuntu, Xcode command
+line tools on macOS, "Desktop development with C++" from Visual Studio Build Tools on Windows).
+```bash
+CMAKE_ARGS="-DGGML_NATIVE=OFF -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON" .venv/bin/pip install -r requirements-engine.txt
+# Apple Silicon: plain `pip install -r requirements-engine.txt` builds with Metal.  No AVX2: drop the CMAKE_ARGS.
+```
+**Already built it for project 1?** The build is relocatable (its libraries find each other next to themselves), so
+it can be copied instead of compiled again:
+```bash
+S=../01-rag-from-scratch/.venv/lib/python3.12/site-packages
+cp -r $S/llama_cpp $S/llama_cpp_python-0.3.37.dist-info .venv/lib/python3.12/site-packages/
+.venv/bin/pip install diskcache==5.6.3 && .venv/bin/pip check
+```
+Models: the three GGUF files from project 1 (`../01-rag-from-scratch/models/llm/`, downloaded by its
+`scripts/download_models.py`). Any ChatML-format GGUF works (Qwen, many others).
+
+## 5. Part B: what can this machine run?
 ```bash
 PYTHONPATH=src .venv/bin/python -m adaptive.plan                     # profile + plan over project 1's GGUF models
 PYTHONPATH=src .venv/bin/python -m adaptive.plan --models /path/to/ggufs --ctx 8192 --min-tok-s 8
@@ -51,10 +69,16 @@ the folder: memory needed at that context size, whether it fits, estimated speed
 `results/hardware/<cpu>.json`. Run it with other programs closed: a busy CPU lowers the measured bandwidth.
 The default model folder is `../01-rag-from-scratch/models/llm/` (see that project's SETUP for the downloads).
 
+Measure the models for real and calibrate the planner's speed estimate (~10 minutes, close other programs):
+```bash
+PYTHONPATH=src .venv/bin/python -m adaptive.bench_models
+```
+
 ## Troubleshooting
 | problem | fix |
 |---|---|
 | `No space left on device` while installing torch | set `TMPDIR` and `PIP_CACHE_DIR` as above |
 | `pip install torch` downloads a 2 GB+ CUDA build | use `--index-url https://download.pytorch.org/whl/cpu` |
 | `curl: (33) HTTP server doesn't seem to support byte ranges` | download `TinyStoriesV2-GPT4-train.txt` in full, or a mirror that supports ranges |
+| `ModuleNotFoundError: llama_cpp` | step 4 |
 | `ModuleNotFoundError: tinygpt` / `adaptive` | run from `05-adaptive-llm/` with `PYTHONPATH=src` |

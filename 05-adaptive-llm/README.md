@@ -21,7 +21,8 @@ efficient models and measure them honestly; Part B applies them to real open mod
 | A3 | Mixture-of-Experts layers | code + tests done; training |
 | A4 | early exit | code + tests done; queued |
 | B1 | hardware profiler (cores, SIMD flags, RAM, GPU, measured bandwidth), GGUF reader, model/quant planner | code + 11 tests done; measurements after Part A (needs an idle CPU) |
-| B2–B5 | llama.cpp runtime + model ladder, router, speculative decoding, benchmarks | |
+| B2 | llama.cpp runtime (streaming, TTFT/decode timing, KV-cache reuse), model ladder with LRU unloading, benchmark + calibration | code + 5 tests done; measurements after Part A |
+| B3–B5 | complexity router + cascade, speculative decoding, benchmarks via evalkit | |
 
 ## Quickstart
 ```bash

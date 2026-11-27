@@ -39,14 +39,19 @@ QUANT_BITS = {"Q8_0": 8.5, "Q6_K": 6.56, "Q5_K_M": 5.7, "Q4_K_M": 4.9, "Q3_K_M":
 MIN_GOOD_QUANT = "Q4_K_M"     # below 4 bits quality drops fast; prefer a smaller model at Q4 to a bigger one at Q2
 
 
-def efficiency() -> float:
-    if CALIBRATION.exists():
-        return json.loads(CALIBRATION.read_text()).get("efficiency", 1.0)
-    return 1.0
+def efficiency(arch: str | None = None) -> float:
+    """Measured share of the bandwidth ceiling llama.cpp reaches, per architecture (`bench_models` writes it).
+
+    Unknown architectures get the lowest measured value, so estimates err on the slow side; 1.0 = uncalibrated.
+    """
+    if not CALIBRATION.exists():
+        return 1.0
+    c = json.loads(CALIBRATION.read_text())
+    return c["efficiency"].get(arch, c["default"]) if arch else c["default"]
 
 
-def estimate(hw: Hardware, file_bytes: int, kv_bytes: int, eff: float | None = None) -> dict:
-    eff = efficiency() if eff is None else eff
+def estimate(hw: Hardware, file_bytes: int, kv_bytes: int, eff: float | None = None, arch: str | None = None) -> dict:
+    eff = efficiency(arch) if eff is None else eff
     need = (file_bytes + kv_bytes) / GB + OVERHEAD_GB
     budget = hw.ram_available_gb - RESERVE_GB
     tok_s = eff * (hw.bandwidth_gbs or 0) * 1e9 / file_bytes if hw.bandwidth_gbs else None
@@ -61,7 +66,7 @@ def plan_local(hw: Hardware, models: list[dict], n_ctx: int = 4096, min_tok_s: f
         kv = kv_cache_bytes(m, n_ctx)
         rows.append({"file": m["file"], "params_b": round(m["params"] / 1e9, 2), "quant": m["quant"],
                      "file_gb": round(m["bytes"] / GB, 2), "kv_gb": round(kv / GB, 3),
-                     **estimate(hw, m["bytes"], kv, eff)})
+                     "arch": m.get("arch"), **estimate(hw, m["bytes"], kv, eff, m.get("arch"))})
     rows.sort(key=lambda r: r["params_b"])
     fitting = [r for r in rows if r["fits"]]
     fast = [r for r in fitting if r["tok_s"] is None or r["tok_s"] >= min_tok_s]

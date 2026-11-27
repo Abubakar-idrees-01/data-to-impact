@@ -1,12 +1,11 @@
 """B1: the profiler parses each OS's facts correctly, the GGUF reader matches what we wrote, the planner's rules hold."""
 
-import struct
-
 import pytest
 
 from adaptive.gguf import kv_cache_bytes, model_info, read_metadata
 from adaptive.hardware import GB, Hardware, parse_cpuinfo, parse_meminfo, slug
 from adaptive.plan import gpu_layers, plan_local, quant_grid
+from helpers import write_gguf
 
 INTEL = "\n\n".join(f"""processor\t: {i}
 model name\t: Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz
@@ -40,30 +39,6 @@ def test_meminfo_uses_available_not_free():
 def test_slug():
     assert slug("Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz") == "intel-core-i5-5200u"
     assert slug("AMD Ryzen 7 5800H with Radeon Graphics") == "amd-ryzen-7-5800h-with-radeon-graphics"
-
-
-# ---------- a tiny GGUF file, written by hand in the format the reader expects
-def _s(text: str) -> bytes:
-    b = text.encode()
-    return struct.pack("<Q", len(b)) + b
-
-
-def write_gguf(path, kv: dict, tensors: list[tuple[str, list[int]]]) -> None:
-    body = b""
-    for k, v in kv.items():
-        body += _s(k)
-        if isinstance(v, str):
-            body += struct.pack("<I", 8) + _s(v)
-        elif isinstance(v, list) and isinstance(v[0], str):
-            body += struct.pack("<IIQ", 9, 8, len(v)) + b"".join(_s(x) for x in v)
-        elif isinstance(v, list):
-            body += struct.pack("<IIQ", 9, 5, len(v)) + b"".join(struct.pack("<i", x) for x in v)
-        else:
-            body += struct.pack("<I", 4) + struct.pack("<I", v)
-    for name, shape in tensors:
-        body += _s(name) + struct.pack("<I", len(shape)) + b"".join(struct.pack("<Q", d) for d in shape)
-        body += struct.pack("<IQ", 12, 0)
-    path.write_bytes(b"GGUF" + struct.pack("<IQQ", 3, len(tensors), len(kv)) + body + b"\0" * 1000)
 
 
 def test_gguf_reader_and_model_info(tmp_path):

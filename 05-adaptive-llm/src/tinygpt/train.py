@@ -130,7 +130,7 @@ def main(argv: list[str] | None = None) -> dict:
     vwin = fixed_windows(valid, config.ctx, a.eval_windows)
     it = batches(train, config.ctx, a.batch, gen)
     log = (out / "log.jsonl").open("a")
-    t_start, t_window, tok_window, train_losses, aux_values = time.time(), time.time(), 0, [], []
+    t_start, t_window, tok_window, train_losses, aux_values, exit_values = time.time(), time.time(), 0, [], [], []
     stopped = "steps"
     model.train()
     while step < a.steps:
@@ -140,13 +140,17 @@ def main(argv: list[str] | None = None) -> dict:
         _, loss = model(x, y)
         aux = model.aux_loss()
         opt.zero_grad(set_to_none=True)
-        (loss + config.aux_coef * aux).backward()        # aux = MoE load balancing (0 for dense)
+        total = loss + config.aux_coef * aux             # aux = MoE load balancing (0 for dense)
+        if config.exit_weight:
+            total = total + config.exit_weight * model.exit_loss     # train the early exits too
+        total.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step()
         step += 1
         tok_window += x.numel()
         train_losses.append(loss.item())
         aux_values.append(float(aux.detach()))
+        exit_values.append(float(model.exit_loss.detach()))
         if step % a.eval_every == 0 or step == a.steps:
             now = time.time()
             elapsed += now - t_start
@@ -156,6 +160,8 @@ def main(argv: list[str] | None = None) -> dict:
                    "val_loss": round(val, 4), "val_ppl": round(math.exp(val), 2),
                    "tok_per_s": round(tok_window / (now - t_window)), "lr": round(opt.param_groups[0]["lr"], 6),
                    "elapsed_min": round(elapsed / 60, 1)}
+            if config.exit_weight:                          # mean training loss of the early exits
+                rec["exit_loss"] = round(float(np.mean(exit_values)), 4)
             moe = [b.ffn for b in model.blocks if isinstance(b.ffn, MoE)]
             if moe:                                         # share of tokens per expert, per layer (last validation batch)
                 rec["aux"] = round(float(np.mean(aux_values)), 4)
@@ -165,7 +171,7 @@ def main(argv: list[str] | None = None) -> dict:
             print(json.dumps(rec), flush=True)
             save_atomic({"model": model.state_dict(), "opt": opt.state_dict(), "gen": gen.get_state(), "step": step,
                          "elapsed": elapsed, "config": config.to_dict()}, ckpt_path)
-            t_window, tok_window, train_losses, aux_values = time.time(), 0, [], []
+            t_window, tok_window, train_losses, aux_values, exit_values = time.time(), 0, [], [], []
             if a.max_minutes and elapsed / 60 >= a.max_minutes and step < a.steps:
                 stopped = "time"
                 break

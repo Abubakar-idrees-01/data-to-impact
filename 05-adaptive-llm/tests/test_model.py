@@ -146,3 +146,31 @@ def test_moe_trains_and_logs_expert_use(tmp_path):
     assert len(log[-1]["expert_share"]) == 2 and abs(sum(log[-1]["expert_share"][0]) - 1) < 1e-3
     run = json.loads((tmp_path / "a" / "moe" / "run.json").read_text())
     assert run["active_params"] < run["params"]
+
+
+def test_early_exit_heads_train_and_the_sweep_is_consistent():
+    from tinygpt.early_exit import per_layer, sweep
+    torch.manual_seed(0)
+    c = GPTConfig(vocab_size=64, ctx=16, d=32, n_layer=3, n_head=4, exit_weight=1.0)
+    m = GPT(c)
+    assert len(m.exit_norms) == 2
+    x = torch.randint(64, (2, 17))
+    _, loss = m(x[:, :-1], x[:, 1:])
+    assert m.exit_loss.item() > 0
+    (loss + m.exit_loss).backward()
+    assert m.exit_norms[0].weight.grad is not None              # the exits get trained
+    m.eval()
+    outs = m.exit_logits(x[:, :-1])
+    full, _ = m(x[:, :-1])
+    assert len(outs) == 3 and torch.allclose(outs[-1], full, atol=1e-5)     # last exit = the normal output
+    lp, conf, top = per_layer(m, x, batch=1)
+    rows = sweep(lp, conf, top, thresholds=[0.0, 1.01])
+    assert rows[0]["avg_layers"] == 1.0                         # τ = 0: everything exits after layer 1
+    assert rows[1]["avg_layers"] == 3.0 and rows[1]["agree_with_full"] == 1.0   # never exit = the full model
+    assert rows[1]["loss"] == pytest.approx(-lp[-1].mean().item(), abs=1e-4)
+
+
+def test_dense_model_has_no_exits_but_logit_lens_works():
+    m = GPT(TINY).eval()
+    assert m.exit_norms is None
+    assert len(m.exit_logits(torch.randint(64, (1, 8)))) == 2

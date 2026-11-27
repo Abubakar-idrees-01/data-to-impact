@@ -34,6 +34,7 @@ class GPTConfig:
     top_k: int = 1              # experts each token is sent to
     expert_mult: int = 4        # each expert's hidden size = expert_mult × d
     aux_coef: float = 0.01      # weight of the load-balancing loss (added by the training loop)
+    exit_weight: float = 0.0    # > 0: every layer gets an exit; loss += exit_weight × mean loss of the early exits
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -133,6 +134,9 @@ class GPT(nn.Module):
         self.drop = nn.Dropout(c.dropout)
         self.blocks = nn.ModuleList(Block(c) for _ in range(c.n_layer))
         self.norm = nn.LayerNorm(c.d)
+        # early exits: one norm per layer except the last (which uses self.norm), all sharing the output layer
+        self.exit_norms = nn.ModuleList(nn.LayerNorm(c.d) for _ in range(c.n_layer - 1)) if c.exit_weight else None
+        self.exit_loss = torch.zeros(())
         self.head = nn.Linear(c.d, c.vocab_size, bias=False)
         self.head.weight = self.tok.weight                       # weight tying
         self.apply(self._init)
@@ -169,13 +173,33 @@ class GPT(nn.Module):
         if T > self.config.ctx:
             raise ValueError(f"sequence of {T} tokens is longer than the context ({self.config.ctx})")
         x = self.drop(self.tok(idx) + self.pos(torch.arange(T, device=idx.device)))
-        for block in self.blocks:
+        early = []
+        for i, block in enumerate(self.blocks):
             x = block(x)
+            if self.exit_norms is not None and i < len(self.exit_norms) and targets is not None:
+                early.append(self.head(self.exit_norms[i](x)))
         logits = self.head(self.norm(x))
         loss = None
         if targets is not None:
             loss = F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
+            if early:
+                self.exit_loss = torch.stack([F.cross_entropy(e.reshape(-1, e.size(-1)), targets.reshape(-1))
+                                              for e in early]).mean()
         return logits, loss
+
+    @torch.no_grad()
+    def exit_logits(self, idx: torch.Tensor) -> list[torch.Tensor]:
+        """Next-token scores after every layer. With trained exits, each layer's own norm; without them, the final
+        norm applied to the intermediate state (the "logit lens": what an untrained early exit would say)."""
+        T = idx.shape[1]
+        x = self.tok(idx) + self.pos(torch.arange(T, device=idx.device))
+        out = []
+        for i, block in enumerate(self.blocks):
+            x = block(x)
+            last = i == len(self.blocks) - 1
+            norm = self.norm if last or self.exit_norms is None else self.exit_norms[i]
+            out.append(self.head(norm(x)))
+        return out
 
     @torch.no_grad()
     def generate(self, idx: torch.Tensor, max_new: int, temperature: float = 0.8, top_k: int | None = 40,

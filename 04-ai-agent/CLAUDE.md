@@ -41,5 +41,7 @@ ran out of 12 digest steps and typed the note as its answer instead of calling w
 - Evaluations: E1 SimpleQA (closed 120b done; agent run in experiments/pipeline.sh), E2 injection + E3 checkup (20b done;
   120b queued in pipeline_120b_next.sh), E4 digest claim support (experiments/digest_eval.py, pipeline_digest.sh:
   20b first, 120b after pipeline_120b_next). All launched detached; logs/ shows progress.
-- Docs: RESULTS (E2/E3 20b final; E1/E4 pending), TIMELINE, OVERVIEW, concept 6, 7 PDFs (scripts/build_pdfs.py, run with
+- E4 20b done (27 Nov): 3/8 notes written, 5/22 claims supported (23%), 2/17 cited claims; judge verified by hand on
+  runs 1 and 7. Pipelines down ~26 Nov 14:30 -> 27 Nov 21:39 (laptop restarts); relaunch commands in docs/SETUP.md.
+- Docs: RESULTS (E2/E3/E4 20b final; E1 and 120b runs pending), TIMELINE, OVERVIEW, concept 6, 7 PDFs (scripts/build_pdfs.py, run with
   ../01-rag-from-scratch/.venv/bin/python). Next: fill RESULTS/OVERVIEW/TIMELINE as pipelines finish, rebuild PDFs.

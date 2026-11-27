@@ -48,11 +48,55 @@ The two MoE variants have the same parameters and the same active compute (one 1
 ones). They test whether *finer* experts, combined two at a time, beat coarse ones used alone (the idea behind
 DeepSeek-MoE's "fine-grained experts").
 
-The question is not "is the MoE better?" (it has 2.6× the parameters, so it should be), but **how much better per
+The question is not "is the MoE better?" (it has 2.6× the parameters, so it is expected to be; see Results for what happened), but **how much better per
 unit of compute**, and what it costs in wall-clock speed and memory on a CPU.
 
 ## Results
-*(added when the MoE runs finish)*
+
+### `moe-4x-top1` vs the dense baseline (same tokens, same steps, same validation windows)
+
+| step | tokens | dense val loss (ppl) | moe-4x-top1 val loss (ppl) | gap |
+|---|---|---|---|---|
+| 250 | 2.0M | 3.454 (31.6) | 3.554 (34.9) | +0.10 |
+| 500 | 4.1M | 2.867 (17.6) | 2.983 (19.7) | +0.12 |
+| 750 | 6.1M | 2.570 (13.1) | 2.684 (14.6) | +0.11 |
+| 1000 | 8.2M | 2.401 (11.0) | 2.516 (12.4) | +0.12 |
+| 1250 | 10.2M | 2.291 (9.9) | 2.407 (11.1) | +0.12 |
+| 1500 | 12.3M | **2.235 (9.34)** | **2.345 (10.44)** | +0.11 |
+
+| | dense | moe-4x-top1 |
+|---|---|---|
+| training speed (clean windows, steps 750–1500) | 2,262–2,267 tok/s | 2,103–2,132 tok/s (**6% slower**) |
+| wall clock, 1,500 steps | 96.4 min | 108.1 min |
+| weights in memory (fp32) | 23 MB | 61 MB (2.6×) |
+| load-balancing `aux` (6 layers, 6.0 = perfectly even) | n/a | 6.06 → 6.004 |
+| busiest / idlest expert share, any layer | n/a | 0.31 / 0.16 at step 250 → 0.28 / 0.22 at the end |
+
+(Steps 250 and 500 of the MoE run overlapped with llama.cpp tests on the same CPU, so their speeds, 1,553 and
+1,651 tok/s, are not used.)
+
+**What this shows.**
+- **At this budget the MoE is worse, not better:** 2.6× the parameters at the same compute per token gave a
+  validation loss 0.11 *higher* (perplexity 10.4 vs 9.3). The gap is about the same from step 250 to step 1500; it
+  does not close as training goes on.
+- **It is also slower on a CPU.** Same arithmetic per token, but grouping tokens by expert, the smaller matrix
+  multiplies and scattering results back cost 6% of throughput. The memory cost is the 2.6× in weights.
+- **The load-balancing loss worked.** No expert collapsed; by the end every expert in every layer handled 22–28% of
+  the tokens (25% is perfectly even).
+
+**Why, most likely.** Both models are under-trained (the dense loss is still falling, see concept 2). In that regime
+the limit is how many gradient updates each weight gets, not how much the model can store. With top-1 routing each
+expert sees only about a quarter of the tokens, so each expert's weights are trained on a quarter of the data. Extra
+capacity only pays once a model has learned what a smaller one can hold, which is why MoE gains in the Switch
+Transformer and Mixtral papers are reported at far larger token budgets. We did not run longer to confirm this: on
+this laptop that is many hours per run.
+
+**For an interview:** "At equal active compute and a small fixed token budget, my 4-expert MoE lost to the dense
+model by 0.11 nats and trained 6% slower on CPU, while load balancing kept all experts at 22–28% use. MoE trades
+memory for capacity; it only wins when the model is capacity-limited, and at 12M tokens mine was data-limited."
+
+### `moe-8x-top2`
+*(training; added when it finishes)*
 
 ## Interview questions
 - *Why doesn't MoE reduce memory?* Every expert must be in memory, because routing is decided per token at run time.

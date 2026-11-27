@@ -25,3 +25,4 @@ What happened, in order, including the mistakes. Dates are 2026.
 | B4 | found while reading the source | `Llama.reset()` only zeroes a counter; low-level decoding must clear the cache itself, or stale entries corrupt attention |
 | A3 | MoE run's first eval window overlapped with llama.cpp smoke tests | stopped running models while training: speed comparisons use the clean windows |
 | B5 | routing headline on a held-out half | thresholds chosen on the other half, so the cascade is not tuned on its own test set |
+| A3 done | moe-4x-top1: val 2.345 (ppl 10.4) vs dense 2.235, 6% slower, 108 min | **the MoE lost** at equal active compute: under-trained models are data-limited, and each top-1 expert trains on a quarter of the tokens; load balancing kept every expert at 22–28% |

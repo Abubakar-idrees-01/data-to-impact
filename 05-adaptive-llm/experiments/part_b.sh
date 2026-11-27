@@ -14,6 +14,7 @@ done
 $PY -m adaptive.bench_models                                          # speeds, RSS, cache reuse, calibration
 $PY -m adaptive.plan                                                  # the plan, now calibrated
 $PY -m adaptive.route_eval run                                        # every model × 128 questions
+$PY -m adaptive.route_eval export                                     # held-out headline policies -> evalkit runs
 $PY -m adaptive.speculative --draft Qwen3.5-0.8B --target Qwen3.5-2B --k 2 4 6
 $PY -m adaptive.speculative --draft qwen2.5-0.5b --target qwen2.5-1.5b --k 2 4 6
 echo "PART-B DONE $(date)"

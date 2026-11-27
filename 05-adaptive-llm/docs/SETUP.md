@@ -79,6 +79,9 @@ PYTHONPATH=src .venv/bin/python -m adaptive.bench_models
 bash scripts/get_eval_data.sh                                        # GSM8K test set, 0.7 MB
 PYTHONPATH=src .venv/bin/python -m adaptive.route_eval run           # every model × 128 questions (~1 h, resumable)
 PYTHONPATH=src .venv/bin/python -m adaptive.route_eval summary       # accuracy and seconds per policy
+PYTHONPATH=src .venv/bin/python -m adaptive.route_eval export        # held-out headline policies as evalkit runs
+../02-llm-evals/.venv/bin/python -m evalkit compare results/evalkit/adaptive-routing/always-qwen3.5-2b.json \
+    results/evalkit/adaptive-routing/cascade-all.json              # question-by-question, McNemar test
 PYTHONPATH=src .venv/bin/python -m adaptive.route_eval run --limit 1 --tag smoke --only "Qwen3.5-0.8B*"   # 1-minute check
 ```
 
@@ -86,7 +89,11 @@ PYTHONPATH=src .venv/bin/python -m adaptive.route_eval run --limit 1 --tag smoke
 ```bash
 PYTHONPATH=src .venv/bin/python -m adaptive.speculative --draft Qwen3.5-0.8B --target Qwen3.5-2B --k 2 4 6
 ```
-Draft and target must share a tokenizer (same model family). Prints target-alone speed, speculative speed, draft
+Draft and target must share a tokenizer (same model family). The Qwen2.5 pair needs the 0.5B draft:
+```bash
+mkdir -p models/llm && curl -fL -o models/llm/qwen2.5-0.5b-instruct-q4_k_m.gguf \
+  https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf   # 0.49 GB
+``` Prints target-alone speed, speculative speed, draft
 acceptance rate and whether the output is identical to the target's own greedy output.
 
 ## Troubleshooting

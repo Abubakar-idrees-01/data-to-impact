@@ -32,7 +32,7 @@ instead of a full 1M-parameter head each. The dense model's logit lens is the un
 **D7. Reuse project 1's models and llama.cpp build.** Three Q4_K_M GGUF models (0.8B, 1.5B, 2B) are already on
 disk; compiling llama-cpp-python takes ~10 minutes of both cores. The compiled package is relocatable (its
 libraries have `RUNPATH $ORIGIN`), so it was copied into this venv and `pip check` passes. One extra download:
-Qwen2.5-0.5B (0.4 GB) as a same-tokenizer draft for Qwen2.5-1.5B.
+Qwen2.5-0.5B (0.49 GB, `models/llm/`, gitignored) as a same-tokenizer draft for Qwen2.5-1.5B.
 
 **D8. Profiler with the standard library only (no psutil).** psutil has no CPU-flag information anyway, and
 `/proc`, `sysctl` and `kernel32` give everything in ~100 lines. A fixture test caught one parser bug: on ARM

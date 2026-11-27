@@ -20,11 +20,12 @@ import math
 from pathlib import Path
 
 from .hardware import profile, slug
-from .router import evaluate_policy, features, oracle, rule_route
+from .router import evaluate_policy, features, oracle, pick_threshold, policy_items, rule_route
 from .tasks import all_tasks, final_answer, grade
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "results" / "routing"
+EVALKIT = ROOT.parent / "02-llm-evals" / "src"          # project 2's evaluation toolkit (standard library only)
 MAX_TOKENS = {"capital": 24, "arith": 24, "gsm8k": 320}
 TAUS = [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
 
@@ -113,6 +114,46 @@ def summary(machine: str) -> dict:
     return out
 
 
+def export(machine: str) -> list[dict]:
+    """Headline policies on held-out questions, saved as evalkit runs (results/evalkit/adaptive-routing/*.json).
+
+    Questions alternate between a dev half (thresholds are chosen there) and a test half (reported), so a
+    cascade's τ is never tuned on the questions it is scored on. τ* = the cheapest threshold whose dev accuracy is
+    within 2 points of always using the largest model.
+    """
+    import sys
+    sys.path.insert(0, str(EVALKIT))
+    from evalkit.runs import Run
+    models, results, family = load(machine)
+    ids = [t["id"] for t in all_tasks() if all(t["id"] in res for res in results)]
+    dev, test = ids[0::2], ids[1::2]
+    msgs = {t["id"]: t["messages"] for t in all_tasks()}
+    routed = {t: rule_route(features(msgs[t]), len(models)) for t in ids}
+    n, top = len(models), len(models) - 1
+    target = evaluate_policy(results, dev, lambda t: top, 0.0)["accuracy"]
+    policies = [(f"always-{models[i]}", lambda t, i=i: i, 0.0, [i]) for i in range(n)]
+    policies.append(("rule-router", lambda t: routed[t], 0.0, None))
+    for name, start, rungs in [(f"cascade-{models[0]}-{models[top]}", lambda t: 0, [0, top]),
+                               ("cascade-all", lambda t: 0, None), ("router-cascade", lambda t: routed[t], None)]:
+        policies.append((name, start, pick_threshold(results, dev, start, TAUS, target, rungs=rungs), rungs))
+    out = []
+    for name, start, tau, rungs in policies:
+        items = [{**it, "family": family[it["id"]], "model": models[it["rung"]]}
+                 for it in policy_items(results, test, start, tau, rungs)]
+        run = Run.build("adaptive-routing", name.lower(), items, metrics=["correct", "seconds"],
+                        config={"machine": machine, "tau": tau, "models": models, "split": "test (odd positions)",
+                                "dev_target_accuracy": target})
+        run.save(ROOT / "results" / "evalkit")
+        out.append({"policy": name, "tau": tau, "accuracy": run.value("correct"), "seconds": run.value("seconds"),
+                    "ci": [run.metrics["correct"]["ci_low"], run.metrics["correct"]["ci_high"]]})
+    (OUT / f"headline-{machine}.json").write_text(json.dumps(out, indent=1))
+    print(f"\nHeld-out test half ({len(test)} questions); τ chosen on the dev half:")
+    for r in out:
+        print(f"  {r['policy']:<44} τ={r['tau']:<5} accuracy {r['accuracy']:.3f} "
+              f"[{r['ci'][0]:.2f}, {r['ci'][1]:.2f}]  {r['seconds']:.2f} s/question")
+    return out
+
+
 def print_summary(s: dict) -> None:
     print(f"{s['n_tasks']} questions, models: {', '.join(s['models'])}\n")
     print(f"{'policy':<52} {'τ':>5} {'acc':>6} {'s/q':>6}  " + " ".join(f"{f:>7}" for f in s["families"]))
@@ -124,7 +165,7 @@ def print_summary(s: dict) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("action", choices=["run", "summary"])
+    ap.add_argument("action", choices=["run", "summary", "export"])
     ap.add_argument("--models", default=str(ROOT.parent / "01-rag-from-scratch" / "models" / "llm"))
     ap.add_argument("--threads", type=int, default=None)
     ap.add_argument("--limit", type=int, default=None, help="only the first N questions of each family")
@@ -135,6 +176,9 @@ def main() -> None:
     machine = slug(hw.cpu) + (f"-{a.tag}" if a.tag else "")
     if a.action == "run":
         run(Path(a.models), a.threads or hw.physical_cores, machine, a.limit, a.only)
+    if a.action == "export":
+        export(machine)
+        return
     print_summary(summary(machine))
 
 

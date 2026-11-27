@@ -96,3 +96,23 @@ def oracle(results: list[dict], tasks: list[str]) -> dict:
         correct += bool(ok)
         seconds += results[rung][t]["seconds"]
     return {"accuracy": round(correct / len(tasks), 4), "seconds": round(seconds / len(tasks), 3)}
+
+
+def policy_items(results: list[dict], tasks: list[str], choose_start, tau: float = 0.0,
+                 rungs: list[int] | None = None) -> list[dict]:
+    """Per-question outcome of a policy (for evalkit: compare policies question by question)."""
+    out = []
+    for t in tasks:
+        ok, s, rung = run_cascade(results, t, choose_start(t), tau, rungs)
+        out.append({"id": t, "correct": ok, "seconds": round(s, 3), "rung": rung})
+    return out
+
+
+def pick_threshold(results: list[dict], dev: list[str], choose_start, taus: list[float], target_accuracy: float,
+                   slack: float = 0.02, rungs: list[int] | None = None) -> float:
+    """The cheapest τ whose accuracy on the dev questions is within `slack` of `target_accuracy` (else the best τ)."""
+    scored = [(tau, evaluate_policy(results, dev, choose_start, tau, rungs)) for tau in taus]
+    good = [(r["seconds"], tau) for tau, r in scored if r["accuracy"] >= target_accuracy - slack]
+    if good:
+        return min(good)[1]
+    return max(scored, key=lambda x: (x[1]["accuracy"], -x[1]["seconds"]))[0]

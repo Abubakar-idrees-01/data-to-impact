@@ -98,3 +98,31 @@ def test_speculative_acceptance_rule():
     assert expected_speedup(0.0, 4, 0.0) == 1.0              # free but useless drafts: no gain
     assert expected_speedup(1.0, 4, 0.0) == 5.0              # perfect free drafts: k + 1 tokens per pass
     assert expected_speedup(0.7, 4, 0.3) == pytest.approx((1 - 0.7 ** 5) / 0.3 / 2.2)
+
+
+def test_summary_and_evalkit_export_on_synthetic_runs(tmp_path, monkeypatch):
+    import json
+    from adaptive import route_eval
+    tasks = [{"id": f"capital-{i:02d}", "family": "capital", "messages": user(f"Capital of country {i}?")}
+             for i in range(10)]
+    monkeypatch.setattr(route_eval, "all_tasks", lambda: tasks)
+    monkeypatch.setattr(route_eval, "OUT", tmp_path / "routing")
+    monkeypatch.setattr(route_eval, "ROOT", tmp_path)
+    (tmp_path / "routing").mkdir()
+    rows = []
+    for name, params, sec in [("small", 1, 1.0), ("mid", 2, 2.0), ("big", 3, 4.0)]:
+        for i, t in enumerate(tasks):
+            right = name == "big" or i < 6                     # small/mid miss the last 4, and are unsure there
+            p = 0.9 if i < 6 else 0.2
+            rows.append({"model": name, "params": params, "task": t["id"], "family": "capital", "correct": right,
+                         "seconds": sec, "answer_tokens": 0, "probs": [p, p]})
+    route_eval.runs_path("m").write_text("\n".join(json.dumps(r) for r in rows))
+    s = route_eval.summary("m")
+    by = {(r["policy"], r["tau"]): r for r in s["policies"]}
+    assert by[("always small", 0.0)]["accuracy"] == 0.6 and by[("always big", 0.0)]["accuracy"] == 1.0
+    casc = by[("cascade small -> big", 0.5)]
+    assert casc["accuracy"] == 1.0 and casc["seconds"] == pytest.approx((6 * 1 + 4 * 5) / 10)
+    head = {r["policy"]: r for r in route_eval.export("m")}
+    assert head["cascade-small-big"]["accuracy"] == 1.0 and head["cascade-small-big"]["tau"] > 0.2
+    saved = json.loads((tmp_path / "results" / "evalkit" / "adaptive-routing" / "cascade-small-big.json").read_text())
+    assert len(saved["items"]) == 5 and {"correct", "seconds"} <= set(saved["metrics"])

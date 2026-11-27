@@ -33,7 +33,8 @@ broken. Most agent demos have a prompt that says "be careful" and nothing that w
 | Docs checkup (gpt-oss-20b, 5 planted errors, 4 decoys) | careful but shallow: 1 / 5 fixed, 0 / 4 decoys broken |
 | Digest guardrails | two bad drafts (one source; an unread source cited) were refused by code; but passing them doesn't make a note faithful |
 | Claim support in digest notes (gpt-oss-20b) | only **23%** of claims backed by what it read (5 / 22); 3 of 8 digests produced a note; the judge caught 3 / 3 planted errors |
-| SimpleQA (research vs. memory), 120b runs | running on the free tier; see [Results](RESULTS.md) |
+| SimpleQA, 40 questions (gpt-oss-120b) | **10% correct from memory → 93% with research** (+82.5 points, p < 0.001); no leaked answers |
+| 120b runs of the injection, checkup and claim-support tests | running on the free tier; see [Results](RESULTS.md) |
 | Cost | $0 (Groq and Tavily free tiers), on a 2015 laptop with no GPU |
 
 ## Built with

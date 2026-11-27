@@ -5,13 +5,13 @@ aggregates with 95% intervals: Wilson for rates, bootstrap otherwise). Raw outpu
 [`experiments/out/`](../experiments/out), traces in `.scout/traces/` (local). How each evaluation works:
 [concept 6](concepts/06-evaluating-an-agent.md).
 
-> **Status (27 Nov 2026, 22:10):** the evaluations run unattended on Groq's free tier (200k tokens per model per day).
-> E2, E3 and E4 have finished on gpt-oss-20b. E1, and E2/E3/E4 on gpt-oss-120b, are running; this page is updated as
+> **Status (27 Nov 2026, 22:40):** the evaluations run unattended on Groq's free tier (200k tokens per model per day).
+> E1 has finished on gpt-oss-120b; E2, E3 and E4 on gpt-oss-20b. E2/E3/E4 on gpt-oss-120b are running; this page is updated as
 > each one finishes.
 
 | | question | model | status |
 |---|---|---|---|
-| E1 | does web research beat the model alone? | gpt-oss-120b | closed-book half done (40/40), agent half running |
+| E1 | does web research beat the model alone? | gpt-oss-120b | **done** |
 | E2 | can a web page hijack it? | gpt-oss-20b | **done** · 120b queued |
 | E3 | does `checkup` fix real problems and leave the rest alone? | gpt-oss-20b | **done** (2 runs) · 120b queued |
 | E4 | do digest notes say what their sources say? | gpt-oss-20b, then 120b | **20b done** · 120b queued |
@@ -56,9 +56,32 @@ aggregates with 95% intervals: Wilson for rates, bootstrap otherwise). Raw outpu
 - No decoy was touched: no over-eager "fixes" of British spelling, `#anchor` links, code-block links or a matching
   number.
 
-## E1. SimpleQA, model alone vs. Scout (gpt-oss-120b, 40 questions)
-*Running.* The closed-book answers are in; the agent answers and the grading (official grader prompt on qwen3.8-27b)
-follow.
+## E1. SimpleQA: model alone vs. Scout (gpt-oss-120b, 40 questions)
+SimpleQA questions are short factual questions written so that strong models often get them wrong from memory.
+40 sampled exactly as the official code does; graded with the official grader prompt on qwen3.8-27b.
+
+| | model alone | Scout (web_search + web_read) |
+|---|---|---|
+| **correct** | **4 / 40 (10%)**, CI 4–23% | **37 / 40 (93%)**, CI 80–97% |
+| incorrect (a wrong answer given) | 25 / 40 (63%) | 3 / 40 (8%) |
+| not attempted ("I don't know") | 11 / 40 | 0 / 40 |
+| tokens per question (mean) | 203 | 5,717 |
+| seconds per question (mean) | 1.4 | 58 |
+| searches / page reads per question | 0 / 0 | 1.15 / 1.23 |
+
+- **Research turns a mostly-wrong model into a mostly-right one:** +82.5 points (95% CI +67.5 to +95.0, McNemar
+  p < 0.001). Paired by question: 34 questions went from wrong to right, 1 from right to wrong.
+- **The model alone is confidently wrong.** It answered 29 of 40 and got 25 of those wrong (correct when it answered:
+  14%). Scout answered all 40 with a cited source.
+- **The cost is ~28× the tokens and ~40× the time** (one or two searches and reads per question, plus waiting out the
+  free tier's rate limits).
+- **Contamination checked:** sites hosting SimpleQA's answers were excluded from search and reading, and every URL the
+  agent saw was checked for the dataset's name: 0 / 40 leaks. Wikipedia was by far the most common site among the
+  URLs it saw (40; next, Facebook with 9), as expected: SimpleQA's answers were written to be findable on the web.
+- **The 3 misses:** a cricket strike rate (81.82; gold 160.00), a birthplace (it found a townland in Limerick; gold
+  Islington, which the model alone got *right*: research can also lead astray), and Delhi's forest cover (a figure from
+  the wrong table or year).
+- Grader spot check: 6 random "correct" verdicts checked by hand, all right.
 
 ## E4. Claim support in digest notes (gpt-oss-20b, 8 digests, step limit 12)
 Each claim is judged against the snippets and passages the agent actually saw, with project 2's validated judge

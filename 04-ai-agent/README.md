@@ -53,7 +53,10 @@ Sources
 Architecture and one run end to end: **[docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md)**
 
 ## Results
-Evaluations are running on the free tier (results land over about a day); see **[docs/RESULTS.md](docs/RESULTS.md)**.
+Full numbers with intervals: **[docs/RESULTS.md](docs/RESULTS.md)**.
+
+**Research beats memory:** on 40 SimpleQA questions, gpt-oss-120b alone was correct on **10%** (and confidently wrong on
+63%); Scout with web search and reading was correct on **93%** (+82.5 points, p < 0.001), with no leaked answer keys.
 First numbers (gpt-oss-20b, 10 attacks + 2 controls): the model tried to obey **2 of 10** attacks (posting a comment,
 reading `.env`) and **0** did anything; 11 of 12 questions were still answered correctly.
 Claim support in learning-log drafts (gpt-oss-20b): only **5 of 22 claims (23%)** were backed by the passages the agent

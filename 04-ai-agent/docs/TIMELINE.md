@@ -79,4 +79,8 @@ agent read. Checking the worst notes by hand confirmed the judge: one note turne
 confident summary with invented numbers; another attached real facts to the wrong source. The code guardrails held
 (no unread or single-source citations), but they don't make a note faithful; review does.
 
+**E1 finished (27 Nov, 22:27):** gpt-oss-120b alone 4 / 40 correct, Scout 37 / 40 (+82.5 points, p < 0.001); no leaks.
+Comparing the two runs exposed a small bug in evalkit's comparison table: it treats `incorrect` and `tokens` as
+higher-is-better, so those rows' better/worse counts are backwards (the numbers themselves are right).
+
 *(Results and the rest of this phase are added as the runs finish.)*

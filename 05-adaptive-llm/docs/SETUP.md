@@ -74,6 +74,14 @@ Measure the models for real and calibrate the planner's speed estimate (~10 minu
 PYTHONPATH=src .venv/bin/python -m adaptive.bench_models
 ```
 
+## 6. Part B: routing evaluation
+```bash
+bash scripts/get_eval_data.sh                                        # GSM8K test set, 0.7 MB
+PYTHONPATH=src .venv/bin/python -m adaptive.route_eval run           # every model × 128 questions (~1 h, resumable)
+PYTHONPATH=src .venv/bin/python -m adaptive.route_eval summary       # accuracy and seconds per policy
+PYTHONPATH=src .venv/bin/python -m adaptive.route_eval run --limit 1 --tag smoke --only "Qwen3.5-0.8B*"   # 1-minute check
+```
+
 ## Troubleshooting
 | problem | fix |
 |---|---|

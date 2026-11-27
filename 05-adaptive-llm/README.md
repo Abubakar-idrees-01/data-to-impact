@@ -22,7 +22,8 @@ efficient models and measure them honestly; Part B applies them to real open mod
 | A4 | early exit | code + tests done; queued |
 | B1 | hardware profiler (cores, SIMD flags, RAM, GPU, measured bandwidth), GGUF reader, model/quant planner | code + 11 tests done; measurements after Part A (needs an idle CPU) |
 | B2 | llama.cpp runtime (streaming, TTFT/decode timing, KV-cache reuse), model ladder with LRU unloading, benchmark + calibration | code + 5 tests done; measurements after Part A |
-| B3–B5 | complexity router + cascade, speculative decoding, benchmarks via evalkit | |
+| B3 | rule router (prompt features), confidence cascade (token probabilities via a llama.cpp logits hook), 128 auto-graded questions (capitals, arithmetic, GSM8K), offline policy simulation | code + 13 tests done; run after Part A |
+| B4–B5 | speculative decoding, benchmarks via evalkit | |
 
 ## Quickstart
 ```bash

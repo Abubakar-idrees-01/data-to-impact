@@ -19,6 +19,7 @@ prompt pre-fills an empty one, as the official template does with `enable_thinki
 
 from __future__ import annotations
 
+import math
 import time
 from collections import OrderedDict
 from dataclasses import asdict, dataclass
@@ -42,6 +43,14 @@ class Generation:
     ttft_s: float               # time to first token = prefill + the first decode step
     decode_tok_s: float         # tokens/s after the first token
     total_s: float
+    token_probs: list[float] | None = None   # probability of each generated token (confidence=True)
+
+    @property
+    def confidence(self) -> float | None:
+        """Geometric mean probability of the generated tokens = exp(mean log-prob): 1.0 = certain of every token."""
+        if not self.token_probs:
+            return None
+        return math.exp(sum(math.log(max(p, 1e-12)) for p in self.token_probs) / len(self.token_probs))
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -62,6 +71,36 @@ def chatml(messages: list[Message], think: bool = False) -> str:
     prompt = "".join(f"<|im_start|>{m['role']}\n{prefix if m['role'] == 'assistant' else ''}{m['content']}<|im_end|>\n"
                      for m in messages)
     return prompt + "<|im_start|>assistant\n" + prefix
+
+
+class ProbRecorder:
+    """A llama.cpp logits processor that records how probable each sampled token was, without changing anything.
+
+    At every step it gets the scores for the whole vocabulary and keeps their softmax; the token chosen at step i is
+    only known at step i+1 (it is then the last input id), so each probability is looked up one step late. The final
+    step's token never comes back as input; for it the top probability is used (= the chosen token under greedy
+    decoding). Cost: one softmax over the vocabulary per token, ~2 ms against ~70 ms per decode step here.
+    """
+
+    def __init__(self):
+        self.probs: list[float] = []
+        self._last = None
+        self._n = None
+
+    def __call__(self, input_ids, logits):
+        import numpy as np
+        if self._last is not None and len(input_ids) > self._n:
+            self.probs.append(float(self._last[input_ids[-1]]))
+        x = logits - logits.max()
+        e = np.exp(x, dtype=np.float32)
+        self._last, self._n = e / e.sum(), len(input_ids)
+        return logits
+
+    def finish(self) -> list[float]:
+        if self._last is not None:
+            self.probs.append(float(self._last.max()))
+            self._last = None
+        return self.probs
 
 
 def timing(t0: float, t_first: float | None, t_end: float, gen_tokens: int) -> tuple[float, float]:
@@ -108,19 +147,23 @@ class LocalModel:
             n += 1
         return min(n, len(prompt_tokens) - 1)          # llama.cpp always re-evaluates at least the last token
 
-    def stream(self, messages: list[Message], max_tokens: int = 256, temperature: float = 0.2) -> Iterator[str]:
+    def stream(self, messages: list[Message], max_tokens: int = 256, temperature: float = 0.2,
+               logits_processor=None) -> Iterator[str]:
         for piece in self.llm.create_completion(self.prompt(messages), max_tokens=max_tokens, temperature=temperature,
-                                                top_p=0.9, repeat_penalty=1.05, stop=CHATML_STOP, stream=True):
+                                                top_p=0.9, repeat_penalty=1.05, stop=CHATML_STOP, stream=True,
+                                                logits_processor=logits_processor):
             yield piece["choices"][0].get("text") or ""
 
     def generate(self, messages: list[Message], max_tokens: int = 256, temperature: float = 0.2,
-                 reuse: bool = True, on_text: Callable[[str], None] | None = None) -> Generation:
+                 reuse: bool = True, on_text: Callable[[str], None] | None = None,
+                 confidence: bool = False) -> Generation:
         if not reuse:
             self.llm.reset()
         prompt_tokens = self.tokens(self.prompt(messages))
         cached = self.cached_prefix(prompt_tokens)
         t0, t_first, parts = time.perf_counter(), None, []
-        for text in self.stream(messages, max_tokens, temperature):
+        rec = ProbRecorder() if confidence else None
+        for text in self.stream(messages, max_tokens, temperature, [rec] if rec else None):
             if t_first is None:
                 t_first = time.perf_counter()
             parts.append(text)
@@ -132,7 +175,7 @@ class LocalModel:
         ttft, rate = timing(t0, t_first, t_end, n_gen)
         return Generation(text=out, model=self.name, prompt_tokens=len(prompt_tokens), cached_prefix=cached,
                           gen_tokens=n_gen, ttft_s=round(ttft, 3), decode_tok_s=round(rate, 2),
-                          total_s=round(t_end - t0, 3))
+                          total_s=round(t_end - t0, 3), token_probs=rec.finish() if rec else None)
 
 
 class Ladder:

@@ -10,7 +10,7 @@ cd data-to-impact/02-llm-evals
 python3 -m venv .venv
 source .venv/bin/activate              # Windows (PowerShell): .venv\Scripts\Activate.ps1
 pip install -r requirements-dev.txt    # only pytest, for the tests
-python -m pytest -q                    # 36 tests, ~3 s, no network
+python -m pytest -q                    # 37 tests, ~3 s, no network
 ```
 On Windows, use `py -3.12 -m venv .venv`. If activation is blocked: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 

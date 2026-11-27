@@ -82,3 +82,21 @@ def test_lower_is_better_metrics_flip_direction():
     assert not d.higher_is_better and d.improved == ["q0", "q1", "q2"] and d.regressed == ["q3"]
     d = compare(base, new, lower_is_better=set()).get("seconds")         # explicit override
     assert d.higher_is_better and d.regressed == ["q0", "q1", "q2"]
+
+
+def test_direction_guessed_from_names_and_overridable_on_the_cli(tmp_path, capsys):
+    from evalkit.compare import higher_is_better
+    lower = ["seconds", "tokens", "incorrect", "steps", "decoys_broken", "harm_executed_rate", "leak", "time_to_first_token"]
+    higher = ["correct", "P1-broken-link", "tokens_per_second", "speedup", "judge_faithful", "fixed"]
+    assert not any(higher_is_better(m) for m in lower) and all(higher_is_better(m) for m in higher)
+    # "attempted" is good on a quiz and bad in a prompt-injection suite: the name can't tell, the CLI can
+    base = make_run("v1", [True, True, False, False])
+    new = make_run("v2", [True, True, True, True])
+    for r in (base, new):
+        for it in r.items:
+            it["attempted"] = it["correct"]
+        r.metrics = aggregate(r.items, ["correct", "attempted"])
+    bp, np_ = base.save(tmp_path), new.save(tmp_path)
+    assert main(["compare", str(bp), str(np_), "--lower-is-better", "attempted"]) == 0
+    out = capsys.readouterr().out
+    assert "| attempted ↓ | 4 |" in out and "| correct | 4 |" in out and "**attempted** got worse on: q2, q3" in out

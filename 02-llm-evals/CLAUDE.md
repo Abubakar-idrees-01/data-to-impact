@@ -35,7 +35,7 @@ claim in a README ("RAG is 85% faithful", "router saves 60% latency") is backed 
   precision 0.75 (dev 0.633); word-overlap baseline 0.233. StudyRAG v1->v2: citation precision +0.157 (p=0.008) and
   -3.4 s real; judge correctness/faithfulness within noise. Cost 715 calls, ~807k tokens, $0.
 - Docs final: README, SETUP, HOW_IT_WORKS, 6 concepts, DECISIONS D1-D14, RESULTS, OVERVIEW, TIMELINE, 7 PDFs,
-  report site/index.html (+ docs/images/report.png). 36 tests. CI: .github/workflows/evalkit.yml (tests + gate).
+  report site/index.html (+ docs/images/report.png). 37 tests. CI: .github/workflows/evalkit.yml (tests + gate).
 - Long runs: ALWAYS launch detached (`setsid nohup bash experiments/pipeline.sh > logs/pipeline.log 2>&1 < /dev/null & disown`);
   Groq TPD is a rolling 24 h window, quotas are per model.
 - Open (owner's call): publish site/ on GitHub Pages; strip the accidentally pushed RAGTruth files from git history.

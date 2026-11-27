@@ -26,8 +26,13 @@ Any project can produce a run without importing evalkit: write one JSON line per
 | p | McNemar for pass/fail metrics, paired bootstrap otherwise |
 | better / worse items | the ids that changed, so you can read what broke |
 
-Direction matters: for `seconds` or `cost`, *lower* is better. evalkit guesses this from the name and can be
-told explicitly.
+Direction matters: for `seconds`, `tokens`, `cost` or `incorrect`, *lower* is better (marked ↓ in the table).
+evalkit guesses this from the name (`tokens_per_second` stays higher-is-better) and can be told explicitly, which
+ambiguous names need: `attempted` is good on a quiz and bad in a prompt-injection suite.
+
+```bash
+evalkit compare base.json new.json --lower-is-better attempted,executed
+```
 
 **Real example** (StudyRAG, project 1, v1 → v2 answers on 34 questions):
 

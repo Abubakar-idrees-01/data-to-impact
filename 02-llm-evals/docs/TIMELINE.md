@@ -71,10 +71,17 @@ this timeline.
 speed-up real, correctness and faithfulness within noise. CI added: evalkit's tests and the StudyRAG quality gate run
 on every push. Whole study: 715 calls, ~807k tokens, $0.
 
+### Later: a consumer found a bug (27 November)
+Project 4 compared Scout's SimpleQA runs and the table said `incorrect` and `tokens` got "better" when they went up:
+the name hints only knew `tokens_used`, not `tokens` or `incorrect`. Hints extended (with `tokens_per_second` kept as
+higher-is-better, and `P1-broken-link`, a fix, not flagged by `_broken`), lower-is-better metrics marked ↓, and
+`--lower-is-better` / `--higher-is-better` flags for names a guess can't settle. Every metric name used across the
+portfolio was checked; a test pins the tricky ones. The numbers in project 4's RESULTS were taken from the deltas, which were always right.
+
 ## Where we ended
 - evalkit: metrics with intervals, paired comparisons, CI gates, an LLM judge validated on 240 held-out human-labelled
   answers (kappa 0.625), a report page, and StudyRAG as its first user.
-- 36 tests, a CI workflow (tests + quality gate), seven PDFs.
+- 37 tests, a CI workflow (tests + quality gate), seven PDFs.
 
 ## Lessons
 1. **Validate the evaluator.** Two judge setups that looked reasonable were no better than word counting, or failed

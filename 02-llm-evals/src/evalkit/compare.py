@@ -14,11 +14,18 @@ from .metrics.stats import mcnemar_exact, paired_bootstrap
 from .runs import Run
 
 # Metrics where a smaller value is better, recognised by name unless the caller says otherwise.
-LOWER_IS_BETTER_HINTS = ("second", "latency", "_ms", "time", "error", "cost", "loss", "tokens_used", "memory")
+# Ambiguous names (e.g. "attempted": good on a quiz, bad in a prompt-injection suite) need an explicit override.
+LOWER_IS_BETTER_HINTS = ("second", "latency", "_ms", "time", "error", "cost", "loss", "tokens", "memory", "steps",
+                         "incorrect", "hallucinat", "unsupported", "_broken", "wrong", "leak", "harm")
+# Checked first: rates per unit of time are better when higher, whatever else the name contains.
+HIGHER_IS_BETTER_HINTS = ("per_second", "per_sec", "_per_min", "throughput", "speedup", "tok_s")
 
 
 def higher_is_better(metric: str) -> bool:
-    return not any(h in metric.lower() for h in LOWER_IS_BETTER_HINTS)
+    name = metric.lower()
+    if any(h in name for h in HIGHER_IS_BETTER_HINTS):
+        return True
+    return not any(h in name for h in LOWER_IS_BETTER_HINTS)
 
 
 @dataclass
@@ -58,10 +65,11 @@ class Comparison:
                  "|---|---|---|---|---|---|---|---|---|"]
         for d in self.diffs:
             star = " **\\***" if d.significant else ""
-            lines.append(f"| {d.metric} | {d.n} | {d.base:.3f} | {d.new:.3f} | {d.delta:+.3f}{star} | "
+            name = d.metric if d.higher_is_better else f"{d.metric} ↓"
+            lines.append(f"| {name} | {d.n} | {d.base:.3f} | {d.new:.3f} | {d.delta:+.3f}{star} | "
                          f"{d.ci_low:+.3f} … {d.ci_high:+.3f} | {d.p:.3f} | {d.test} | "
                          f"{len(d.improved)} / {len(d.regressed)} |")
-        lines += ["", "\\* p < 0.05. Paired over items present in both runs."]
+        lines += ["", "\\* p < 0.05. ↓ lower is better. Paired over items present in both runs."]
         for d in self.diffs:
             if d.regressed and show_items:
                 lines.append(f"- **{d.metric}** got worse on: {', '.join(d.regressed[:show_items])}"

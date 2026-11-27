@@ -2,7 +2,7 @@
 
     evalkit import  details.jsonl --suite studyrag-answers --name v2 [--metrics a,b]
     evalkit summary results/studyrag-answers/v2.json
-    evalkit compare results/studyrag-answers/v1.json results/studyrag-answers/v2.json
+    evalkit compare results/studyrag-answers/v1.json results/studyrag-answers/v2.json [--lower-is-better a,b]
     evalkit gate    results/studyrag-answers/v2.json --rules gate.toml [--baseline v1.json]
 """
 
@@ -11,7 +11,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from .compare import compare
+from .compare import compare, higher_is_better
 from .gate import check, load_rules
 from .runs import Run, load_jsonl_items
 
@@ -34,6 +34,10 @@ def main(argv: list[str] | None = None) -> int:
     cp.add_argument("base")
     cp.add_argument("new")
     cp.add_argument("--metrics", help="comma-separated; default: all shared metrics")
+    cp.add_argument("--lower-is-better", default="", help="comma-separated metrics where smaller is better "
+                    "(added to those guessed from the name, e.g. seconds, tokens, incorrect)")
+    cp.add_argument("--higher-is-better", default="", help="comma-separated metrics to treat as higher-is-better "
+                    "even if the name suggests otherwise")
 
     gt = sub.add_parser("gate", help="exit 1 if the run breaks the rules (for CI)")
     gt.add_argument("run")
@@ -50,7 +54,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{run.suite}/{run.name} ({len(run.items)} items, {run.created})\n\n{run.summary_table()}")
     elif a.cmd == "compare":
         metrics = a.metrics.split(",") if a.metrics else None
-        print(compare(Run.load(a.base), Run.load(a.new), metrics).to_markdown())
+        base, new = Run.load(a.base), Run.load(a.new)
+        lower = {m for m in set(base.metrics) | set(new.metrics) if not higher_is_better(m)}
+        lower = (lower | set(filter(None, a.lower_is_better.split(",")))) - set(filter(None, a.higher_is_better.split(",")))
+        print(compare(base, new, metrics, lower_is_better=lower).to_markdown())
     elif a.cmd == "gate":
         results = check(Run.load(a.run), load_rules(a.rules), Run.load(a.baseline) if a.baseline else None)
         for r in results:

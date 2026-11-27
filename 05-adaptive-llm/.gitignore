@@ -5,3 +5,4 @@ models/*
 !models/README.md
 .venv/
 __pycache__/
+logs/

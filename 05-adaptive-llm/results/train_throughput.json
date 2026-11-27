@@ -1,0 +1,109 @@
+{
+ "cpu": "x86_64",
+ "torch": "2.15.0+cpu",
+ "ctx": 256,
+ "batch": 32,
+ "budget_tokens": 20000000.0,
+ "rows": [
+  {
+   "config": "d128-L4",
+   "d": 128,
+   "n_layer": 4,
+   "n_head": 4,
+   "params": 1345792,
+   "threads": 2,
+   "tok_per_s": 4909,
+   "hours_for_budget": 1.13
+  },
+  {
+   "config": "d128-L4",
+   "d": 128,
+   "n_layer": 4,
+   "n_head": 4,
+   "params": 1345792,
+   "threads": 4,
+   "tok_per_s": 4350,
+   "hours_for_budget": 1.28
+  },
+  {
+   "config": "d192-L6",
+   "d": 192,
+   "n_layer": 6,
+   "n_head": 6,
+   "params": 3494784,
+   "threads": 2,
+   "tok_per_s": 2333,
+   "hours_for_budget": 2.38
+  },
+  {
+   "config": "d192-L6",
+   "d": 192,
+   "n_layer": 6,
+   "n_head": 6,
+   "params": 3494784,
+   "threads": 4,
+   "tok_per_s": 1994,
+   "hours_for_budget": 2.79
+  },
+  {
+   "config": "d256-L6",
+   "d": 256,
+   "n_layer": 6,
+   "n_head": 8,
+   "params": 5839360,
+   "threads": 2,
+   "tok_per_s": 1594,
+   "hours_for_budget": 3.49
+  },
+  {
+   "config": "d256-L6",
+   "d": 256,
+   "n_layer": 6,
+   "n_head": 8,
+   "params": 5839360,
+   "threads": 4,
+   "tok_per_s": 1336,
+   "hours_for_budget": 4.16
+  },
+  {
+   "config": "d256-L8",
+   "d": 256,
+   "n_layer": 8,
+   "n_head": 8,
+   "params": 7414272,
+   "threads": 2,
+   "tok_per_s": 1243,
+   "hours_for_budget": 4.47
+  },
+  {
+   "config": "d256-L8",
+   "d": 256,
+   "n_layer": 8,
+   "n_head": 8,
+   "params": 7414272,
+   "threads": 4,
+   "tok_per_s": 1045,
+   "hours_for_budget": 5.32
+  },
+  {
+   "config": "d384-L6",
+   "d": 384,
+   "n_layer": 6,
+   "n_head": 6,
+   "params": 12297984,
+   "threads": 2,
+   "tok_per_s": 907,
+   "hours_for_budget": 6.12
+  },
+  {
+   "config": "d384-L6",
+   "d": 384,
+   "n_layer": 6,
+   "n_head": 6,
+   "params": 12297984,
+   "threads": 4,
+   "tok_per_s": 775,
+   "hours_for_budget": 7.17
+  }
+ ]
+}

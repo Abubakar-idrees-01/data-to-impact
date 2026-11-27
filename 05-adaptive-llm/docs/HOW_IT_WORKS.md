@@ -67,6 +67,7 @@ speculative.py: for one model's reply, a small same-family model drafts k tokens
 | [`router.py`](../src/adaptive/router.py) | rule router, cascade, policy evaluation, oracle |
 | [`route_eval.py`](../src/adaptive/route_eval.py) | run every model on every question once; simulate every policy |
 | [`speculative.py`](../src/adaptive/speculative.py) | greedy speculative decoding on llama.cpp's batch API |
+| [`server.py`](../src/adaptive/server.py) | OpenAI-compatible `/v1/chat/completions` over the ladder; renders each model's own template, parses Qwen tool calls |
 
 ### One request, end to end
 1. **Plan (startup).** The profiler and planner decide which models the ladder may use, the context size and the

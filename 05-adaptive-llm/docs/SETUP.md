@@ -96,6 +96,15 @@ mkdir -p models/llm && curl -fL -o models/llm/qwen2.5-0.5b-instruct-q4_k_m.gguf 
 ``` Prints target-alone speed, speculative speed, draft
 acceptance rate and whether the output is identical to the target's own greedy output.
 
+## 8. Part B: serve the engine to other programs (OpenAI-compatible)
+```bash
+PYTHONPATH=src .venv/bin/python -m adaptive.server --port 8090        # http://127.0.0.1:8090/v1
+curl -s http://127.0.0.1:8090/v1/chat/completions -H 'Content-Type: application/json' \
+  -d '{"model": "auto", "messages": [{"role": "user", "content": "Capital of Peru?"}]}'
+# project 4's agent, offline:  SCOUT_API_BASE_URL=http://127.0.0.1:8090/v1 SCOUT_API_MODEL=auto
+```
+`model`: `auto` (routed; requests with tools go to the largest model) or part of a model's name. No streaming.
+
 ## Troubleshooting
 | problem | fix |
 |---|---|

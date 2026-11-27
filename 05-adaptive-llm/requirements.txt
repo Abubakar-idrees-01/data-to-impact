@@ -1,0 +1,6 @@
+# CPU-only PyTorch comes from PyTorch's own index (the PyPI default on Linux/Windows is a 2 GB+ CUDA build).
+# On macOS remove the "+cpu" suffix: the normal PyPI build is CPU/Metal already.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.15.0+cpu
+numpy==2.5.5
+pytest==9.2.0

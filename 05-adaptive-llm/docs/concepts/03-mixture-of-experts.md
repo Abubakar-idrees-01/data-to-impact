@@ -15,7 +15,10 @@ between whole models.
 For each token vector `x` (of size `d` = 256):
 1. **Route:** `p = softmax(x · W_r)`, one probability per expert. `W_r` is a learned `d × n_experts` matrix, so the
    router costs almost nothing (1,024 parameters for 4 experts).
-2. **Choose:** keep the `top_k` largest probabilities; renormalise them to sum to 1.
+2. **Choose:** keep the `top_k` largest probabilities. With `top_k` ≥ 2, renormalise them to sum to 1 (as Mixtral
+   does). With `top_k` = 1, keep the raw probability as the weight (as the Switch Transformer does), because
+   renormalising a single weight gives `p / p = 1`: a constant, through which no gradient reaches the router. We
+   learned this the hard way (see Results).
 3. **Mix:** `output = Σ weight_e · expert_e(x)` over the chosen experts only. Each expert is an ordinary feed-forward
    network (expand, GELU, project back).
 
@@ -53,50 +56,60 @@ unit of compute**, and what it costs in wall-clock speed and memory on a CPU.
 
 ## Results
 
-### `moe-4x-top1` vs the dense baseline (same tokens, same steps, same validation windows)
+All runs: 1,500 steps × 32 × 256 = 12.3M tokens, the same validation windows, 2 threads on the i5-5200U.
 
-| step | tokens | dense val loss (ppl) | moe-4x-top1 val loss (ppl) | gap |
-|---|---|---|---|---|
-| 250 | 2.0M | 3.454 (31.6) | 3.554 (34.9) | +0.10 |
-| 500 | 4.1M | 2.867 (17.6) | 2.983 (19.7) | +0.12 |
-| 750 | 6.1M | 2.570 (13.1) | 2.684 (14.6) | +0.11 |
-| 1000 | 8.2M | 2.401 (11.0) | 2.516 (12.4) | +0.12 |
-| 1250 | 10.2M | 2.291 (9.9) | 2.407 (11.1) | +0.12 |
-| 1500 | 12.3M | **2.235 (9.34)** | **2.345 (10.44)** | +0.11 |
+### Validation loss (perplexity) during training
 
-| | dense | moe-4x-top1 |
-|---|---|---|
-| training speed (clean windows, steps 750–1500) | 2,262–2,267 tok/s | 2,103–2,132 tok/s (**6% slower**) |
-| wall clock, 1,500 steps | 96.4 min | 108.1 min |
-| weights in memory (fp32) | 23 MB | 61 MB (2.6×) |
-| load-balancing `aux` (6 layers, 6.0 = perfectly even) | n/a | 6.06 → 6.004 |
-| busiest / idlest expert share, any layer | n/a | 0.31 / 0.16 at step 250 → 0.28 / 0.22 at the end |
+| step | tokens | dense | moe-8x-top2 | moe-4x-top1 (bug) | moe-4x-top1 (fixed) |
+|---|---|---|---|---|---|
+| 250 | 2.0M | 3.454 (31.6) | 3.363 (28.9) | 3.554 (34.9) | *(retraining)* |
+| 500 | 4.1M | 2.867 (17.6) | 2.744 (15.5) | 2.983 (19.7) | |
+| 750 | 6.1M | 2.570 (13.1) | 2.454 (11.6) | 2.684 (14.6) | |
+| 1000 | 8.2M | 2.401 (11.0) | 2.284 (9.8) | 2.516 (12.4) | |
+| 1250 | 10.2M | 2.291 (9.9) | 2.178 (8.8) | 2.407 (11.1) | |
+| 1500 | 12.3M | **2.235 (9.34)** | **2.120 (8.33)** | **2.345 (10.44)** | |
 
-(Steps 250 and 500 of the MoE run overlapped with llama.cpp tests on the same CPU, so their speeds, 1,553 and
-1,651 tok/s, are not used.)
+| | dense | moe-8x-top2 | moe-4x-top1 (bug) |
+|---|---|---|---|
+| training speed (clean windows) | 2,262–2,267 tok/s | 1,980–1,996 tok/s (**12% slower**) | 2,103–2,132 tok/s (6% slower) |
+| wall clock, 1,500 steps | 96.4 min | 104.6 min | 108.1 min |
+| weights in memory (fp32) | 23 MB | 61 MB (2.6×) | 61 MB (2.6×) |
+| load-balancing `aux` at the end (6.0 = perfectly even) | n/a | 6.007 | 6.004 |
+| expert shares at the end, any layer (even = 1/E) | n/a | 0.086–0.152 (even 0.125) | 0.22–0.28 (even 0.25) |
 
-**What this shows.**
-- **At this budget the MoE is worse, not better:** 2.6× the parameters at the same compute per token gave a
-  validation loss 0.11 *higher* (perplexity 10.4 vs 9.3). The gap is about the same from step 250 to step 1500; it
-  does not close as training goes on.
-- **It is also slower on a CPU.** Same arithmetic per token, but grouping tokens by expert, the smaller matrix
-  multiplies and scattering results back cost 6% of throughput. The memory cost is the 2.6× in weights.
-- **The load-balancing loss worked.** No expert collapsed; by the end every expert in every layer handled 22–28% of
-  the tokens (25% is perfectly even).
+Steps 250 and 500 of the buggy run overlapped with llama.cpp tests on the same CPU; their speeds are not used.
 
-**Why, most likely.** Both models are under-trained (the dense loss is still falling, see concept 2). In that regime
-the limit is how many gradient updates each weight gets, not how much the model can store. With top-1 routing each
-expert sees only about a quarter of the tokens, so each expert's weights are trained on a quarter of the data. Extra
-capacity only pays once a model has learned what a smaller one can hold, which is why MoE gains in the Switch
-Transformer and Mixtral papers are reported at far larger token budgets. We did not run longer to confirm this: on
-this laptop that is many hours per run.
+### What this shows
+- **The 8-expert top-2 MoE beats the dense model at equal active compute:** validation loss 0.115 lower (perplexity
+  8.3 vs 9.3), ahead by about the same margin at every checkpoint. It wins at equal *time* too: after 87 minutes it
+  was at 2.178, already better than the dense model's final 2.235 after 96 minutes.
+- **It costs speed and memory on a CPU.** Same arithmetic per token, but grouping tokens by expert, smaller matrix
+  multiplies (eight 512-wide experts instead of one 1,024-wide network) and scattering the results back cost 12% of
+  throughput, and every expert's weights must be in memory: 2.6× the weights for 0.115 nats.
+- **The load-balancing loss worked** in every run: no expert collapsed.
 
-**For an interview:** "At equal active compute and a small fixed token budget, my 4-expert MoE lost to the dense
-model by 0.11 nats and trained 6% slower on CPU, while load balancing kept all experts at 22–28% use. MoE trades
-memory for capacity; it only wins when the model is capacity-limited, and at 12M tokens mine was data-limited."
+### The bug the first top-1 run found
+The first `moe-4x-top1` run *lost* to the dense model by 0.11, and my first explanation was "each expert only trains
+on a quarter of the tokens". The 8-expert run disproved that: with top-2 of 8, each expert also sees about a quarter
+of the tokens, and it won.
 
-### `moe-8x-top2`
-*(training; added when it finishes)*
+The real cause was in the code. Top-1 renormalised its single chosen weight, `w = p / p = 1`. That is a constant, so
+the gradient of the language-model loss with respect to the router was zero; measured on a test layer it was
+**4 × 10⁻⁹ (rounding noise) instead of 0.016**. The router learned only from the load-balancing loss, which asks
+"spread tokens evenly" and nothing about *which* expert suits a token. So routing was balanced but blind: each expert
+got a quarter of the tokens without any specialisation, which is worse than one network seeing them all. Top-2 was
+not affected, because `p₁ / (p₁ + p₂)` still depends on both probabilities.
+
+The fix follows the Switch Transformer: for top-1 the output is `p · expert(x)`, so a token's loss tells the router
+whether that expert was a good choice. A regression test checks that the router gets a real gradient from the output
+alone, for both top-1 and top-2 (it fails on the old code). The buggy run is kept as `models/moe-4x-top1-bug` and the
+fixed one is retrained with identical settings.
+
+### For an interview
+"At equal active compute and 12M training tokens, my 8-expert top-2 MoE reached perplexity 8.3 against the dense
+model's 9.3, 12% slower on a CPU and with 2.6× the weights in memory. My first top-1 run lost to dense, and the
+reason was a gating bug: renormalising a single top-1 weight makes it the constant 1, so the router got no gradient
+from the task. That's why Switch multiplies by the raw gate probability."
 
 ## Interview questions
 - *Why doesn't MoE reduce memory?* Every expert must be in memory, because routing is decided per token at run time.

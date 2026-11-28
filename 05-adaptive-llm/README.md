@@ -7,7 +7,7 @@ A chat assistant designed for weak, GPU-less machines, built in two parts:
 - **A hardware-adaptive inference engine** that profiles the machine, routes each prompt to the smallest model that
   can handle it, and uses quantization and speculative decoding for speed.
 
-**Status:** 🚧 Part A in progress. A1 (data, tokenizer) and A2 (dense baseline) done; MoE and early-exit runs training.
+**Status:** 🚧 Part A in progress. A1 (data, tokenizer), A2 (dense baseline) and the first MoE runs done; early-exit run training.
 
 ## Why
 Training a ChatGPT-quality model is impossible on a CPU. Part A builds a tiny model to *show* the ideas behind
@@ -18,8 +18,8 @@ efficient models and measure them honestly; Part B applies them to real open mod
 |---|---|---|
 | A1 | TinyStories data + byte-level BPE tokenizer written from scratch | ✅ 4,096 tokens, 57.6M tokens of stories, 3.95 chars/token |
 | A2 | dense GPT baseline, training loop, CPU throughput | ✅ 5.84M params, 12.3M tokens in 96 min, val loss 2.235 (ppl 9.3); 2 threads beat 4 |
-| A3 | Mixture-of-Experts layers | code + tests done; training |
-| A4 | early exit | code + tests done; queued |
+| A3 | Mixture-of-Experts layers | 8×top-2: ppl 8.3 vs dense 9.3 at equal active compute; top-1 gating bug found, rerun queued |
+| A4 | early exit | code + tests done; training |
 | B1 | hardware profiler (cores, SIMD flags, RAM, GPU, measured bandwidth), GGUF reader, model/quant planner | code + 11 tests done; measurements after Part A (needs an idle CPU) |
 | B2 | llama.cpp runtime (streaming, TTFT/decode timing, KV-cache reuse), model ladder with LRU unloading, benchmark + calibration | code + 5 tests done; measurements after Part A |
 | B3 | rule router (prompt features), confidence cascade (token probabilities via a llama.cpp logits hook), 128 auto-graded questions (capitals, arithmetic, GSM8K), offline policy simulation | code + 13 tests done; run after Part A |

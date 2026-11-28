@@ -122,6 +122,17 @@ def test_moe_top2_mixes_two_experts_and_matches_a_slow_loop():
     assert torch.allclose(fast.reshape(-1, 32), torch.stack(slow), atol=1e-5)
 
 
+def test_the_router_learns_from_the_language_model_loss():
+    # regression: top-1 used to renormalise its single weight to p/p = 1, so the router's only gradient was the
+    # load-balancing loss. Both top-1 and top-2 must pass the main loss's gradient to the router.
+    for k in (1, 2):
+        torch.manual_seed(0)
+        c = GPTConfig(vocab_size=64, ctx=16, d=32, n_layer=1, n_head=4, n_experts=4, top_k=k, expert_mult=1)
+        layer = GPT(c).blocks[0].ffn
+        layer(torch.randn(2, 5, 32)).pow(2).sum().backward()          # a loss on the output only, no aux
+        assert layer.router.weight.grad.abs().sum() > 1e-4, k        # the bug gave 4e-9 (rounding noise)
+
+
 def test_load_balancing_loss_is_one_when_even_and_large_when_collapsed():
     from tinygpt.model import MoE
     layer = MoE(GPTConfig(d=8, n_experts=4, top_k=1, expert_mult=1))

@@ -54,5 +54,8 @@ B4. speculative decoding; B5. benchmarks via evalkit; Scout (project 4) offline 
   (calibration), plan, route_eval run + export, speculative (Qwen3.5 0.8B→2B, Qwen2.5 0.5B→1.5B).
 - Don't run llama.cpp or other heavy jobs while part_a.sh trains: it skews the tokens/s comparison.
 - llama-cpp-python 0.3.37 was copied from project 1's venv (relocatable); Qwen2.5-0.5B draft in `models/llm/`.
+- MoE: 8x-top2 val 2.120 beats dense 2.235. Top-1 gating bug (p/p = 1, no router gradient) fixed; buggy run kept as
+  `models/moe-4x-top1-bug`. `experiments/part_a_rerun.sh` (detached) waits for PART-A DONE, retrains moe-4x-top1,
+  writes samples for all models, then execs part_b.sh (the old waiting part_b.sh was stopped).
 - After both queues: fill Results in concepts 3, 4, 5, 6, 7; RESULTS.md; README numbers; then the Scout offline
   demo (OpenAI-compatible server over the engine, Qwen `<tool_call>` parsing).

@@ -23,6 +23,11 @@ warm). Under-trained by research standards (loss still falling), but every varia
 **D5. MoE compared at equal *active* compute, in two shapes.** A bigger model is expected to be better, so "MoE
 beats dense" alone says little. Both MoE runs use 5.85M active parameters per token (the dense model: 5.84M) and
 15.3M in total: 4 experts of full width, top-1; and 8 half-width experts, top-2 (the fine-grained variant).
+Measured: 8×top-2 beat dense by 0.115 val loss (ppl 8.3 vs 9.3) at 12% lower CPU throughput and 2.6× the weights.
+
+**D5b. Top-1 gate = raw router probability, not renormalised (Switch), top-2 renormalised (Mixtral).** Found by a
+result, not by review: the first top-1 run lost to dense, and the cause was `p / p = 1`, a constant gate that gave the
+router zero gradient from the task (4e-9 vs 0.016 measured). A regression test covers both; the run is redone.
 
 **D6. Early exits share the output layer; trained with the mean exit loss at weight 1.0.** 512 parameters per exit
 instead of a full 1M-parameter head each. The dense model's logit lens is the untrained baseline.

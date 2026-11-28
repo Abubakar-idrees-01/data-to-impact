@@ -74,7 +74,9 @@ class MoE(nn.Module):
     """Mixture-of-Experts feed-forward: a router picks top_k of n_experts MLPs per token.
 
     router:   p = softmax(x · W_r)            one probability per expert, per token
-    choose:   the top_k experts by p; their weights are renormalised to sum to 1
+    choose:   the top_k experts by p; with top_k ≥ 2 their weights are renormalised to sum to 1 (Mixtral);
+              with top_k = 1 the weight is the raw p (Switch Transformer). Renormalising one weight gives p/p = 1,
+              a constant, and the router would get no gradient from the language-model loss at all.
     output:   Σ weight_e · expert_e(x)        only the chosen experts run for this token
 
     Load balancing (Switch Transformer): with f_e = share of tokens whose first choice is expert e and P_e = mean
@@ -96,7 +98,8 @@ class MoE(nn.Module):
         flat = x.reshape(-1, D)
         probs = F.softmax(self.router(flat), dim=-1)                    # (N, E)
         weights, chosen = torch.topk(probs, self.top_k, dim=-1)         # (N, k)
-        weights = weights / weights.sum(dim=-1, keepdim=True)
+        if self.top_k > 1:
+            weights = weights / weights.sum(dim=-1, keepdim=True)
         out = torch.zeros_like(flat)
         for e, expert in enumerate(self.experts):
             rows, slot = torch.where(chosen == e)                       # tokens that picked expert e

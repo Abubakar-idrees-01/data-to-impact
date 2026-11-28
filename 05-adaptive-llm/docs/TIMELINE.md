@@ -25,4 +25,6 @@ What happened, in order, including the mistakes. Dates are 2026.
 | B4 | found while reading the source | `Llama.reset()` only zeroes a counter; low-level decoding must clear the cache itself, or stale entries corrupt attention |
 | A3 | MoE run's first eval window overlapped with llama.cpp smoke tests | stopped running models while training: speed comparisons use the clean windows |
 | B5 | routing headline on a held-out half | thresholds chosen on the other half, so the cascade is not tuned on its own test set |
-| A3 done | moe-4x-top1: val 2.345 (ppl 10.4) vs dense 2.235, 6% slower, 108 min | **the MoE lost** at equal active compute: under-trained models are data-limited, and each top-1 expert trains on a quarter of the tokens; load balancing kept every expert at 22–28% |
+| A3 | moe-4x-top1: val 2.345 (ppl 10.4) vs dense 2.235 | the MoE lost; first guess: "each top-1 expert trains on only a quarter of the tokens" |
+| A3 | moe-8x-top2: val **2.120** (ppl 8.3), 12% slower than dense | **the guess was wrong**: top-2 of 8 also gives each expert a quarter of the tokens, and it won |
+| A3 | read the gate code | **bug**: top-1 renormalised its one weight to p/p = 1, so the router got no gradient from the task (4e-9 vs 0.016); fixed as in Switch (gate = raw p), regression test fails on the old code, run redone after Part A (`part_a_rerun.sh`) |

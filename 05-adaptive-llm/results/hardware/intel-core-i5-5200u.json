@@ -12,19 +12,20 @@
    "fma"
   ],
   "ram_total_gb": 15.53,
-  "ram_available_gb": 10.65,
+  "ram_available_gb": 10.75,
   "gpus": [],
-  "bandwidth_gbs": 20.87
+  "bandwidth_gbs": 21.0
  },
  "plan": {
-  "choice": "Qwen3.5-2B-Q4_K_M.gguf",
-  "why": "largest model that fits in RAM and runs at \u2265 5.0 tok/s",
+  "choice": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+  "why": "fastest model not significantly less accurate than the most accurate (Qwen3.5-2B-Q4_K_M.gguf, 0.852): 0.82 on 128 questions, McNemar p = 0.50",
   "threads": 2,
   "n_ctx": 4096,
   "gpu_layers": 0,
   "models": [
    {
     "file": "Qwen3.5-0.8B-Q4_K_M.gguf",
+    "name": "Qwen3.5-0.8B",
     "params_b": 0.75,
     "quant": "Q4_K_M",
     "file_gb": 0.5,
@@ -32,10 +33,12 @@
     "arch": "qwen35",
     "need_gb": 0.89,
     "fits": true,
-    "tok_s": 19.1
+    "tok_s": 19.2,
+    "accuracy": 0.664
    },
    {
     "file": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+    "name": "qwen2.5-1.5b-instruct",
     "params_b": 1.78,
     "quant": "Q4_K_M",
     "file_gb": 1.04,
@@ -43,10 +46,12 @@
     "arch": "qwen2",
     "need_gb": 1.5,
     "fits": true,
-    "tok_s": 13.4
+    "tok_s": 13.5,
+    "accuracy": 0.82
    },
    {
     "file": "Qwen3.5-2B-Q4_K_M.gguf",
+    "name": "Qwen3.5-2B",
     "params_b": 1.88,
     "quant": "Q4_K_M",
     "file_gb": 1.19,
@@ -54,7 +59,8 @@
     "arch": "qwen35",
     "need_gb": 1.59,
     "fits": true,
-    "tok_s": 7.9
+    "tok_s": 8.0,
+    "accuracy": 0.852
    }
   ]
  },
@@ -66,32 +72,32 @@
     "Q8_0": {
      "need_gb": 0.86,
      "fits": true,
-     "tok_s": 18.4
+     "tok_s": 18.5
     },
     "Q6_K": {
      "need_gb": 0.75,
      "fits": true,
-     "tok_s": 23.9
+     "tok_s": 24.0
     },
     "Q5_K_M": {
      "need_gb": 0.7,
      "fits": true,
-     "tok_s": 27.5
+     "tok_s": 27.6
     },
     "Q4_K_M": {
      "need_gb": 0.65,
      "fits": true,
-     "tok_s": 32.0
+     "tok_s": 32.2
     },
     "Q3_K_M": {
      "need_gb": 0.59,
      "fits": true,
-     "tok_s": 40.2
+     "tok_s": 40.4
     },
     "Q2_K": {
      "need_gb": 0.54,
      "fits": true,
-     "tok_s": 52.2
+     "tok_s": 52.5
     }
    }
   },
@@ -102,32 +108,32 @@
     "Q8_0": {
      "need_gb": 1.37,
      "fits": true,
-     "tok_s": 9.2
+     "tok_s": 9.3
     },
     "Q6_K": {
      "need_gb": 1.14,
      "fits": true,
-     "tok_s": 11.9
+     "tok_s": 12.0
     },
     "Q5_K_M": {
      "need_gb": 1.04,
      "fits": true,
-     "tok_s": 13.7
+     "tok_s": 13.8
     },
     "Q4_K_M": {
      "need_gb": 0.95,
      "fits": true,
-     "tok_s": 16.0
+     "tok_s": 16.1
     },
     "Q3_K_M": {
      "need_gb": 0.83,
      "fits": true,
-     "tok_s": 20.1
+     "tok_s": 20.2
     },
     "Q2_K": {
      "need_gb": 0.73,
      "fits": true,
-     "tok_s": 26.1
+     "tok_s": 26.3
     }
    }
   },
@@ -158,7 +164,7 @@
     "Q3_K_M": {
      "need_gb": 1.32,
      "fits": true,
-     "tok_s": 10.0
+     "tok_s": 10.1
     },
     "Q2_K": {
      "need_gb": 1.11,
@@ -184,7 +190,7 @@
     "Q5_K_M": {
      "need_gb": 3.12,
      "fits": true,
-     "tok_s": 3.4
+     "tok_s": 3.5
     },
     "Q4_K_M": {
      "need_gb": 2.75,
@@ -194,12 +200,12 @@
     "Q3_K_M": {
      "need_gb": 2.29,
      "fits": true,
-     "tok_s": 5.0
+     "tok_s": 5.1
     },
     "Q2_K": {
      "need_gb": 1.87,
      "fits": true,
-     "tok_s": 6.5
+     "tok_s": 6.6
     }
    }
   },

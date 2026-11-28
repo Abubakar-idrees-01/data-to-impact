@@ -57,7 +57,7 @@ B4. speculative decoding; B5. benchmarks via evalkit; Scout (project 4) offline 
 - Part A DONE (docs/RESULTS.md). MoE: 8x-top2 val 2.120, fixed 4x-top1 2.181, dense 2.235. Top-1 gating bug (p/p = 1, no router gradient) fixed; buggy run kept as
   `models/moe-4x-top1-bug`. `experiments/part_a_rerun.sh` (detached) waits for PART-A DONE, retrains moe-4x-top1,
   writes samples for all models, then execs part_b.sh (the old waiting part_b.sh was stopped).
-- TODO after Part B: regenerate `results/samples/moe-4x-top1-bug-final.txt` with the OLD gate (renormalised top-1);
-  the fixed code changes that checkpoint's outputs, so the file was deleted.
-- After both queues: fill Results in concepts 3, 4, 5, 6, 7; RESULTS.md; README numbers; then the Scout offline
-  demo (OpenAI-compatible server over the engine, Qwen `<tool_call>` parsing).
+- Part B DONE (docs/RESULTS.md): planner now quality-aware (picks Qwen2.5-1.5B), no-mmap default, speculative is
+  slower on this CPU. Buggy-run samples regenerated with its own gate (`experiments/sample_bug_run.py`).
+- Timing runs need an IDLE desktop too: with VS Code/Chrome busy, bandwidth measured 12 GB/s instead of 21.
+- Next: the Scout offline demo through `adaptive.server` (OpenAI-compatible; Qwen `<tool_call>` parsing).

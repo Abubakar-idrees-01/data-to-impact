@@ -64,8 +64,10 @@ class Sequence:
 
     def __init__(self, path: Path, n_ctx: int = 2048, threads: int = 2):
         from llama_cpp import Llama
+
+        from .runtime import USE_MMAP
         self.llm = Llama(model_path=str(path), n_ctx=n_ctx, n_threads=threads, n_threads_batch=threads,
-                         n_batch=512, verbose=False)
+                         n_batch=512, use_mmap=USE_MMAP, verbose=False)
         self.vocab = self.llm.n_vocab()
         self.rewindable = None                       # set by probe_rewind()
         self.snapshot = None

@@ -84,8 +84,11 @@ bandwidth **21.0 GB/s**.
   reaches 0.49, the plain-attention Qwen2.5 0.72. The calibration file stores `{"qwen35": 0.487, "qwen2": 0.719}`
   and uses the lowest (0.469) for an architecture it has never measured.
 - **Two threads (= physical cores) is best for both Qwen3.5 models**, as in Part A's training benchmark. Qwen2.5-1.5B
-  is the exception: 4 threads was 31% faster. Its 2-thread prefill (23 tok/s) barely beat 1 thread (20), which looks
-  like a disturbed run rather than a property of the model; it is re-measured below.
+  looked like the exception (4 threads 31% faster), but its 2-thread prefill (23 tok/s) barely beat 1 thread (20),
+  the sign of a disturbed run. Re-checked: the speculative-decoding benchmark, later on the idle CPU, decoded the same
+  model at **12.3–13.4 tok/s on 2 threads**, as fast as the "4-thread" figure. So the rule stays: threads = physical
+  cores. (A full re-run of this table was spoiled by desktop load: bandwidth measured 12 GB/s instead of 21, every
+  model slowed down, and it was discarded: [`contended/`](../../results/hardware/contended/).)
 
 ### Memory: estimate vs peak RSS (GiB = 2³⁰ bytes, as in the planner)
 | model | file + KV cache (4k) | estimate (+0.35 GB buffers) | peak RSS | error |
@@ -94,13 +97,49 @@ bandwidth **21.0 GB/s**.
 | Qwen3.5-2B | 1.19 + 0.05 GB | 1.59 GB | 1.92 GB | −0.33 |
 | Qwen2.5-1.5B | 1.04 + 0.11 GB | 1.50 GB | 1.87 GB | −0.37 |
 
-The fixed 0.35 GB for buffers fits the small model and **under-estimates the two larger ones by about a fifth**. The
-1 GB reserve still covered it here, but the estimate should scale with the model; the cause is checked below.
+The fixed 0.35 GB for buffers fits the small model and **under-estimates the two larger ones by about a fifth**.
+
+**Where the extra memory came from.** llama.cpp's load log and `/proc/self/status` (resident memory split into file
+pages and anonymous memory) explain it. On AVX2 most Q4_K weight matrices are **repacked** into an interleaved 8×8
+layout that the matrix kernels read faster. The repacked copy is new, anonymous memory: 161 MiB for the 0.8B,
+491 MiB for the 2B and 597 MiB for the 1.5B. With the file memory-mapped (llama.cpp's default), the original pages of
+those weights also stay resident, though they are never read again:
+
+| model | resident file pages | anonymous (repacked copy + KV + buffers) | RSS |
+|---|---|---|---|
+| Qwen3.5-0.8B | 0.51 GiB = the whole file | 0.34 GiB | 0.84 GiB |
+| Qwen3.5-2B | 1.20 GiB = the whole file | 0.66 GiB | 1.86 GiB |
+| Qwen2.5-1.5B | 1.06 GiB = the whole file | 0.77 GiB | 1.82 GiB |
+
+So every repacked weight was in RAM twice. **The fix: load with `use_mmap=False`**, which reads each weight
+straight into its final buffer:
+
+| model | peak RSS with mmap | without | saved | load time without |
+|---|---|---|---|---|
+| Qwen3.5-0.8B | 0.89 GiB | 0.74 GiB | −17% | 2.0 s |
+| Qwen3.5-2B | 1.92 GiB | 1.39–1.44 GiB | −25% | 2.3–3.3 s |
+| Qwen2.5-1.5B | 1.87 GiB | 1.24–1.29 GiB | −32% | 2.1–2.8 s |
+
+The engine now loads this way (`runtime.USE_MMAP = False`). The planner's estimate then sits 0.1–0.2 GiB *above* the
+measured peak, which is the safe side. Without mmap the pages could not be shared between two processes running the
+same model, which this engine never does.
 
 ### The plan and the cached second turn
-- **Plan:** Qwen3.5-2B, 2 threads, 4k context: "the largest model that fits and runs at ≥ 5 tok/s". It predicted
-  7.9 tok/s and the model measured 8.3. That prediction uses the efficiency measured on these same models, so the
-  real test of the calibration is a different machine.
+- **First plan:** Qwen3.5-2B, 2 threads, 4k context: "the largest model that fits and runs at ≥ 5 tok/s". It
+  predicted 7.9 tok/s and the model measured 8.3. That prediction uses the efficiency measured on these same models,
+  so the real test of the calibration is a different machine.
+- **The rule was wrong, measured by the routing eval ([concept 6](06-routing-and-cascades.md)).** The 2B answered no
+  better than the 1.5B and was 1.6× slower. The planner now reads the routing eval's answers when they exist and takes
+  **the fastest model that is not significantly less accurate than the most accurate one** (exact McNemar test on
+  the same 128 questions, p < 0.05); "largest" is only the fallback without measurements:
+
+  ```
+  model                         tok/s    acc
+  Qwen3.5-0.8B                   19.2  0.664     significantly worse than the 2B
+  qwen2.5-1.5b-instruct          13.5  0.82      vs the 2B: McNemar p = 0.50  → choice
+  Qwen3.5-2B                      8.0  0.852     most accurate
+  ```
+  The threshold is a standard significance level, not a margin tuned until the answer came out "right".
 - **KV-cache reuse on the second chat turn** (the first turn stays cached; only the new message is prefilled):
 
 | model | 2nd-turn time to first token, cache kept | cache cleared | reused tokens |
@@ -113,9 +152,6 @@ The fixed 0.35 GB for buffers fits the small model and **under-estimates the two
   of a long chat, not decoding.
 - **Quantization grid** for downloads on this machine: the best pick is Q8_0 at 0.5–1B, Q6_K at 2B and nothing above
   4B (Q4_K_M 4B: 4.0 tok/s, under the 5 tok/s floor). The grid never recommends below Q4.
-
-*Open checks (after the routing and speculative runs): the Qwen2.5-1.5B thread result, and what the extra
-0.33–0.37 GB is.*
 
 ## Interview questions
 - *Why is LLM generation on a CPU memory-bound?* For each new token, every weight is read once and used in one

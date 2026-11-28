@@ -7,7 +7,7 @@ A chat assistant designed for weak, GPU-less machines, built in two parts:
 - **A hardware-adaptive inference engine** that profiles the machine, routes each prompt to the smallest model that
   can handle it, and uses quantization and speculative decoding for speed.
 
-**Status:** 🚧 Part A done ([results](docs/RESULTS.md)); Part B code done, its measurements running.
+**Status:** 🚧 Part A and Part B measured ([results](docs/RESULTS.md)); offline Scout demo next.
 
 ## Why
 Training a ChatGPT-quality model is impossible on a CPU. Part A builds a tiny model to *show* the ideas behind
@@ -18,13 +18,13 @@ efficient models and measure them honestly; Part B applies them to real open mod
 |---|---|---|
 | A1 | TinyStories data + byte-level BPE tokenizer written from scratch | ✅ 4,096 tokens, 57.6M tokens of stories, 3.95 chars/token |
 | A2 | dense GPT baseline, training loop, CPU throughput | ✅ 5.84M params, 12.3M tokens in 96 min, val loss 2.235 (ppl 9.3); 2 threads beat 4 |
-| A3 | Mixture-of-Experts layers | at equal active compute: 8×top-2 ppl 8.33, 4×top-1 8.85, dense 9.34; 6–12% slower on CPU; top-1 gating bug found and fixed |
-| A4 | early exit | layer-1 exit ppl 13.8 (untrained: 130); confidence checks cost more than the layers they skip, so a fixed exit at layer 4 (0.72× compute, ppl 10.1) is the better trade |
-| B1 | hardware profiler (cores, SIMD flags, RAM, GPU, measured bandwidth), GGUF reader, model/quant planner | code + 11 tests done; measurements after Part A (needs an idle CPU) |
-| B2 | llama.cpp runtime (streaming, TTFT/decode timing, KV-cache reuse), model ladder with LRU unloading, benchmark + calibration | code + 5 tests done; measurements after Part A |
-| B3 | rule router (prompt features), confidence cascade (token probabilities via a llama.cpp logits hook), 128 auto-graded questions (capitals, arithmetic, GSM8K), offline policy simulation | code + 13 tests done; run after Part A |
-| B4 | greedy speculative decoding on llama.cpp's batch API (draft k tokens, verify in one pass); rollback by cache removal, or per-sequence state snapshots (19.5 MB) for Qwen3.5, whose recurrent layers cannot rewind | code + test done; output identical to greedy (checked); speed run after Part A |
-| B5 | headline policies on a held-out half (τ chosen on the other half) exported as evalkit runs for paired comparison | export code + test done |
+| A3 | Mixture-of-Experts layers | ✅ at equal active compute: 8×top-2 ppl 8.33, 4×top-1 8.85, dense 9.34; 6–12% slower on CPU; top-1 gating bug found and fixed |
+| A4 | early exit | ✅ layer-1 exit ppl 13.8 (untrained: 130); confidence checks cost more than the layers they skip, so a fixed exit at layer 4 (0.72× compute, ppl 10.1) is the better trade |
+| B1 | hardware profiler (cores, SIMD flags, RAM, GPU, measured bandwidth), GGUF reader, model/quant planner | ✅ 21 GB/s; llama.cpp reaches 47–72% of the bandwidth ceiling (calibrated per architecture); planner now picks the fastest model not significantly less accurate than the best: Qwen2.5-1.5B |
+| B2 | llama.cpp runtime (streaming, TTFT/decode timing, KV-cache reuse), model ladder with LRU unloading, benchmark + calibration | ✅ cached 2nd turn 13× faster to first token; loading without mmap saves 17–32% RAM (repacked weights were resident twice) |
+| B3 | rule router (prompt features), confidence cascade (token probabilities via a llama.cpp logits hook), 128 auto-graded questions (capitals, arithmetic, GSM8K), offline policy simulation | ✅ no router or cascade beats always-1.5B on held-out questions; confidence AUROC 0.85–1.0 on short answers, 0.51–0.66 after chain-of-thought |
+| B4 | greedy speculative decoding on llama.cpp's batch API (draft k tokens, verify in one pass); rollback by cache removal, or per-sequence state snapshots (19.5 MB) for Qwen3.5, whose recurrent layers cannot rewind | ✅ slower here in all 24 settings (×0.24–0.64): verifying 5 tokens costs 3.4–3.8 steps on 2 cores; measured cost model predicts it within 0.05 |
+| B5 | headline policies on a held-out half (τ chosen on the other half) exported as evalkit runs for paired comparison | ✅ 7 policies as evalkit runs, McNemar comparisons in concept 6 |
 | B5 | OpenAI-compatible server over the engine (each model's own chat template; Qwen2.5 JSON and Qwen3.5 XML tool calls parsed), so project 4's agent can run offline | code + 5 tests done; live demo after the measurements |
 
 ## Quickstart

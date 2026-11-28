@@ -40,7 +40,50 @@ Every run: TinyStories V2, our 4,096-token BPE tokenizer, d = 256, 6 layers, 8 h
 [`results/samples/`](../results/samples/). All models write grammatical stories with dialogue. All still lose track
 of objects and names within a few sentences (Tim's "boat" makes "his boat go fast"). At 12M tokens, consistency
 is what none of them has learned yet, which matches the loss still falling at the end of every run.
+The buggy MoE checkpoint must be sampled with the gate it was trained with
+([`experiments/sample_bug_run.py`](../experiments/sample_bug_run.py)): loss 2.390 under its own gate, 4.406 under
+the fixed one.
 
 ## Part B: the adaptive engine on real models
-*(added when `experiments/part_b.sh` finishes: model speeds and memory, calibration, routing headline, speculative
-decoding)*
+Qwen3.5-0.8B, Qwen2.5-1.5B and Qwen3.5-2B (Q4_K_M GGUF) through llama.cpp, 2 threads, idle CPU unless stated.
+
+### The machine and the models ([concept 5](concepts/05-hardware-aware-model-choice.md))
+| | Qwen3.5-0.8B | Qwen2.5-1.5B | Qwen3.5-2B |
+|---|---|---|---|
+| decode tok/s (2 threads) | 18.5 | 12.3–13.4 | 8.3 |
+| share of the bandwidth ceiling (21 GB/s) | 0.47 | 0.72 | 0.51 |
+| peak RAM, mmap (default) → without mmap | 0.89 → 0.74 GiB | 1.87 → 1.24–1.29 GiB | 1.92 → 1.39–1.44 GiB |
+| 2nd chat turn, time to first token: cache kept / cleared | 0.49 / 6.47 s | 0.84 / 12.20 s | 1.04 / 13.74 s |
+| accuracy on the 128 questions | 0.664 | 0.820 | 0.852 |
+
+- Keeping the conversation in the KV cache makes the next reply start **13× sooner**.
+- **Weights were in RAM twice.** llama.cpp repacks Q4_K weights for AVX2, and with mmap the original pages stay
+  resident too. Loading without mmap saves 17–32% at the same load time; the engine now does.
+- **The planner's first rule, "largest model that fits", picked the 2B.** It now picks the fastest model that is
+  not significantly less accurate than the best (McNemar on the 128 questions): **Qwen2.5-1.5B** (vs 2B: p = 0.50;
+  the 0.8B vs 2B: p < 0.001).
+
+### Routing and cascades ([concept 6](concepts/06-routing-and-cascades.md))
+Held-out half (64 questions), thresholds chosen on the other half:
+
+| policy | accuracy [95% CI] | s / question |
+|---|---|---|
+| **always Qwen2.5-1.5B** | 0.812 [0.70, 0.89] | **5.13** |
+| always Qwen3.5-2B | 0.797 [0.68, 0.88] | 8.33 |
+| rule router | 0.719 [0.60, 0.81] | 7.88 |
+| cascade through all three (τ = 0.95) | 0.828 [0.72, 0.90] | 7.95 |
+| oracle (smallest correct model, all 128) | 0.922 | 4.82 |
+
+- No policy beats always using the 1.5B (evalkit McNemar: p ≥ 0.15 for every comparison), and the close ones are
+  40–60% slower.
+- **Confidence works for short answers and fails after reasoning.** The AUROC of answer-token confidence for right vs
+  wrong is 0.85–1.00 on capitals and arithmetic and 0.51–0.66 on GSM8K, where 42 of 54 wrong answers had
+  confidence ≥ 0.9.
+
+### Speculative decoding ([concept 7](concepts/07-speculative-decoding.md))
+- **Slower in all 24 settings** (2 pairs × 4 prompts × k = 2, 4, 6): ×0.24–0.64 of the target alone.
+- **Why:** on 2 cores a pass over 5 tokens costs 3.4–3.8 single-token passes (compute-bound), not ≈ 1 as on a GPU.
+  With the measured pass costs the speed-up formula predicts the Qwen2.5 pair within 0.05. Even 100% acceptance
+  would give 0.76–0.97×.
+- **Batched and single-token llama.cpp passes differ** by up to 1.7 in the logits. So near-ties flip, and the
+  output matches the target's one-token-at-a-time greedy output only up to the first such flip.

@@ -1,0 +1,20 @@
+# moe-4x-top1-bug on 64 validation windows: loss 2.390 with the gate it was trained with (p / p = 1), 4.406 with today's fixed gate (raw p)
+# samples below use the trained gate; prompt 'Once upon a time', temperature 0.8, top-k 40, seed 0
+
+--- sample 1
+Once upon a time, there was a little boy named Tim. Tim loved to play with his toys. One day, he found a big, red ball in his house.
+"Can I play with my ball?" Tim asked. His mom said, "Yes, but be careful. It is not nice."
+Tim and his mom played with the ball. They had a lot of a lot. Tim made his mom smile.
+After playing, they went home. Tim's mom smiled too. She called for the toy truck to come! They played with the toy cars and had a lot of fun. Tim was happy he had found a new toy truck!
+
+--- sample 2
+Once upon a time, there was a little girl named Lucy. Tim loved to play with her friends.
+One sunny day, Lucy found a big box in her room. She was so happy to find her favorite toy. She took the box to the box and opened it. Tim went inside and found a big, shiny thing in his toy box. He put the box in a tree and started to play with it.
+Lucy and Tim played with the shiny toy all day. They became good friends and played together every day. But when they were sitting, Bob had a big mess. It was a big, mean cat! Lucy was scared and didn't know what to do. The cat tried to get the magic cat, but it was too hard to move.
+The rude cat saw how fast the box was and had many pieces. Tim's mom helped get out of the box. They worked hard, the box, and this time, they could be safe again.
+
+--- sample 3
+Once upon a time, in a small house, there was a little girl named Mia. Mia loved to play with her toys and make things nice and pretend to share with her friends.
+One day, Mia's family came to visit her house. They wanted to find her to play with the toys, but they were too busy. They ran and started to fight. Mia's mom and dad came into the room and said, "Lily, you are a good friend!" Mia was happy and said, "Thank you for being nice, Lily. I will fix your toys."
+They played and had a lot of fun. Mia was happy to help her mom and dad. They were happy to have her to share and not be friends anymore. Mia and Jill learned that playing with friends can be friends and share with each other. They learned that even big things with others can make things.
+

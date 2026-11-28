@@ -91,7 +91,7 @@ def pick_by_quality(fast: list[dict], quality: dict[str, dict[str, bool]]) -> tu
         return None                                   # an unmeasured candidate could be the best: don't guess
     for r in measured:
         q = quality[r["name"]]
-        r["accuracy"] = round(sum(q.values()) / len(q), 3)
+        r.setdefault("accuracy", round(sum(q.values()) / len(q), 3))
     best = max(measured, key=lambda r: r["accuracy"])
     for r in sorted(measured, key=lambda r: -(r["tok_s"] or 0)):
         p = 1.0 if r is best else mcnemar_p(quality[r["name"]], quality[best["name"]])
@@ -113,6 +113,10 @@ def plan_local(hw: Hardware, models: list[dict], n_ctx: int = 4096, min_tok_s: f
                      "quant": m["quant"], "file_gb": round(m["bytes"] / GB, 2), "kv_gb": round(kv / GB, 3),
                      "arch": m.get("arch"), **estimate(hw, m["bytes"], kv, eff, m.get("arch"))})
     rows.sort(key=lambda r: r["params_b"])
+    for r in rows:
+        if quality.get(r["name"]):
+            q = quality[r["name"]]
+            r["accuracy"] = round(sum(q.values()) / len(q), 3)
     fitting = [r for r in rows if r["fits"]]
     fast = [r for r in fitting if r["tok_s"] is None or r["tok_s"] >= min_tok_s]
     picked = pick_by_quality(fast, quality) if fast else None
@@ -161,8 +165,12 @@ def main() -> None:
     ap.add_argument("--ctx", type=int, default=4096)
     ap.add_argument("--min-tok-s", type=float, default=READING_SPEED)
     ap.add_argument("--no-bandwidth", action="store_true", help="skip the 2-second bandwidth measurement")
+    ap.add_argument("--bandwidth", type=float, help="use this read bandwidth (GB/s) instead of measuring: a busy "
+                                                    "machine measures low (ours: 12 GB/s with the desktop busy, 21 idle)")
     a = ap.parse_args()
-    hw = profile(bandwidth=not a.no_bandwidth)
+    hw = profile(bandwidth=not a.no_bandwidth and a.bandwidth is None)
+    if a.bandwidth:
+        hw.bandwidth_gbs = a.bandwidth
     print(f"{hw.cpu} | {hw.physical_cores} cores / {hw.logical_cores} threads | {', '.join(hw.flags) or 'no SIMD flags'}")
     print(f"RAM {hw.ram_available_gb:.1f} of {hw.ram_total_gb:.1f} GB available | GPU: {', '.join(hw.gpus) or 'none'} | "
           f"bandwidth {hw.bandwidth_gbs} GB/s | efficiency {efficiency()}")

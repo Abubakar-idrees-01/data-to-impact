@@ -86,3 +86,16 @@ rejected because it copies a vocabulary-sized score row per token and scans a 50
 Measured: ×0.24–0.64 for every pair, prompt and k, because a pass over 5 tokens costs 3.4–3.8 single steps on this
 CPU; **so the engine does not use speculative decoding on this machine.** `pass_cost()` measures V(n) on any machine;
 the technique is worth enabling only where V(k + 1) + k·c is clearly below the expected tokens per round.
+
+**D16. Choose the model by measured quality, not size.** The first planner took the largest model that fits and is
+fast enough (Qwen3.5-2B). The routing eval showed the 1.5B as accurate within noise and 1.6× faster. Rule now: the
+fastest model that is not significantly less accurate than the most accurate one, by an exact McNemar test at
+p < 0.05 on the same questions. A standard test, not a tuned margin; "largest" stays as the fallback when any
+candidate is unmeasured.
+
+**D17. Load weights without mmap.** Measured: with mmap, AVX2 weight repacking leaves every repacked weight in RAM
+twice (original file pages + repacked copy); `use_mmap=False` cut peak RSS by 17–32% at the same 2–3 s load time.
+Cost: two processes can no longer share one model's pages, which this engine never needs.
+
+**D18. No speculative decoding on this machine.** Measured slower in all 24 settings; the cause (verification is
+compute-bound on 2 cores) is a property of the hardware, so `pass_cost()` should decide per machine.

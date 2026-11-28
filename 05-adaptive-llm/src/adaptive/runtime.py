@@ -13,6 +13,11 @@ first, to measure what that saves. Reuse needs llama.cpp to delete the cache *af
 with a recurrent state (Qwen3.5's linear-attention layers) that state cannot be rewound, so llama.cpp may fall back
 to prefilling everything. `cached_prefix` is therefore an upper bound; the benchmark measures the real effect on TTFT.
 
+**Weights are read into memory, not memory-mapped** (`use_mmap=False`). On AVX2/NEON, llama.cpp repacks most Q4_K
+weights into an interleaved layout, a second copy; with mmap the original file pages also stay resident, so every
+repacked weight is in RAM twice. Measured peak RSS: Qwen3.5-2B 1.86 → 1.39 GiB, Qwen2.5-1.5B 1.82 → 1.24 GiB, with
+the same load time (2.1-2.3 s).
+
 Thinking models (Qwen3/3.5) would first write a hidden `<think>` block, which at ~5 tok/s adds up to a minute; the
 prompt pre-fills an empty one, as the official template does with `enable_thinking=False` (as in project 1).
 """
@@ -28,6 +33,8 @@ from typing import Callable, Iterator
 
 from .gguf import kv_cache_bytes, model_info
 from .hardware import GB
+
+USE_MMAP = False             # see the module docstring: mmap + weight repacking keeps two copies of most weights
 
 CHATML_STOP = ["<|im_end|>", "<|endoftext|>"]
 Message = dict          # {"role": "system" | "user" | "assistant", "content": str}
@@ -121,7 +128,7 @@ class LocalModel:
             from llama_cpp import Llama
             llama_factory = Llama
         self.llm = llama_factory(model_path=str(self.path), n_ctx=n_ctx, n_threads=threads, n_threads_batch=threads,
-                                 n_batch=256, verbose=False)
+                                 n_batch=256, use_mmap=USE_MMAP, verbose=False)
         template = self.llm.metadata.get("tokenizer.chat_template", "")
         if "<|im_start|>" not in template:
             raise ValueError(f"{self.path.name}: only ChatML chat templates (Qwen, many others) are supported")

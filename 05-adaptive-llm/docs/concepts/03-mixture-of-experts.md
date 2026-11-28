@@ -112,6 +112,11 @@ alone, for both top-1 and top-2 (it fails on the old code). The buggy run is kep
 fixed one is retrained with identical settings. **Fixing that one line moved the final loss from 2.345 to 2.181:**
 from 0.11 worse than dense to 0.05 better.
 
+A side effect worth knowing: the fixed code changes what the *old* checkpoint computes (outputs are now scaled by p),
+so it must be run with the gate it was trained with. On 64 validation windows it scores 2.390 with its own gate and
+4.406 with the fixed one, and its samples are only coherent with its own
+([`experiments/sample_bug_run.py`](../../experiments/sample_bug_run.py)).
+
 ### For an interview
 "At equal active compute and 12M training tokens, my 8-expert top-2 MoE reached perplexity 8.3 against the dense
 model's 9.3, 12% slower on a CPU and with 2.6× the weights in memory; 4-expert top-1 reached 8.85 at 6% slower. My

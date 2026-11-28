@@ -62,20 +62,20 @@ All runs: 1,500 steps × 32 × 256 = 12.3M tokens, the same validation windows, 
 
 | step | tokens | dense | moe-8x-top2 | moe-4x-top1 (bug) | moe-4x-top1 (fixed) |
 |---|---|---|---|---|---|
-| 250 | 2.0M | 3.454 (31.6) | 3.363 (28.9) | 3.554 (34.9) | *(retraining)* |
-| 500 | 4.1M | 2.867 (17.6) | 2.744 (15.5) | 2.983 (19.7) | |
-| 750 | 6.1M | 2.570 (13.1) | 2.454 (11.6) | 2.684 (14.6) | |
-| 1000 | 8.2M | 2.401 (11.0) | 2.284 (9.8) | 2.516 (12.4) | |
-| 1250 | 10.2M | 2.291 (9.9) | 2.178 (8.8) | 2.407 (11.1) | |
-| 1500 | 12.3M | **2.235 (9.34)** | **2.120 (8.33)** | **2.345 (10.44)** | |
+| 250 | 2.0M | 3.454 (31.6) | 3.363 (28.9) | 3.554 (34.9) | 3.459 (31.8) |
+| 500 | 4.1M | 2.867 (17.6) | 2.744 (15.5) | 2.983 (19.7) | 2.851 (17.3) |
+| 750 | 6.1M | 2.570 (13.1) | 2.454 (11.6) | 2.684 (14.6) | 2.545 (12.7) |
+| 1000 | 8.2M | 2.401 (11.0) | 2.284 (9.8) | 2.516 (12.4) | 2.358 (10.6) |
+| 1250 | 10.2M | 2.291 (9.9) | 2.178 (8.8) | 2.407 (11.1) | 2.241 (9.4) |
+| 1500 | 12.3M | **2.235 (9.34)** | **2.120 (8.33)** | **2.345 (10.44)** | **2.181 (8.85)** |
 
-| | dense | moe-8x-top2 | moe-4x-top1 (bug) |
-|---|---|---|---|
-| training speed (clean windows) | 2,262–2,267 tok/s | 1,980–1,996 tok/s (**12% slower**) | 2,103–2,132 tok/s (6% slower) |
-| wall clock, 1,500 steps | 96.4 min | 104.6 min | 108.1 min |
-| weights in memory (fp32) | 23 MB | 61 MB (2.6×) | 61 MB (2.6×) |
-| load-balancing `aux` at the end (6.0 = perfectly even) | n/a | 6.007 | 6.004 |
-| expert shares at the end, any layer (even = 1/E) | n/a | 0.086–0.152 (even 0.125) | 0.22–0.28 (even 0.25) |
+| | dense | moe-8x-top2 | moe-4x-top1 (fixed) | moe-4x-top1 (bug) |
+|---|---|---|---|---|
+| training speed (clean windows) | 2,262–2,267 tok/s | 1,980–1,996 tok/s (**12% slower**) | 2,099–2,138 tok/s (6% slower) | 2,103–2,132 tok/s (6% slower) |
+| wall clock, 1,500 steps | 96.4 min | 104.6 min | 97.7 min | 108.1 min |
+| weights in memory (fp32) | 23 MB | 61 MB (2.6×) | 61 MB (2.6×) | 61 MB (2.6×) |
+| load-balancing `aux` at the end (6.0 = perfectly even) | n/a | 6.007 | 6.022 | 6.004 |
+| expert shares at the end, any layer (even = 1/E) | n/a | 0.086–0.152 (even 0.125) | 0.15–0.40 (even 0.25) | 0.22–0.28 (even 0.25) |
 
 Steps 250 and 500 of the buggy run overlapped with llama.cpp tests on the same CPU; their speeds are not used.
 
@@ -86,7 +86,13 @@ Steps 250 and 500 of the buggy run overlapped with llama.cpp tests on the same C
 - **It costs speed and memory on a CPU.** Same arithmetic per token, but grouping tokens by expert, smaller matrix
   multiplies (eight 512-wide experts instead of one 1,024-wide network) and scattering the results back cost 12% of
   throughput, and every expert's weights must be in memory: 2.6× the weights for 0.115 nats.
-- **The load-balancing loss worked** in every run: no expert collapsed.
+- **Both MoE shapes beat dense once the router learns.** Fixed top-1 ends 0.054 below dense (ppl 8.85 vs 9.34), and
+  its lead grows with training (0.00 at step 250, 0.05 at step 1500). Fine-grained top-2 of 8 is better still
+  (−0.115) and ahead from the first checkpoint, at twice the slowdown (12% vs 6%). Same parameters, same active
+  compute: mixing two smaller experts per token beats one big one, as DeepSeek-MoE argues.
+- **The load-balancing loss worked** in every run: no expert collapsed. A router that learns from the task uses its
+  experts *less* evenly (0.15–0.40 with the fix, 0.22–0.28 with the bug): it specialises, and the small balancing
+  term only stops it from collapsing.
 
 ### The bug the first top-1 run found
 The first `moe-4x-top1` run *lost* to the dense model by 0.11, and my first explanation was "each expert only trains
@@ -103,13 +109,15 @@ not affected, because `p₁ / (p₁ + p₂)` still depends on both probabilities
 The fix follows the Switch Transformer: for top-1 the output is `p · expert(x)`, so a token's loss tells the router
 whether that expert was a good choice. A regression test checks that the router gets a real gradient from the output
 alone, for both top-1 and top-2 (it fails on the old code). The buggy run is kept as `models/moe-4x-top1-bug` and the
-fixed one is retrained with identical settings.
+fixed one is retrained with identical settings. **Fixing that one line moved the final loss from 2.345 to 2.181:**
+from 0.11 worse than dense to 0.05 better.
 
 ### For an interview
 "At equal active compute and 12M training tokens, my 8-expert top-2 MoE reached perplexity 8.3 against the dense
-model's 9.3, 12% slower on a CPU and with 2.6× the weights in memory. My first top-1 run lost to dense, and the
-reason was a gating bug: renormalising a single top-1 weight makes it the constant 1, so the router got no gradient
-from the task. That's why Switch multiplies by the raw gate probability."
+model's 9.3, 12% slower on a CPU and with 2.6× the weights in memory; 4-expert top-1 reached 8.85 at 6% slower. My
+first top-1 run lost to dense, and the reason was a gating bug: renormalising a single top-1 weight makes it the
+constant 1, so the router got no gradient from the task. Fixing that one line took it from 0.11 worse than dense to
+0.05 better. That's why Switch multiplies by the raw gate probability."
 
 ## Interview questions
 - *Why doesn't MoE reduce memory?* Every expert must be in memory, because routing is decided per token at run time.

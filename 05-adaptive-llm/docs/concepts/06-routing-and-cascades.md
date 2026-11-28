@@ -50,7 +50,88 @@ three) at τ = 0.3 … 0.95; router + cascade; and the **oracle**, each question
 that gets it right, an upper bound no real policy can reach.
 
 ## Results
-*(added when `route_eval` has run; it needs an idle CPU, after the Part A training queue)*
+Three local models (Q4_K_M, 2 threads, thinking off) × 128 questions = 384 answers, generated once in about 40 minutes;
+every policy is then simulated from them ([`results/routing/`](../../results/routing/)).
+
+### Each model alone
+| model | accuracy | capitals | arithmetic | GSM8K | seconds / question |
+|---|---|---|---|---|---|
+| Qwen3.5-0.8B | 0.664 | 0.81 | 0.78 | 0.38 | **4.0** |
+| Qwen2.5-1.5B | 0.820 | 0.94 | 0.85 | **0.65** | 5.2 |
+| Qwen3.5-2B | **0.852** | **0.98** | **0.93** | 0.62 | 8.7 |
+| *oracle: the smallest model that gets it right* | *0.922* | | | | *4.8* |
+
+**Bigger is not better here.** The 2B has 6% more parameters than the 1.5B and is 1.6× slower, and it is *worse* on
+the GSM8K word problems. Ranking models by size, as both the planner and the rule router do, gets the ladder wrong.
+
+### Policies on all 128 questions
+| policy | τ | accuracy | s / question |
+|---|---|---|---|
+| always 1.5B | | 0.820 | 5.20 |
+| always 2B | | 0.852 | 8.66 |
+| rule router | | 0.766 | 8.21 |
+| cascade 0.8B → 2B | 0.9 | 0.781 | 6.19 |
+| cascade 1.5B → 2B | 0.8 | 0.852 | 6.29 |
+| cascade through all three | 0.9 | 0.781 | 6.00 |
+| rule router + cascade | 0.9 | 0.852 | 8.76 |
+
+These rows are *in-sample*: τ was picked by looking at the same questions. The 1.5B → 2B cascade looks best (the
+2B's accuracy for 27% less time), but choosing it after seeing every result would be choosing on the test set, so
+it is not in the headline below.
+
+### The headline: τ chosen on the dev half, scored on the held-out half (64 questions)
+| policy | τ (from dev) | accuracy [95% CI] | s / question |
+|---|---|---|---|
+| **always 1.5B** | | **0.812** [0.70, 0.89] | **5.13** |
+| always 2B | | 0.797 [0.68, 0.88] | 8.33 |
+| always 0.8B | | 0.719 [0.60, 0.81] | 4.24 |
+| rule router | | 0.719 [0.60, 0.81] | 7.88 |
+| cascade 0.8B → 2B | 0.95 | 0.797 [0.68, 0.88] | 7.09 |
+| cascade through all | 0.95 | 0.828 [0.72, 0.90] | 7.95 |
+| rule router + cascade | 0.8 | 0.812 [0.70, 0.89] | 8.21 |
+
+Compared question by question with evalkit (project 2; McNemar on the questions that flipped):
+
+| base → new | correct (better / worse) | p | seconds |
+|---|---|---|---|
+| always 1.5B → always 2B | 0.812 → 0.797 (5 / 6) | 1.00 | 5.1 → 8.3 (p < 0.001) |
+| always 1.5B → cascade through all | 0.812 → 0.828 (5 / 4) | 1.00 | 5.1 → 8.0 (p = 0.03) |
+| always 1.5B → rule router | 0.812 → 0.719 (3 / 9) | 0.15 | 5.1 → 7.9 (p < 0.001) |
+| always 2B → cascade 0.8B → 2B | 0.797 → 0.797 (1 / 1) | 1.00 | 8.3 → 7.1 (p = 0.20) |
+
+**No policy beats "always Qwen2.5-1.5B"**, and every one that comes close is 40–60% slower. With 64 questions,
+none of the accuracy differences is significant (even 0.8B vs 1.5B: 12 / 6 flips, p = 0.24). The speed differences
+are, so speed decides: on this laptop, run the 1.5B.
+
+### Why the cascades fail: confidence is not correctness on reasoning
+| | capitals | arithmetic | GSM8K (step-by-step) |
+|---|---|---|---|
+| AUROC of confidence for right vs wrong (0.5 = chance) | 0.92–1.00 | 0.85–0.97 | **0.51–0.66** |
+| wrong answers with confidence ≥ 0.9 | 1 of 13 | 4 of 18 | **42 of 54** |
+
+For a one-word answer the token probability is a good signal: when the 0.8B was wrong about a capital its confidence
+averaged 0.61, against 0.84 when right. After a chain of reasoning it is not. The final number follows from the
+model's own working with probability ~0.95, whether that working was right or wrong. **The probability measures
+agreement with the text before it, not truth.** So the cascade escalates capitals and sums correctly and lets
+confident wrong maths through (0.8B on GSM8K: 0.38 alone, 0.45 at best through a cascade).
+
+The confidence signal does work where it applies: on arithmetic, the cascade from 0.8B to 2B reaches the 2B's
+accuracy (0.93) at τ = 0.9. Better signals for reasoning would be self-consistency (sample several solutions and
+check that they agree) or a verifier, each costing extra generations. On a CPU that cost is exactly what routing is
+meant to save.
+
+### What changes in the engine
+- The ladder must be ranked by **measured** quality and speed, not by parameter count. Here the 1.5B is as accurate as the 2B within
+  noise and 1.6× faster.
+- Escalate on confidence only for short answers. For reasoning, start at the model that handles reasoning best.
+- The oracle (0.922 at 4.8 s) shows that a better signal is worth a lot: 7 points above the best policy here, in
+  less time than the 1.5B alone.
+
+**For an interview:** "I generated every answer once from three local models, then simulated routing policies
+offline, choosing thresholds on a dev half and reporting on the held-out half with McNemar tests. Nothing beat
+always using the 1.5B model, because the 2B was slower and no more accurate. Cascades failed on maths: wrong
+chain-of-thought answers had confidence above 0.9 in 42 of 54 cases, so token probability is a usable signal for
+short answers (AUROC up to 1.0) but close to chance for reasoning (0.51–0.66)."
 
 ## Interview questions
 - *Why not always use the biggest model?* On a CPU, speed is inversely proportional to model size; most everyday

@@ -1,0 +1,552 @@
+{
+ "suite": "adaptive-routing",
+ "name": "always-qwen2.5-1.5b-instruct",
+ "items": [
+  {
+   "id": "capital-01",
+   "correct": true,
+   "seconds": 1.268,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-03",
+   "correct": true,
+   "seconds": 1.35,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-05",
+   "correct": true,
+   "seconds": 1.354,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-07",
+   "correct": true,
+   "seconds": 1.354,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-09",
+   "correct": true,
+   "seconds": 1.276,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-11",
+   "correct": true,
+   "seconds": 1.476,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-13",
+   "correct": true,
+   "seconds": 1.287,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-15",
+   "correct": true,
+   "seconds": 1.396,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-17",
+   "correct": true,
+   "seconds": 1.335,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-19",
+   "correct": true,
+   "seconds": 1.357,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-21",
+   "correct": false,
+   "seconds": 1.347,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-23",
+   "correct": true,
+   "seconds": 1.949,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-25",
+   "correct": true,
+   "seconds": 1.27,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-27",
+   "correct": true,
+   "seconds": 1.308,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-29",
+   "correct": true,
+   "seconds": 1.335,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-31",
+   "correct": true,
+   "seconds": 1.335,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-33",
+   "correct": true,
+   "seconds": 1.27,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-35",
+   "correct": true,
+   "seconds": 1.326,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-37",
+   "correct": false,
+   "seconds": 1.332,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-39",
+   "correct": true,
+   "seconds": 1.266,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-41",
+   "correct": true,
+   "seconds": 1.555,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-43",
+   "correct": true,
+   "seconds": 1.335,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-45",
+   "correct": true,
+   "seconds": 1.499,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "capital-47",
+   "correct": true,
+   "seconds": 1.415,
+   "rung": 1,
+   "family": "capital",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-01",
+   "correct": false,
+   "seconds": 1.551,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-03",
+   "correct": true,
+   "seconds": 1.429,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-05",
+   "correct": true,
+   "seconds": 1.457,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-07",
+   "correct": true,
+   "seconds": 1.42,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-09",
+   "correct": true,
+   "seconds": 1.397,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-11",
+   "correct": true,
+   "seconds": 1.507,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-13",
+   "correct": true,
+   "seconds": 1.449,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-15",
+   "correct": false,
+   "seconds": 1.432,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-17",
+   "correct": true,
+   "seconds": 1.367,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-19",
+   "correct": true,
+   "seconds": 1.414,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-21",
+   "correct": true,
+   "seconds": 1.459,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-23",
+   "correct": true,
+   "seconds": 1.423,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-25",
+   "correct": true,
+   "seconds": 1.529,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-27",
+   "correct": true,
+   "seconds": 1.441,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-29",
+   "correct": true,
+   "seconds": 1.568,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-31",
+   "correct": true,
+   "seconds": 1.409,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-33",
+   "correct": true,
+   "seconds": 1.446,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-35",
+   "correct": true,
+   "seconds": 1.435,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-37",
+   "correct": true,
+   "seconds": 1.437,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "arith-39",
+   "correct": false,
+   "seconds": 1.499,
+   "rung": 1,
+   "family": "arith",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-001",
+   "correct": true,
+   "seconds": 8.914,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-003",
+   "correct": true,
+   "seconds": 7.503,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-005",
+   "correct": false,
+   "seconds": 13.321,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-007",
+   "correct": false,
+   "seconds": 19.32,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-009",
+   "correct": true,
+   "seconds": 13.268,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-011",
+   "correct": true,
+   "seconds": 13.641,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-013",
+   "correct": false,
+   "seconds": 11.093,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-015",
+   "correct": true,
+   "seconds": 17.02,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-017",
+   "correct": true,
+   "seconds": 12.819,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-019",
+   "correct": false,
+   "seconds": 8.927,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-021",
+   "correct": false,
+   "seconds": 11.123,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-023",
+   "correct": true,
+   "seconds": 9.564,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-025",
+   "correct": true,
+   "seconds": 15.138,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-027",
+   "correct": true,
+   "seconds": 13.033,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-029",
+   "correct": false,
+   "seconds": 11.151,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-031",
+   "correct": true,
+   "seconds": 15.7,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-033",
+   "correct": true,
+   "seconds": 17.88,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-035",
+   "correct": true,
+   "seconds": 12.228,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-037",
+   "correct": false,
+   "seconds": 18.153,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  },
+  {
+   "id": "gsm8k-039",
+   "correct": true,
+   "seconds": 16.738,
+   "rung": 1,
+   "family": "gsm8k",
+   "model": "qwen2.5-1.5b-instruct"
+  }
+ ],
+ "metrics": {
+  "correct": {
+   "value": 0.8125,
+   "ci_low": 0.7002540844522482,
+   "ci_high": 0.889354651190779,
+   "n": 64
+  },
+  "seconds": {
+   "value": 5.13434375,
+   "ci_low": 3.76040703125,
+   "ci_high": 6.566703515624997,
+   "n": 64
+  }
+ },
+ "config": {
+  "machine": "intel-core-i5-5200u",
+  "tau": 0.0,
+  "models": [
+   "Qwen3.5-0.8B",
+   "qwen2.5-1.5b-instruct",
+   "Qwen3.5-2B"
+  ],
+  "split": "test (odd positions)",
+  "dev_target_accuracy": 0.9062
+ },
+ "env": {
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_count": 4,
+  "git_commit": "9b45c2b",
+  "git_dirty": false
+ },
+ "created": "2026-11-28T05:57:03+00:00"
+}

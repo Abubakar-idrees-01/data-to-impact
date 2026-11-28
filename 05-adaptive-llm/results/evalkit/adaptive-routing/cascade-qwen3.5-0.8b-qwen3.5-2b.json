@@ -1,0 +1,552 @@
+{
+ "suite": "adaptive-routing",
+ "name": "cascade-qwen3.5-0.8b-qwen3.5-2b",
+ "items": [
+  {
+   "id": "capital-01",
+   "correct": true,
+   "seconds": 2.335,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-03",
+   "correct": true,
+   "seconds": 2.351,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-05",
+   "correct": true,
+   "seconds": 2.363,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-07",
+   "correct": true,
+   "seconds": 0.725,
+   "rung": 0,
+   "family": "capital",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "capital-09",
+   "correct": true,
+   "seconds": 2.41,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-11",
+   "correct": true,
+   "seconds": 2.457,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-13",
+   "correct": true,
+   "seconds": 2.717,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-15",
+   "correct": true,
+   "seconds": 2.537,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-17",
+   "correct": true,
+   "seconds": 2.762,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-19",
+   "correct": true,
+   "seconds": 2.514,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-21",
+   "correct": true,
+   "seconds": 2.864,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-23",
+   "correct": true,
+   "seconds": 2.672,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-25",
+   "correct": true,
+   "seconds": 2.442,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-27",
+   "correct": true,
+   "seconds": 2.56,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-29",
+   "correct": true,
+   "seconds": 2.695,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-31",
+   "correct": true,
+   "seconds": 2.635,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-33",
+   "correct": true,
+   "seconds": 2.486,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-35",
+   "correct": true,
+   "seconds": 2.559,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-37",
+   "correct": true,
+   "seconds": 2.42,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-39",
+   "correct": true,
+   "seconds": 2.715,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-41",
+   "correct": true,
+   "seconds": 3.226,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-43",
+   "correct": true,
+   "seconds": 2.544,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-45",
+   "correct": true,
+   "seconds": 2.788,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-47",
+   "correct": true,
+   "seconds": 2.852,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-01",
+   "correct": true,
+   "seconds": 3.322,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-03",
+   "correct": false,
+   "seconds": 2.79,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-05",
+   "correct": true,
+   "seconds": 2.93,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-07",
+   "correct": true,
+   "seconds": 2.669,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-09",
+   "correct": true,
+   "seconds": 1.043,
+   "rung": 0,
+   "family": "arith",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "arith-11",
+   "correct": false,
+   "seconds": 2.688,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-13",
+   "correct": true,
+   "seconds": 0.92,
+   "rung": 0,
+   "family": "arith",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "arith-15",
+   "correct": true,
+   "seconds": 2.564,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-17",
+   "correct": true,
+   "seconds": 0.843,
+   "rung": 0,
+   "family": "arith",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "arith-19",
+   "correct": true,
+   "seconds": 0.925,
+   "rung": 0,
+   "family": "arith",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "arith-21",
+   "correct": true,
+   "seconds": 1.299,
+   "rung": 0,
+   "family": "arith",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "arith-23",
+   "correct": true,
+   "seconds": 2.696,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-25",
+   "correct": true,
+   "seconds": 1.0,
+   "rung": 0,
+   "family": "arith",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "arith-27",
+   "correct": true,
+   "seconds": 2.919,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-29",
+   "correct": true,
+   "seconds": 1.192,
+   "rung": 0,
+   "family": "arith",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "arith-31",
+   "correct": true,
+   "seconds": 2.655,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-33",
+   "correct": true,
+   "seconds": 2.918,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-35",
+   "correct": true,
+   "seconds": 2.764,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-37",
+   "correct": true,
+   "seconds": 2.909,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-39",
+   "correct": false,
+   "seconds": 2.792,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-001",
+   "correct": true,
+   "seconds": 5.592,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-003",
+   "correct": false,
+   "seconds": 4.264,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-005",
+   "correct": false,
+   "seconds": 7.123,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-007",
+   "correct": false,
+   "seconds": 10.677,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-009",
+   "correct": true,
+   "seconds": 11.262,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-011",
+   "correct": true,
+   "seconds": 8.301,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-013",
+   "correct": false,
+   "seconds": 56.621,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-015",
+   "correct": false,
+   "seconds": 15.06,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-017",
+   "correct": true,
+   "seconds": 16.988,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-019",
+   "correct": false,
+   "seconds": 10.701,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-021",
+   "correct": false,
+   "seconds": 5.771,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-023",
+   "correct": true,
+   "seconds": 37.973,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-025",
+   "correct": true,
+   "seconds": 10.103,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-027",
+   "correct": true,
+   "seconds": 34.543,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-029",
+   "correct": true,
+   "seconds": 8.568,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-031",
+   "correct": false,
+   "seconds": 10.509,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-033",
+   "correct": true,
+   "seconds": 7.123,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-035",
+   "correct": true,
+   "seconds": 11.458,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  },
+  {
+   "id": "gsm8k-037",
+   "correct": false,
+   "seconds": 57.315,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-039",
+   "correct": false,
+   "seconds": 19.531,
+   "rung": 0,
+   "family": "gsm8k",
+   "model": "Qwen3.5-0.8B"
+  }
+ ],
+ "metrics": {
+  "correct": {
+   "value": 0.796875,
+   "ci_low": 0.6828613244878341,
+   "ci_high": 0.8772669743730419,
+   "n": 64
+  },
+  "seconds": {
+   "value": 7.09296875,
+   "ci_low": 4.58193671875,
+   "ci_high": 10.105057031249999,
+   "n": 64
+  }
+ },
+ "config": {
+  "machine": "intel-core-i5-5200u",
+  "tau": 0.95,
+  "models": [
+   "Qwen3.5-0.8B",
+   "qwen2.5-1.5b-instruct",
+   "Qwen3.5-2B"
+  ],
+  "split": "test (odd positions)",
+  "dev_target_accuracy": 0.9062
+ },
+ "env": {
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_count": 4,
+  "git_commit": "9b45c2b",
+  "git_dirty": false
+ },
+ "created": "2026-11-28T05:57:03+00:00"
+}

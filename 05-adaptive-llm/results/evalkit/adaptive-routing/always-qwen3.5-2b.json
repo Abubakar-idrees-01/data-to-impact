@@ -1,0 +1,552 @@
+{
+ "suite": "adaptive-routing",
+ "name": "always-qwen3.5-2b",
+ "items": [
+  {
+   "id": "capital-01",
+   "correct": true,
+   "seconds": 1.615,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-03",
+   "correct": true,
+   "seconds": 1.624,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-05",
+   "correct": true,
+   "seconds": 1.628,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-07",
+   "correct": true,
+   "seconds": 1.605,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-09",
+   "correct": true,
+   "seconds": 1.681,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-11",
+   "correct": true,
+   "seconds": 1.733,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-13",
+   "correct": true,
+   "seconds": 1.615,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-15",
+   "correct": true,
+   "seconds": 1.722,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-17",
+   "correct": true,
+   "seconds": 1.75,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-19",
+   "correct": true,
+   "seconds": 1.634,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-21",
+   "correct": true,
+   "seconds": 1.921,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-23",
+   "correct": true,
+   "seconds": 1.726,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-25",
+   "correct": true,
+   "seconds": 1.622,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-27",
+   "correct": true,
+   "seconds": 1.703,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-29",
+   "correct": true,
+   "seconds": 1.725,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-31",
+   "correct": true,
+   "seconds": 1.725,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-33",
+   "correct": true,
+   "seconds": 1.711,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-35",
+   "correct": true,
+   "seconds": 1.661,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-37",
+   "correct": true,
+   "seconds": 1.624,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-39",
+   "correct": true,
+   "seconds": 1.827,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-41",
+   "correct": true,
+   "seconds": 2.135,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-43",
+   "correct": true,
+   "seconds": 1.723,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-45",
+   "correct": true,
+   "seconds": 1.869,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "capital-47",
+   "correct": true,
+   "seconds": 1.885,
+   "rung": 2,
+   "family": "capital",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-01",
+   "correct": true,
+   "seconds": 1.863,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-03",
+   "correct": false,
+   "seconds": 1.809,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-05",
+   "correct": true,
+   "seconds": 1.952,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-07",
+   "correct": true,
+   "seconds": 1.806,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-09",
+   "correct": true,
+   "seconds": 1.768,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-11",
+   "correct": false,
+   "seconds": 1.801,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-13",
+   "correct": true,
+   "seconds": 1.954,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-15",
+   "correct": true,
+   "seconds": 1.686,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-17",
+   "correct": true,
+   "seconds": 1.937,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-19",
+   "correct": true,
+   "seconds": 1.894,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-21",
+   "correct": true,
+   "seconds": 1.891,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-23",
+   "correct": true,
+   "seconds": 1.811,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-25",
+   "correct": true,
+   "seconds": 1.854,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-27",
+   "correct": true,
+   "seconds": 1.868,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-29",
+   "correct": true,
+   "seconds": 1.872,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-31",
+   "correct": true,
+   "seconds": 1.788,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-33",
+   "correct": true,
+   "seconds": 2.003,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-35",
+   "correct": true,
+   "seconds": 1.89,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-37",
+   "correct": true,
+   "seconds": 1.862,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "arith-39",
+   "correct": false,
+   "seconds": 1.786,
+   "rung": 2,
+   "family": "arith",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-001",
+   "correct": true,
+   "seconds": 8.471,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-003",
+   "correct": false,
+   "seconds": 9.188,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-005",
+   "correct": false,
+   "seconds": 15.191,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-007",
+   "correct": false,
+   "seconds": 37.716,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-009",
+   "correct": false,
+   "seconds": 19.052,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-011",
+   "correct": true,
+   "seconds": 19.62,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-013",
+   "correct": false,
+   "seconds": 37.309,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-015",
+   "correct": true,
+   "seconds": 27.254,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-017",
+   "correct": true,
+   "seconds": 18.424,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-019",
+   "correct": false,
+   "seconds": 35.305,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-021",
+   "correct": false,
+   "seconds": 21.111,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-023",
+   "correct": true,
+   "seconds": 18.787,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-025",
+   "correct": true,
+   "seconds": 23.298,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-027",
+   "correct": true,
+   "seconds": 25.229,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-029",
+   "correct": true,
+   "seconds": 18.281,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-031",
+   "correct": false,
+   "seconds": 17.327,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-033",
+   "correct": true,
+   "seconds": 19.198,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-035",
+   "correct": true,
+   "seconds": 17.38,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-037",
+   "correct": false,
+   "seconds": 37.629,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  },
+  {
+   "id": "gsm8k-039",
+   "correct": false,
+   "seconds": 28.993,
+   "rung": 2,
+   "family": "gsm8k",
+   "model": "Qwen3.5-2B"
+  }
+ ],
+ "metrics": {
+  "correct": {
+   "value": 0.796875,
+   "ci_low": 0.6828613244878341,
+   "ci_high": 0.8772669743730419,
+   "n": 64
+  },
+  "seconds": {
+   "value": 8.33315625,
+   "ci_low": 5.808073828125,
+   "ci_high": 11.124358984375,
+   "n": 64
+  }
+ },
+ "config": {
+  "machine": "intel-core-i5-5200u",
+  "tau": 0.0,
+  "models": [
+   "Qwen3.5-0.8B",
+   "qwen2.5-1.5b-instruct",
+   "Qwen3.5-2B"
+  ],
+  "split": "test (odd positions)",
+  "dev_target_accuracy": 0.9062
+ },
+ "env": {
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "cpu_count": 4,
+  "git_commit": "9b45c2b",
+  "git_dirty": false
+ },
+ "created": "2026-11-28T05:57:03+00:00"
+}

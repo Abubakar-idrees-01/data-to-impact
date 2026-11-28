@@ -10,6 +10,8 @@ A chat assistant designed for weak, GPU-less machines, built in two parts:
 **Status:** ✅ both parts built and measured ([results](docs/RESULTS.md)), including the offline Scout demo.
 
 ## Try the tiny GPT in your browser
+**🌐 Live demo:** [abubakar-idrees-01.github.io/data-to-impact/tinygpt](https://abubakar-idrees-01.github.io/data-to-impact/tinygpt/) (downloads 6–15 MB of weights, then runs offline in the tab)
+
 ![The MoE model writing a story in the browser, tokens coloured by the expert the router chose](docs/images/web-moe.png)
 
 [`site/`](site/) runs the trained models **entirely in the browser**, in plain JavaScript with no libraries and no

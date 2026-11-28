@@ -105,3 +105,5 @@ library: the forward pass is ~200 lines, which a reader can check against `model
 against PyTorch (logits within 4e-7 on dense, MoE top-1/top-2 and exit models; identical greedy stories from all
 three trained models). int8 with one scale per row cut the downloads 4× (26 MB for three models instead of 107) for
 +0.0001 to +0.0004 validation loss. Routers and norms stay float32: they are tiny, and routing is what MoE is about.
+The weights live in a GitHub Release (`tinygpt-web-v1`), not in git, as the repo rule says. The Pages workflow
+downloads them at deploy time, so the public demo works and clones stay small.

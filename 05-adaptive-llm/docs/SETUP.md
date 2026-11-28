@@ -113,6 +113,10 @@ python3 -m http.server 8000 -d site                         # then open http://l
 The page needs to be served over HTTP (opening `index.html` as a file blocks `fetch`). Any static host works,
 since everything runs in the browser. URL options for links and screenshots: `?model=exit-d256-L6&early=0.6&seed=3&run`.
 
+**Publishing:** the weights are not in git. `bash scripts/publish_web_weights.sh` uploads `site/models/` and the
+tokenizer to the GitHub Release `tinygpt-web-v1`, and the Pages workflow downloads them when it deploys `site/` to
+`/tinygpt/`. Re-run the export and this script after retraining.
+
 Screenshots and an end-to-end check of the real page (fails on any JavaScript error):
 ```bash
 TMPDIR=$PWD/.tmp .venv/bin/pip install -r requirements-dev.txt   # Playwright; uses the installed Chrome

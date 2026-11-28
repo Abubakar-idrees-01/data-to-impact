@@ -31,6 +31,9 @@ router zero gradient from the task (4e-9 vs 0.016 measured). A regression test c
 
 **D6. Early exits share the output layer; trained with the mean exit loss at weight 1.0.** 512 parameters per exit
 instead of a full 1M-parameter head each. The dense model's logit lens is the untrained baseline.
+Measured: layer-1 exit ppl 13.8 (logit lens 130), final layer 9.79 vs dense 9.34, 1.8× training time. The sweep
+reports compute *including* the confidence check (one 256 × 4,096 projection per check, 1.2 layers' worth), because
+leaving it out makes every τ look like a saving; counted, only τ ≤ 0.4 breaks even and a fixed layer-4 exit wins.
 
 ## Part B
 

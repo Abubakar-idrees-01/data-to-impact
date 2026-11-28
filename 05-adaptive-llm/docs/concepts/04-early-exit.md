@@ -45,7 +45,64 @@ values for later tokens to attend to. Methods like CALM (Schuster et al., 2022) 
 them. So the "compute saved" here is what the exit decisions *allow*, not a measured wall-clock speed-up.
 
 ## Results
-*(added when `exit-d256-L6` and the sweeps finish)*
+Same budget as every Part A run (1,500 steps, 12.3M tokens). Evaluated on 256 validation windows = 65,536 positions
+([`results/early_exit/`](../../results/early_exit/)).
+
+### 1. What training the exits costs
+| | dense (no exit training) | exit-d256-L6 (`--exit-weight 1.0`) |
+|---|---|---|
+| final-layer val loss (ppl) | **2.235 (9.34)** | 2.281 (9.79) |
+| training speed | 2,265 tok/s | 1,240 tok/s (**1.8× slower**) |
+| wall clock | 96 min | 168 min |
+
+The concept's prediction held: early layers that must also predict cost the full model 0.05 nats, and five extra
+256 × 4,096 projections nearly double the training compute.
+
+### 2. Every layer as an exit
+| layer | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|
+| dense, logit lens (untrained): ppl | 130.0 | 79.9 | 60.6 | 31.3 | 15.7 | 9.34 |
+| dense, agrees with its final top token | 24% | 30% | 37% | 50% | 68% | 100% |
+| **trained exits: ppl** | **13.8** | 11.7 | 10.7 | 10.1 | 9.9 | 9.79 |
+| trained exits: agree with the final top token | 69% | 78% | 85% | 90% | 94% | 100% |
+
+Exit training turns layer 1 from useless (ppl 130) into a usable model (ppl 13.8, the dense model's quality at about
+step 900). The model now contains six models of increasing depth that share their weights.
+
+### 3. The confidence rule
+| τ | ppl | avg layers | layer-only "saved" | exits at layer 1 / 2–5 / 6 | **real compute vs full model** |
+|---|---|---|---|---|---|
+| 0.3 | 11.78 | 2.54 | 58% | 58% / 17% / 25% | 0.78× |
+| 0.4 | 11.08 | 3.25 | 46% | 43% / 18% / 38% | 1.00× |
+| 0.5 | 10.59 | 3.87 | 36% | 32% / 16% / 51% | 1.19× |
+| 0.6 | 10.28 | 4.37 | 27% | 23% / 15% / 62% | 1.35× |
+| 0.8 | 9.91 | 5.15 | 14% | 12% / 9% / 80% | 1.59× |
+| 0.95 | 9.81 | 5.69 | 5% | 4% / 4% / 92% | 1.76× |
+| never | 9.79 | 6.00 | 0% | 0 / 0 / 100% | 1.85× |
+
+The dense model with logit-lens exits is far worse: at τ = 0.9 it saves 8% of layers at ppl 11.1.
+
+**The column that matters is the last one.** The sweep's "saved" counts layers only, and so does most writing on
+early exit. But deciding whether to exit means computing that exit's confidence. Here that is the full projection onto
+4,096 words: 256 × 4,096 = **1.05M multiply-adds, more than a whole layer** (12 × 256² weights + attention ≈ 0.85M).
+Counting both, a token that leaves at layer *i* costs *i* × (layer + check) against the full model's 6 layers + 1 head
+= 6.16M. Every threshold above 0.4 then costs **more** than not exiting at all.
+
+**What to take from this**
+- **A fixed shallow exit beats the dynamic rule here.** Always answering from layer 4 costs 0.72× the full model at
+  ppl 10.1; the dynamic rule at τ = 0.6 gives ppl 10.3 at 1.35×. One trained model offers several sizes (6 layers for
+  quality, 3–4 for speed), and choosing the size per *machine* or per *request* is the idea Part B builds on.
+- **Dynamic exits need a cheap confidence check.** That is why CALM trains a tiny classifier on the hidden state
+  instead of reading the full softmax. It also helps to check only where exits happen: here almost all early exits
+  are at layer 1, so one check after layer 1 would capture most of the saving.
+- **The balance changes with scale.** The check costs `d × V` and a layer about `12 d²`, so the check is relatively
+  cheaper in wide models: at d = 4,096 and V = 32k it is about 0.7 of a layer instead of 1.2. It is still not free.
+- The caveat above stands: these are teacher-forced decisions, not a measured generation speed-up.
+
+**For an interview:** "Training an exit after every layer took my 6-layer model's first layer from perplexity 130 to
+13.8, for 0.05 nats at the final layer and 1.8× the training time. At τ = 0.6 the rule skips 27% of layers, but my
+vocabulary projection costs more than a layer, so checking confidence after every layer made it 1.35× *more*
+expensive. A fixed exit at layer 4 was the better trade: 0.72× the compute at perplexity 10.1."
 
 ## Interview questions
 - *Why can every layer share the output matrix?* All layers write into the same residual stream, a vector space

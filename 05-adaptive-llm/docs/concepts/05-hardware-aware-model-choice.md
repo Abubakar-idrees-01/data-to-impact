@@ -65,12 +65,57 @@ cores. For downloads it also prints a grid of model size × quantization (Q8_0 �
 Q4_K_M: under 4 bits quality drops quickly, so a smaller model at 4 bits usually beats a bigger one at 2 bits.
 
 ## Results
-*(added when measured on an idle CPU, after the Part A training runs)*
+Measured by [`bench_models.py`](../../src/adaptive/bench_models.py) on the idle laptop (after Part A), context 4,096,
+a fixed ~370-token prompt, 96 generated tokens, each model in its own process
+([`results/hardware/`](../../results/hardware/)).
 
-Already known from project 1's measurements on this laptop: Qwen3.5-0.8B 18.9 tok/s, Qwen2.5-1.5B 14.2,
-Qwen3.5-2B 5.7. The 2B is 2.5× slower than the 1.5B although its file is only 15% bigger, so bandwidth alone does
-not predict it. Hybrid attention has younger, slower CPU kernels in llama.cpp. The planner therefore needs a
-measured efficiency **per architecture**, not one number for the machine.
+**The profile:** i5-5200U, 2 cores / 4 threads, AVX2 + FMA + F16C, 10.7 of 15.5 GB available, no GPU, measured read
+bandwidth **21.0 GB/s**.
+
+### Speed by thread count (decode tok/s; prefill tok/s in brackets)
+| model | 1 thread | 2 threads | 4 threads | bandwidth ceiling | efficiency |
+|---|---|---|---|---|---|
+| Qwen3.5-0.8B (0.50 GiB) | 12.0 (43) | **18.5** (78) | 17.7 (79) | 39.4 | 0.47 |
+| Qwen3.5-2B (1.19 GiB) | 5.3 (16) | **8.3** (31) | 7.6 (29) | 16.4 | 0.51 |
+| Qwen2.5-1.5B (1.04 GiB) | 8.2 (20) | 10.3 (23) | **13.5** (37) | 18.8 | 0.72 |
+
+- **Real decoding reaches 47–72% of the bandwidth ceiling**, so the ceiling alone over-promises by 1.4–2×. That is
+  why the planner multiplies by a measured efficiency, and why it is kept per architecture: the hybrid Qwen3.5
+  reaches 0.49, the plain-attention Qwen2.5 0.72. The calibration file stores `{"qwen35": 0.487, "qwen2": 0.719}`
+  and uses the lowest (0.469) for an architecture it has never measured.
+- **Two threads (= physical cores) is best for both Qwen3.5 models**, as in Part A's training benchmark. Qwen2.5-1.5B
+  is the exception: 4 threads was 31% faster. Its 2-thread prefill (23 tok/s) barely beat 1 thread (20), which looks
+  like a disturbed run rather than a property of the model; it is re-measured below.
+
+### Memory: estimate vs peak RSS (GiB = 2³⁰ bytes, as in the planner)
+| model | file + KV cache (4k) | estimate (+0.35 GB buffers) | peak RSS | error |
+|---|---|---|---|---|
+| Qwen3.5-0.8B | 0.50 + 0.05 GB | 0.89 GB | 0.89 GB | 0.00 |
+| Qwen3.5-2B | 1.19 + 0.05 GB | 1.59 GB | 1.92 GB | −0.33 |
+| Qwen2.5-1.5B | 1.04 + 0.11 GB | 1.50 GB | 1.87 GB | −0.37 |
+
+The fixed 0.35 GB for buffers fits the small model and **under-estimates the two larger ones by about a fifth**. The
+1 GB reserve still covered it here, but the estimate should scale with the model; the cause is checked below.
+
+### The plan and the cached second turn
+- **Plan:** Qwen3.5-2B, 2 threads, 4k context: "the largest model that fits and runs at ≥ 5 tok/s". It predicted
+  7.9 tok/s and the model measured 8.3. That prediction uses the efficiency measured on these same models, so the
+  real test of the calibration is a different machine.
+- **KV-cache reuse on the second chat turn** (the first turn stays cached; only the new message is prefilled):
+
+| model | 2nd-turn time to first token, cache kept | cache cleared | reused tokens |
+|---|---|---|---|
+| Qwen3.5-0.8B | **0.49 s** | 6.47 s | 469 of 499 |
+| Qwen3.5-2B | **1.04 s** | 13.74 s | 438 of 467 |
+| Qwen2.5-1.5B | **0.84 s** | 12.20 s | 417 of 442 |
+
+  **13× faster replies** from keeping the conversation in the cache. On a CPU, prefill (30–80 tok/s) is the slow part
+  of a long chat, not decoding.
+- **Quantization grid** for downloads on this machine: the best pick is Q8_0 at 0.5–1B, Q6_K at 2B and nothing above
+  4B (Q4_K_M 4B: 4.0 tok/s, under the 5 tok/s floor). The grid never recommends below Q4.
+
+*Open checks (after the routing and speculative runs): the Qwen2.5-1.5B thread result, and what the extra
+0.33–0.37 GB is.*
 
 ## Interview questions
 - *Why is LLM generation on a CPU memory-bound?* For each new token, every weight is read once and used in one

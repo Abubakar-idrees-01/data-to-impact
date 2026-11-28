@@ -1,0 +1,9 @@
+{
+ "measured_on": "intel-core-i5-5200u",
+ "bandwidth_gbs": 21.0,
+ "efficiency": {
+  "qwen35": 0.487,
+  "qwen2": 0.719
+ },
+ "default": 0.469
+}

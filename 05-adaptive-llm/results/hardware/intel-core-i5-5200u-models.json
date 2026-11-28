@@ -1,0 +1,202 @@
+{
+ "hardware": {
+  "os": "Linux",
+  "arch": "x86_64",
+  "cpu": "Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz",
+  "physical_cores": 2,
+  "logical_cores": 4,
+  "flags": [
+   "avx",
+   "avx2",
+   "f16c",
+   "fma"
+  ],
+  "ram_total_gb": 15.53,
+  "ram_available_gb": 10.87,
+  "gpus": [],
+  "bandwidth_gbs": 21.0
+ },
+ "ctx": 4096,
+ "models": [
+  {
+   "file": "Qwen3.5-0.8B-Q4_K_M.gguf",
+   "name": "Qwen3.5-0.8B",
+   "arch": "qwen35",
+   "bytes": 532517120,
+   "load_s": 1.63,
+   "runs": [
+    {
+     "threads": 1,
+     "text": "The bridge displays two colors because the original stone arches were destroyed by a 1847 flood, forcing the town to rebuild them entirely in brick. This construction process resulted in the bridge being half grey and half red. Regarding the market, it was originally located on the eastern bank but moved to the station square after a railway arrived in 1871; today, the old market hall serves as a library while the bridge remains closed to cars but open to pedestrians",
+     "model": "Qwen3.5-0.8B",
+     "prompt_tokens": 374,
+     "cached_prefix": 0,
+     "gen_tokens": 96,
+     "ttft_s": 8.661,
+     "decode_tok_s": 11.98,
+     "total_s": 16.594,
+     "token_probs": null,
+     "prefill_tok_s": 43.2
+    },
+    {
+     "threads": 2,
+     "text": "The bridge displays two colors because the original stone arches were destroyed by a 1847 flood, forcing the town to rebuild them entirely in brick. This construction process resulted in the bridge being half grey and half red. Regarding the market, it was originally located on the eastern bank but moved to the station square after a railway arrived in 1871; today, the old market hall serves as a library while the bridge remains closed to cars but open to pedestrians",
+     "model": "Qwen3.5-0.8B",
+     "prompt_tokens": 374,
+     "cached_prefix": 0,
+     "gen_tokens": 96,
+     "ttft_s": 4.799,
+     "decode_tok_s": 18.49,
+     "total_s": 9.937,
+     "token_probs": null,
+     "prefill_tok_s": 77.9
+    },
+    {
+     "threads": 4,
+     "text": "The bridge displays two colors because the original stone arches were destroyed by a 1847 flood, forcing the town to rebuild them entirely in brick. This construction process resulted in the bridge being half grey and half red. Regarding the market, it was originally located on the eastern bank but moved to the station square after a railway arrived in 1871; today, the old market hall serves as a library while the bridge remains closed to cars but open to pedestrians",
+     "model": "Qwen3.5-0.8B",
+     "prompt_tokens": 374,
+     "cached_prefix": 0,
+     "gen_tokens": 96,
+     "ttft_s": 4.726,
+     "decode_tok_s": 17.69,
+     "total_s": 10.097,
+     "token_probs": null,
+     "prefill_tok_s": 79.1
+    }
+   ],
+   "best_threads": 2,
+   "reuse": {
+    "prompt_tokens": 499,
+    "cached_prefix": 469,
+    "ttft_kept_s": 0.493,
+    "ttft_cleared_s": 6.468
+   },
+   "sample": "The bridge displays two colors because the original stone arches were destroyed by a 1847 flood, forcing the town to rebuild them entirely in brick. This construction process resulted in the bridge being half grey and half red. Regarding the market, it was originally located on the eastern bank but ",
+   "peak_rss_gb": 0.894,
+   "estimated_need_gb": 0.893,
+   "ceiling_tok_s": 39.4,
+   "efficiency": 0.469
+  },
+  {
+   "file": "Qwen3.5-2B-Q4_K_M.gguf",
+   "name": "Qwen3.5-2B",
+   "arch": "qwen35",
+   "bytes": 1280835840,
+   "load_s": 2.19,
+   "runs": [
+    {
+     "threads": 1,
+     "text": "The bridge is painted in two colors because the town rebuilt the arches after a 1847 flood by replacing the original stone with brick, which has a different color. Regarding the market, it was originally on the eastern bank but moved to the station square when the railway arrived in 1871.",
+     "model": "Qwen3.5-2B",
+     "prompt_tokens": 374,
+     "cached_prefix": 0,
+     "gen_tokens": 64,
+     "ttft_s": 23.258,
+     "decode_tok_s": 5.3,
+     "total_s": 35.138,
+     "token_probs": null,
+     "prefill_tok_s": 16.1
+    },
+    {
+     "threads": 2,
+     "text": "The bridge is painted in two colors because the town rebuilt the arches after a 1847 flood by replacing the original stone with brick, which has a different color. Regarding the market, it was originally on the eastern bank but moved to the station square when the railway arrived in 1871.",
+     "model": "Qwen3.5-2B",
+     "prompt_tokens": 374,
+     "cached_prefix": 0,
+     "gen_tokens": 64,
+     "ttft_s": 12.259,
+     "decode_tok_s": 8.3,
+     "total_s": 19.854,
+     "token_probs": null,
+     "prefill_tok_s": 30.5
+    },
+    {
+     "threads": 4,
+     "text": "The bridge is painted in two colors because the town rebuilt the arches after a 1847 flood by replacing the original stone with brick, which has a different color. Regarding the market, it was originally on the eastern bank but moved to the station square when the railway arrived in 1871.",
+     "model": "Qwen3.5-2B",
+     "prompt_tokens": 374,
+     "cached_prefix": 0,
+     "gen_tokens": 64,
+     "ttft_s": 13.093,
+     "decode_tok_s": 7.64,
+     "total_s": 21.338,
+     "token_probs": null,
+     "prefill_tok_s": 28.6
+    }
+   ],
+   "best_threads": 2,
+   "reuse": {
+    "prompt_tokens": 467,
+    "cached_prefix": 438,
+    "ttft_kept_s": 1.035,
+    "ttft_cleared_s": 13.737
+   },
+   "sample": "The bridge is painted in two colors because the town rebuilt the arches after a 1847 flood by replacing the original stone with brick, which has a different color. Regarding the market, it was originally on the eastern bank but moved to the station square when the railway arrived in 1871.",
+   "peak_rss_gb": 1.919,
+   "estimated_need_gb": 1.59,
+   "ceiling_tok_s": 16.4,
+   "efficiency": 0.506
+  },
+  {
+   "file": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+   "name": "qwen2.5-1.5b-instruct",
+   "arch": "qwen2",
+   "bytes": 1117320736,
+   "load_s": 2.36,
+   "runs": [
+    {
+     "threads": 1,
+     "text": "The bridge is two colors because it was rebuilt in brick after a flood destroyed two of the five arches in 1847. The market moved to the station square in 1871 when a railway arrived in the town.",
+     "model": "qwen2.5-1.5b-instruct",
+     "prompt_tokens": 368,
+     "cached_prefix": 0,
+     "gen_tokens": 49,
+     "ttft_s": 18.091,
+     "decode_tok_s": 8.16,
+     "total_s": 23.976,
+     "token_probs": null,
+     "prefill_tok_s": 20.3
+    },
+    {
+     "threads": 2,
+     "text": "The bridge is two colors because it was rebuilt in brick after a flood destroyed two of the five arches in 1847. The market moved to the station square in 1871 when a railway arrived in the town.",
+     "model": "qwen2.5-1.5b-instruct",
+     "prompt_tokens": 368,
+     "cached_prefix": 0,
+     "gen_tokens": 49,
+     "ttft_s": 16.074,
+     "decode_tok_s": 10.33,
+     "total_s": 20.718,
+     "token_probs": null,
+     "prefill_tok_s": 22.9
+    },
+    {
+     "threads": 4,
+     "text": "The bridge is two colors because it was rebuilt in brick after a flood destroyed two of the five arches in 1847. The market moved to the station square in 1871 when a railway arrived in the town.",
+     "model": "qwen2.5-1.5b-instruct",
+     "prompt_tokens": 368,
+     "cached_prefix": 0,
+     "gen_tokens": 49,
+     "ttft_s": 10.08,
+     "decode_tok_s": 13.51,
+     "total_s": 13.634,
+     "token_probs": null,
+     "prefill_tok_s": 36.5
+    }
+   ],
+   "best_threads": 4,
+   "reuse": {
+    "prompt_tokens": 442,
+    "cached_prefix": 417,
+    "ttft_kept_s": 0.841,
+    "ttft_cleared_s": 12.195
+   },
+   "sample": "The bridge is two colors because it was rebuilt in brick after a flood destroyed two of the five arches in 1847. The market moved to the station square in 1871 when a railway arrived in the town.",
+   "peak_rss_gb": 1.874,
+   "estimated_need_gb": 1.5,
+   "ceiling_tok_s": 18.8,
+   "efficiency": 0.719
+  }
+ ]
+}

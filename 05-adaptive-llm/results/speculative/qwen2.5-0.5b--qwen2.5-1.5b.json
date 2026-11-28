@@ -1,0 +1,266 @@
+{
+ "draft": "qwen2.5-0.5b",
+ "target": "qwen2.5-1.5b",
+ "rewind": [
+  true,
+  true
+ ],
+ "pass_cost_ms": {
+  "target": {
+   "1": 67.2,
+   "2": 126.6,
+   "3": 185.9,
+   "5": 257.3,
+   "7": 369.7
+  },
+  "draft": {
+   "1": 39.7,
+   "2": 54.2,
+   "3": 89.1,
+   "5": 131.8,
+   "7": 174.6
+  }
+ },
+ "rows": [
+  {
+   "prompt": "Explain in a short paragraph why the sky is blue.",
+   "greedy": {
+    "tokens": 75,
+    "seconds": 5.587840399995912,
+    "target_passes": 75,
+    "rounds": 75,
+    "accepted": 0,
+    "drafted": 0,
+    "tok_s": 13.42,
+    "acceptance": 0.0
+   },
+   "spec": {
+    "2": {
+     "tokens": 81,
+     "seconds": 10.770387608004967,
+     "target_passes": 36,
+     "rounds": 35,
+     "accepted": 46,
+     "drafted": 70,
+     "tok_s": 7.52,
+     "acceptance": 0.657,
+     "same_as_greedy": 0.373,
+     "first_difference_at": 26,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.56
+    },
+    "4": {
+     "tokens": 82,
+     "seconds": 12.00969328499923,
+     "target_passes": 28,
+     "rounds": 27,
+     "accepted": 56,
+     "drafted": 106,
+     "tok_s": 6.83,
+     "acceptance": 0.528,
+     "same_as_greedy": 0.373,
+     "first_difference_at": 28,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.509
+    },
+    "6": {
+     "tokens": 78,
+     "seconds": 15.727079504998983,
+     "target_passes": 26,
+     "rounds": 25,
+     "accepted": 54,
+     "drafted": 148,
+     "tok_s": 4.96,
+     "acceptance": 0.365,
+     "same_as_greedy": 0.373,
+     "first_difference_at": 28,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.37
+    }
+   }
+  },
+  {
+   "prompt": "Write a Python function that returns the n-th Fibonacci number, with a docstring.",
+   "greedy": {
+    "tokens": 128,
+    "seconds": 9.590892249994795,
+    "target_passes": 129,
+    "rounds": 128,
+    "accepted": 0,
+    "drafted": 0,
+    "tok_s": 13.35,
+    "acceptance": 0.0
+   },
+   "spec": {
+    "2": {
+     "tokens": 128,
+     "seconds": 15.132688552010222,
+     "target_passes": 50,
+     "rounds": 49,
+     "accepted": 80,
+     "drafted": 98,
+     "tok_s": 8.46,
+     "acceptance": 0.816,
+     "same_as_greedy": 1.0,
+     "first_difference_at": null,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.634
+    },
+    "4": {
+     "tokens": 128,
+     "seconds": 16.147891872009495,
+     "target_passes": 36,
+     "rounds": 35,
+     "accepted": 93,
+     "drafted": 138,
+     "tok_s": 7.93,
+     "acceptance": 0.674,
+     "same_as_greedy": 0.258,
+     "first_difference_at": 30,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.594
+    },
+    "6": {
+     "tokens": 128,
+     "seconds": 18.076061656000093,
+     "target_passes": 29,
+     "rounds": 28,
+     "accepted": 101,
+     "drafted": 166,
+     "tok_s": 7.08,
+     "acceptance": 0.608,
+     "same_as_greedy": 0.984,
+     "first_difference_at": 57,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.531
+    }
+   }
+  },
+  {
+   "prompt": "List five tips for studying effectively, one line each.",
+   "greedy": {
+    "tokens": 39,
+    "seconds": 3.1674258429993642,
+    "target_passes": 39,
+    "rounds": 39,
+    "accepted": 0,
+    "drafted": 0,
+    "tok_s": 12.31,
+    "acceptance": 0.0
+   },
+   "spec": {
+    "2": {
+     "tokens": 40,
+     "seconds": 5.530313146999106,
+     "target_passes": 17,
+     "rounds": 16,
+     "accepted": 24,
+     "drafted": 32,
+     "tok_s": 7.23,
+     "acceptance": 0.75,
+     "same_as_greedy": 0.564,
+     "first_difference_at": 22,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.587
+    },
+    "4": {
+     "tokens": 39,
+     "seconds": 6.669070133997593,
+     "target_passes": 15,
+     "rounds": 14,
+     "accepted": 26,
+     "drafted": 55,
+     "tok_s": 5.85,
+     "acceptance": 0.473,
+     "same_as_greedy": 1.0,
+     "first_difference_at": null,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.475
+    },
+    "6": {
+     "tokens": 39,
+     "seconds": 6.61015573599434,
+     "target_passes": 11,
+     "rounds": 10,
+     "accepted": 30,
+     "drafted": 57,
+     "tok_s": 5.9,
+     "acceptance": 0.526,
+     "same_as_greedy": 1.0,
+     "first_difference_at": null,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.479
+    }
+   }
+  },
+  {
+   "prompt": "Summarise the water cycle for a ten-year-old in four sentences.",
+   "greedy": {
+    "tokens": 71,
+    "seconds": 5.427018799004145,
+    "target_passes": 71,
+    "rounds": 71,
+    "accepted": 0,
+    "drafted": 0,
+    "tok_s": 13.08,
+    "acceptance": 0.0
+   },
+   "spec": {
+    "2": {
+     "tokens": 71,
+     "seconds": 11.701912197997444,
+     "target_passes": 40,
+     "rounds": 39,
+     "accepted": 33,
+     "drafted": 77,
+     "tok_s": 6.07,
+     "acceptance": 0.429,
+     "same_as_greedy": 0.465,
+     "first_difference_at": 21,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.464
+    },
+    "4": {
+     "tokens": 78,
+     "seconds": 13.978381064007408,
+     "target_passes": 33,
+     "rounds": 32,
+     "accepted": 47,
+     "drafted": 124,
+     "tok_s": 5.58,
+     "acceptance": 0.379,
+     "same_as_greedy": 0.662,
+     "first_difference_at": 46,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.427
+    },
+    "6": {
+     "tokens": 80,
+     "seconds": 19.677700098996866,
+     "target_passes": 33,
+     "rounds": 32,
+     "accepted": 49,
+     "drafted": 187,
+     "tok_s": 4.07,
+     "acceptance": 0.262,
+     "same_as_greedy": 0.465,
+     "first_difference_at": 33,
+     "restores": 0,
+     "snapshot_mb": 0.0,
+     "speedup": 0.311
+    }
+   }
+  }
+ ]
+}

@@ -83,3 +83,6 @@ prompt-lookup drafting, not a draft model. Greedy acceptance makes the output ex
 output, which is testable token by token (first check: identical). Rollback: cache removal where possible,
 per-sequence state snapshots (`llama_state_seq_*`, 19.5 MB for Qwen3.5-2B) where not; `Llama.save_state()` was
 rejected because it copies a vocabulary-sized score row per token and scans a 508 MB array on restore.
+Measured: ×0.24–0.64 for every pair, prompt and k, because a pass over 5 tokens costs 3.4–3.8 single steps on this
+CPU; **so the engine does not use speculative decoding on this machine.** `pass_cost()` measures V(n) on any machine;
+the technique is worth enabling only where V(k + 1) + k·c is clearly below the expected tokens per round.

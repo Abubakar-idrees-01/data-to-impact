@@ -7,7 +7,7 @@ A chat assistant designed for weak, GPU-less machines, built in two parts:
 - **A hardware-adaptive inference engine** that profiles the machine, routes each prompt to the smallest model that
   can handle it, and uses quantization and speculative decoding for speed.
 
-**Status:** 🚧 Part A and Part B measured ([results](docs/RESULTS.md)); offline Scout demo next.
+**Status:** ✅ both parts built and measured ([results](docs/RESULTS.md)), including the offline Scout demo.
 
 ## Why
 Training a ChatGPT-quality model is impossible on a CPU. Part A builds a tiny model to *show* the ideas behind
@@ -25,7 +25,7 @@ efficient models and measure them honestly; Part B applies them to real open mod
 | B3 | rule router (prompt features), confidence cascade (token probabilities via a llama.cpp logits hook), 128 auto-graded questions (capitals, arithmetic, GSM8K), offline policy simulation | ✅ no router or cascade beats always-1.5B on held-out questions; confidence AUROC 0.85–1.0 on short answers, 0.51–0.66 after chain-of-thought |
 | B4 | greedy speculative decoding on llama.cpp's batch API (draft k tokens, verify in one pass); rollback by cache removal, or per-sequence state snapshots (19.5 MB) for Qwen3.5, whose recurrent layers cannot rewind | ✅ slower here in all 24 settings (×0.24–0.64): verifying 5 tokens costs 3.4–3.8 steps on 2 cores; measured cost model predicts it within 0.05 |
 | B5 | headline policies on a held-out half (τ chosen on the other half) exported as evalkit runs for paired comparison | ✅ 7 policies as evalkit runs, McNemar comparisons in concept 6 |
-| B5 | OpenAI-compatible server over the engine (each model's own chat template; Qwen2.5 JSON and Qwen3.5 XML tool calls parsed), so project 4's agent can run offline | code + 5 tests done; live demo after the measurements |
+| B5 | OpenAI-compatible server over the engine (each model's own chat template; Qwen2.5 JSON and Qwen3.5 XML tool calls parsed), so project 4's agent can run offline | ✅ Scout answered from the user's notes fully offline on Qwen2.5-1.5B (2 model calls, 1 tool call, 160 s) |
 
 ## Quickstart
 ```bash

@@ -60,4 +60,5 @@ B4. speculative decoding; B5. benchmarks via evalkit; Scout (project 4) offline 
 - Part B DONE (docs/RESULTS.md): planner now quality-aware (picks Qwen2.5-1.5B), no-mmap default, speculative is
   slower on this CPU. Buggy-run samples regenerated with its own gate (`experiments/sample_bug_run.py`).
 - Timing runs need an IDLE desktop too: with VS Code/Chrome busy, bandwidth measured 12 GB/s instead of 21.
-- Next: the Scout offline demo through `adaptive.server` (OpenAI-compatible; Qwen `<tool_call>` parsing).
+- Scout offline demo done (RESULTS.md). Kill the server with `kill $(pgrep -f "adaptive[.]server")`: a plain pkill
+  pattern matches the calling shell. Possible next: screenshots/GIF, a web demo page.

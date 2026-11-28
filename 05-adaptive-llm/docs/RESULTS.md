@@ -87,3 +87,15 @@ Held-out half (64 questions), thresholds chosen on the other half:
   would give 0.76–0.97×.
 - **Batched and single-token llama.cpp passes differ** by up to 1.7 in the logits. So near-ties flip, and the
   output matches the target's one-token-at-a-time greedy output only up to the first such flip.
+
+### Project 4's agent, offline ([`server.py`](../src/adaptive/server.py))
+`scout ask --notes "What is supervised learning, according to my lecture notes?"` with Scout pointed at
+`adaptive.server` (Qwen2.5-1.5B, the planner's choice) instead of the Groq API. No cloud call:
+- **2 model calls, 1 tool call** (`search_notes` through project 3's MCP server), 3,641 tokens, **160 s** with the
+  desktop busy. The answer was correct and drawn from the retrieved lecture slides.
+- It did not cite the slides in Scout's `(Lec n — Slide m)` format, which the cloud models do. A 1.5B model follows
+  the tool protocol, but not every formatting instruction.
+- **First attempt: an empty answer.** Qwen2.5's own chat template shows the tool-call format with doubled braces
+  (`{{"name": ...}}`, never un-escaped), the 1.5B copied them, and the server's strict JSON parse dropped the call.
+  The parser now decodes the first `{"name": ...}` object and ignores stray braces, and an unreadable call stays
+  visible as text instead of disappearing (both tested).

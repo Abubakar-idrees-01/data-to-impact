@@ -32,7 +32,13 @@ def test_parse_qwen25_json_tool_calls_and_plain_text():
     rest, calls = parse_tool_calls(text, TOOLS)
     assert rest == "" and [json.loads(c["function"]["arguments"])["query"] for c in calls] == ["a", "b"]
     assert parse_tool_calls("<think>\nhm\n</think>\n\nJust an answer.") == ("Just an answer.", [])
-    assert parse_tool_calls("<tool_call>\n{broken json\n</tool_call>")[1] == []          # ignored, not a crash
+    broken = parse_tool_calls("<tool_call>\n{broken json\n</tool_call>")
+    assert broken[1] == [] and "{broken json" in broken[0]                    # not a crash, and not swallowed
+    # Qwen2.5's template shows the format with doubled braces, and the 1.5B copies them (seen with Scout)
+    doubled = ('<tool_call>\n{{"name": "web_search", "arguments": {"query": "supervised learning", "limit": 4, '
+               '"fresh": null}}}}\n</tool_call>')
+    rest, calls = parse_tool_calls(doubled, TOOLS)
+    assert rest == "" and json.loads(calls[0]["function"]["arguments"])["query"] == "supervised learning"
     assert parse_tool_calls("<tool_call>\n<function=web_search>\n<parameter=query>\nx")[1][0]["function"]["name"] \
         == "web_search"                                                                   # cut off by max_tokens
 

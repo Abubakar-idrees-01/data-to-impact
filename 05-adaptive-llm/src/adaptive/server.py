@@ -86,20 +86,24 @@ def parse_tool_calls(text: str, tools: list[dict] | None = None) -> tuple[str, l
     """(remaining text, OpenAI-style tool calls) from a Qwen reply."""
     schemas = {t["function"]["name"]: t["function"].get("parameters", {}).get("properties", {})
                for t in tools or [] if "function" in t}
-    calls = []
+    calls, unparsed = [], []
     for block in TOOL_BLOCK.findall(text):
         name, args = None, {}
         if block.startswith("{"):                                       # Qwen2.5: JSON
-            try:
-                obj = json.loads(block)
-                name, args = obj.get("name"), obj.get("arguments", {})
-                if isinstance(args, str):
-                    args = json.loads(args or "{}")
-            except ValueError:
+            obj = _json_call(block)
+            if obj is None:
+                unparsed.append(block)
                 continue
+            name, args = obj.get("name"), obj.get("arguments", {})
+            if isinstance(args, str):
+                try:
+                    args = json.loads(args or "{}")
+                except ValueError:
+                    args = {}
         else:                                                           # Qwen3.5: XML-like
             fn = re.search(r"<function=([^>\n]+)>(.*?)(?:</function>|\Z)", block, re.S)
             if not fn:
+                unparsed.append(block)
                 continue
             name = fn.group(1).strip()
             props = schemas.get(name, {})
@@ -109,13 +113,37 @@ def parse_tool_calls(text: str, tools: list[dict] | None = None) -> tuple[str, l
             calls.append({"id": f"call_{uuid.uuid4().hex[:12]}", "type": "function",
                           "function": {"name": name, "arguments": json.dumps(args, ensure_ascii=False)}})
     rest = TOOL_BLOCK.sub("", THINK.sub("", text)).strip()
+    if unparsed:                      # never swallow what the model wrote: an unreadable call stays visible as text
+        rest = "\n".join([rest] + [f"<tool_call>{b}</tool_call>" for b in unparsed]).strip()
     return rest, calls
+
+
+def _json_call(block: str) -> dict | None:
+    """A Qwen2.5 tool call, also when the braces are doubled.
+
+    Qwen2.5's own chat template shows the format as `{{"name": <function-name>, "arguments": <args-json-object>}}`
+    (the braces were never un-escaped), and small models copy it: `{{"name": "search_notes", ...}}}}`. Strict JSON
+    first; otherwise decode the first `{"name": ...}` object and ignore stray braces around it.
+    """
+    try:
+        obj = json.loads(block)
+        return obj if isinstance(obj, dict) else None
+    except ValueError:
+        pass
+    start = re.search(r'\{\s*"name"', block)
+    if not start:
+        return None
+    try:
+        obj, _ = json.JSONDecoder().raw_decode(block[start.start():])
+    except ValueError:
+        return None
+    return obj if isinstance(obj, dict) else None
 
 
 # ---------- the engine behind the endpoint
 class ChatEngine:
-    def __init__(self, ladder: Ladder):
-        self.ladder = ladder
+    def __init__(self, ladder: Ladder, log_replies: bool = False):
+        self.ladder, self.log_replies = ladder, log_replies
 
     def pick(self, requested: str, messages: list[dict], tools) -> int:
         names = [n.lower() for n in self.ladder.names]
@@ -137,6 +165,8 @@ class ChatEngine:
                                       temperature=float(body.get("temperature") or 0.0), top_p=0.9,
                                       repeat_penalty=1.05, stop=CHATML_STOP)
         text = out["choices"][0]["text"]
+        if self.log_replies:
+            print(f"--- {m.name} raw reply:\n{text}\n---", flush=True)
         content, calls = parse_tool_calls(text, tools)
         usage = out.get("usage", {})
         finish = "tool_calls" if calls else out["choices"][0].get("finish_reason") or "stop"
@@ -190,13 +220,14 @@ def main() -> None:
     ap.add_argument("--host", default="127.0.0.1", help="127.0.0.1 = this machine only")
     ap.add_argument("--models", default=str(ROOT.parent / "01-rag-from-scratch" / "models" / "llm"))
     ap.add_argument("--ctx", type=int, default=8192)
+    ap.add_argument("--log-replies", action="store_true", help="print each model's raw reply (debugging tool calls)")
     a = ap.parse_args()
     hw = profile(bandwidth=False)
     ladder = Ladder(sorted(Path(a.models).glob("*.gguf")), budget_gb=hw.ram_available_gb - 1.0, n_ctx=a.ctx,
                     threads=hw.physical_cores)
     print(f"models: {', '.join(ladder.names)} | budget {hw.ram_available_gb - 1.0:.1f} GB | "
           f"http://{a.host}:{a.port}/v1", flush=True)
-    HTTPServer((a.host, a.port), make_handler(ChatEngine(ladder))).serve_forever()
+    HTTPServer((a.host, a.port), make_handler(ChatEngine(ladder, a.log_replies))).serve_forever()
 
 
 if __name__ == "__main__":

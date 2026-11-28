@@ -61,4 +61,7 @@ B4. speculative decoding; B5. benchmarks via evalkit; Scout (project 4) offline 
   slower on this CPU. Buggy-run samples regenerated with its own gate (`experiments/sample_bug_run.py`).
 - Timing runs need an IDLE desktop too: with VS Code/Chrome busy, bandwidth measured 12 GB/s instead of 21.
 - Scout offline demo done (RESULTS.md). Kill the server with `kill $(pgrep -f "adaptive[.]server")`: a plain pkill
-  pattern matches the calling shell. Possible next: screenshots/GIF, a web demo page.
+  pattern matches the calling shell. 
+- Browser demo (site/): live at https://abubakar-idrees-01.github.io/data-to-impact/tinygpt/. Weights are NOT in git:
+  `python -m tinygpt.export_web` then `bash scripts/publish_web_weights.sh` (release tinygpt-web-v1); the Pages
+  workflow downloads them. `scripts/screenshots.py` = screenshots + end-to-end check (Playwright, dev requirement).

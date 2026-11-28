@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tiny GPT, in your browser</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232f5bd3'/%3E%3C/svg%3E">
+<meta name="description" content="A 6-layer GPT trained from scratch on a laptop CPU, with Mixture-of-Experts and early exits, running entirely in your browser.">
+<style>
+:root {
+  --bg: #f7f6f3; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6a66; --line: #e4e2dc;
+  --accent: #2f5bd3; --ok: #1f7a4d; --bad: #b3261e; --code: #f1efe9; --prompt: #e9e7e1;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141413; --panel: #1d1d1b; --ink: #ecebe6; --muted: #a09e97; --line: #33322f;
+    --accent: #8aa8ff; --ok: #5cc78f; --bad: #ff8a80; --code: #262523; --prompt: #2c2b28;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141413; --panel: #1d1d1b; --ink: #ecebe6; --muted: #a09e97; --line: #33322f;
+  --accent: #8aa8ff; --ok: #5cc78f; --bad: #ff8a80; --code: #262523; --prompt: #2c2b28;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: var(--accent); }
+header, main, footer { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+header { padding-top: 32px; padding-bottom: 4px; }
+h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: -0.01em; }
+h2 { font-size: 15px; margin: 0 0 10px; }
+.lede { color: var(--muted); max-width: 780px; margin: 0; }
+.theme { float: right; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 8px; padding: 4px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+.models { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 22px 0 16px; }
+.model { text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; color: var(--ink); font: inherit; cursor: pointer; }
+.model[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.model .t { font-weight: 650; display: block; }
+.model .m { color: var(--muted); font-size: 13px; display: block; margin-top: 2px; }
+.model .n { font-size: 12.5px; margin-top: 6px; display: block; font-variant-numeric: tabular-nums; }
+.layout { display: grid; grid-template-columns: 300px 1fr; gap: 18px; align-items: start; margin-bottom: 30px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; min-width: 0; }
+label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 4px; }
+label:first-of-type { margin-top: 0; }
+label b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+textarea, input[type=number] { width: 100%; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+textarea { min-height: 76px; resize: vertical; }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.chip { font: inherit; font-size: 12.5px; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 99px; padding: 2px 9px; cursor: pointer; }
+.row { display: flex; gap: 8px; align-items: center; }
+.btns { display: flex; gap: 8px; margin-top: 16px; }
+button.go { flex: 1; font: inherit; font-weight: 600; border: 0; border-radius: 8px; padding: 9px 12px; background: var(--accent); color: #fff; cursor: pointer; }
+:root[data-theme="dark"] button.go { color: #10131c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) button.go { color: #10131c; } }
+button.stop { font: inherit; border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; background: none; color: var(--ink); cursor: pointer; }
+button:disabled { opacity: 0.5; cursor: default; }
+.exitbox { border-top: 1px solid var(--line); margin-top: 16px; padding-top: 12px; }
+.check { display: flex; gap: 8px; align-items: center; color: var(--ink); font-size: 14px; margin: 0; }
+.hint { color: var(--muted); font-size: 12.5px; margin: 6px 0 0; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.stat { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+.stat .k { color: var(--muted); font-size: 12.5px; }
+.stat .v { font-size: 20px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.story { font-size: 16.5px; line-height: 1.7; white-space: pre-wrap; min-height: 160px; }
+.story .p { color: var(--muted); }
+.story .cursor { display: inline-block; width: 8px; height: 1.1em; background: var(--accent); vertical-align: text-bottom; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.viewbar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; border-top: 1px solid var(--line); margin-top: 16px; padding-top: 12px; font-size: 13px; color: var(--muted); }
+.viewbar select { font: inherit; font-size: 13px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; }
+.tokens { margin-top: 10px; line-height: 2.1; font-size: 14px; }
+.tok { border-radius: 4px; padding: 1px 1px; white-space: pre-wrap; box-shadow: inset 0 -1px 0 var(--line); }
+.tok.prompt { background: var(--prompt); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 12px; margin-top: 8px; font-size: 12.5px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.status { color: var(--muted); font-size: 13px; margin-top: 8px; min-height: 1.3em; }
+.bar { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.bar > div { height: 100%; width: 0; background: var(--accent); transition: width .1s; }
+.about { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 30px; }
+.about .panel p { margin: 0; font-size: 14px; color: var(--muted); }
+.about .panel p + p { margin-top: 8px; }
+footer { color: var(--muted); font-size: 13px; padding-bottom: 40px; }
+@media (max-width: 820px) { .layout { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <button class="theme" id="theme" type="button">Theme</button>
+  <h1>Tiny GPT, trained on a laptop, running in your browser</h1>
+  <p class="lede">Six-layer transformers built and trained from scratch on a 2015 laptop CPU (project 5 of
+  <a href="https://github.com/Abubakar-idrees-01/data-to-impact">data-to-impact</a>), on 12 million tokens of
+  children's stories. Nothing is sent to a server: the weights load into this page and every token is computed here,
+  in plain JavaScript. Give it the start of a story. <a href="https://github.com/Abubakar-idrees-01/data-to-impact/tree/main/05-adaptive-llm">Code and docs</a>.</p>
+</header>
+
+<main>
+  <div class="models" id="models" role="group" aria-label="Model"></div>
+
+  <div class="layout">
+    <div class="panel">
+      <label for="prompt">Start of the story</label>
+      <textarea id="prompt">Once upon a time</textarea>
+      <div class="chips" id="examples"></div>
+
+      <label for="temp">Temperature <b id="tempv"></b></label>
+      <input id="temp" type="range" min="0" max="1.5" step="0.05" value="0.8">
+      <p class="hint">0 = always the most likely word; higher = more surprising.</p>
+
+      <label for="topk">Top-k <b id="topkv"></b></label>
+      <input id="topk" type="range" min="1" max="100" step="1" value="40">
+
+      <label for="len">Length <b id="lenv"></b> tokens</label>
+      <input id="len" type="range" min="10" max="240" step="10" value="200">
+
+      <label for="seed">Seed</label>
+      <div class="row"><input id="seed" type="number" value="0" min="0"><button class="chip" id="dice" type="button" title="random seed">random</button></div>
+
+      <div class="exitbox" id="exitbox" hidden>
+        <label class="check"><input type="checkbox" id="early"> Leave early when confident</label>
+        <label for="tau">Confidence threshold τ <b id="tauv"></b></label>
+        <input id="tau" type="range" min="0.3" max="0.99" step="0.01" value="0.6">
+        <p class="hint">Each layer has its own exit. A token stops at the first layer whose top word is at least τ likely;
+        the skipped layers still get keys and values (CALM), so later words can look back at it.</p>
+      </div>
+
+      <div class="btns">
+        <button class="go" id="go" type="button" disabled>Write</button>
+        <button class="stop" id="stop" type="button" disabled>Stop</button>
+      </div>
+      <div class="status" id="status">Loading…</div>
+      <div class="bar"><div id="bar"></div></div>
+    </div>
+
+    <div class="panel">
+      <div class="stats">
+        <div class="stat"><div class="k">speed</div><div class="v" id="s-speed">–</div></div>
+        <div class="stat"><div class="k">tokens written</div><div class="v" id="s-tokens">–</div></div>
+        <div class="stat"><div class="k">layers per token</div><div class="v" id="s-layers">–</div></div>
+        <div class="stat"><div class="k" title="multiply-adds, including every early-exit check, relative to running all 6 layers once">compute vs full model</div><div class="v" id="s-compute">–</div></div>
+      </div>
+      <div class="story" id="story" aria-live="polite"></div>
+      <div class="viewbar">
+        <span>Colour tokens by</span>
+        <select id="colour"></select>
+        <span id="layerpick" hidden>layer <select id="layer"></select></span>
+      </div>
+      <div class="tokens" id="tokens"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+
+  <div class="about">
+    <div class="panel"><h2>Mixture-of-Experts</h2><p>The MoE model replaces each feed-forward network with 8 smaller
+    experts, and a router sends every token to 2 of them. That gives 2.6× the parameters at the same compute per token.
+    It reached perplexity 8.3 against the dense model's 9.3. Colour by "expert" to see where the router sends each token.</p>
+    <p><a href="https://github.com/Abubakar-idrees-01/data-to-impact/blob/main/05-adaptive-llm/docs/concepts/03-mixture-of-experts.md">How it works, and the routing bug it found</a></p></div>
+    <div class="panel"><h2>Early exit</h2><p>The early-exit model can answer after any layer. Turn on "leave early" and
+    watch "layers per token" drop. Then watch "compute vs full model": checking confidence means projecting onto all
+    4,096 words, which costs more than a layer. So above τ ≈ 0.4 the checks cost more than the layers they save, which
+    is exactly what the measurements found.</p>
+    <p><a href="https://github.com/Abubakar-idrees-01/data-to-impact/blob/main/05-adaptive-llm/docs/concepts/04-early-exit.md">The measurements</a></p></div>
+    <div class="panel"><h2>What it can and can't do</h2><p>It writes short, grammatical stories with dialogue,
+    because that is all it has ever read. It loses track of names and objects within a few sentences, and it cannot
+    answer questions or chat. Weights are 8-bit (one scale per row), which raised the validation loss by 0.0001–0.0004.</p>
+    <p><a href="https://github.com/Abubakar-idrees-01/data-to-impact/blob/main/05-adaptive-llm/docs/RESULTS.md">All results</a></p></div>
+  </div>
+</main>
+
+<footer>Model code: <code>tinygpt.js</code>, checked against PyTorch (logits within 4 × 10⁻⁷, identical greedy stories).
+Data: TinyStories V2 (CDLA-Sharing-1.0).</footer>
+
+<script type="module">
+import { TinyGPT, Tokenizer, sample, mulberry32 } from "./tinygpt.js";
+
+const $ = (id) => document.getElementById(id);
+const INFO = {
+  "dense-d256-L6": { title: "Dense", sub: "every parameter for every token", ppl: "9.34" },
+  "moe-8x-top2": { title: "Mixture-of-Experts", sub: "8 experts, 2 per token", ppl: "8.33" },
+  "exit-d256-L6": { title: "Early exit", sub: "an exit after every layer", ppl: "9.79" },
+};
+const EXAMPLES = ["Once upon a time", "Lily and Ben went to the park.", "The little dragon was sad because",
+                  "Tom found a shiny key under", "\"Can I have a cookie?\" asked"];
+// 8 categorical colours (experts), readable as token backgrounds in both themes
+const CAT = ["#4e79a7", "#f28e2b", "#59a14f", "#e15759", "#b07aa1", "#76b7b2", "#edc948", "#9c755f"];
+const LAYER = ["#2166ac", "#4393c3", "#92c5de", "#f4a582", "#d6604d", "#b2182b"];   // layer 1 (cool) → 6 (warm)
+
+let tok, index, current = null, models = new Map(), running = false, stopFlag = false, last = null;
+
+// ---------------- theme
+const root = document.documentElement;
+$("theme").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+};
+
+// ---------------- controls
+const bind = (id, fmt) => { const el = $(id), out = $(id + "v"); const f = () => (out.textContent = fmt(+el.value)); el.oninput = f; f(); };
+bind("temp", (v) => v.toFixed(2)); bind("topk", (v) => v); bind("len", (v) => v); bind("tau", (v) => v.toFixed(2));
+$("dice").onclick = () => ($("seed").value = Math.floor(Math.random() * 100000));
+for (const e of EXAMPLES) {
+  const b = document.createElement("button"); b.className = "chip"; b.type = "button"; b.textContent = e;
+  b.onclick = () => { $("prompt").value = e; }; $("examples").append(b);
+}
+
+// ---------------- loading
+async function fetchWithProgress(url, onProgress) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+  const total = +res.headers.get("content-length") || 0, reader = res.body.getReader(), chunks = [];
+  let got = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value); got += value.length;
+    if (total) onProgress(got / total);
+  }
+  const buf = new Uint8Array(got); let o = 0;
+  for (const c of chunks) { buf.set(c, o); o += c.length; }
+  return buf.buffer;
+}
+
+async function loadModel(name) {
+  if (models.has(name)) return models.get(name);
+  const mb = (index.find((m) => m.name === name).bytes / 2 ** 20).toFixed(1);
+  $("status").textContent = `Downloading ${INFO[name].title} (${mb} MB)…`;
+  const manifest = await (await fetch(`models/${name}.json`)).json();
+  const buf = await fetchWithProgress(`models/${name}.bin`, (f) => ($("bar").style.width = `${f * 100}%`));
+  const m = new TinyGPT(manifest, buf);
+  models.set(name, m);
+  return m;
+}
+
+async function select(name) {
+  if (running) return;
+  for (const b of $("models").children) b.setAttribute("aria-pressed", b.dataset.name === name);
+  $("go").disabled = true;
+  try {
+    current = await loadModel(name);
+    $("status").textContent = `${INFO[name].title} ready. ${current.manifest.params.toLocaleString()} parameters, all running in this tab.`;
+    $("bar").style.width = "0";
+    $("go").disabled = false;
+  } catch (e) {
+    $("status").textContent = `Could not load the model: ${e.message}`;
+  }
+  $("exitbox").hidden = !current?.hasExits;
+  setColourOptions();
+  render();
+}
+
+function setColourOptions() {
+  const opts = [["prob", "probability of the chosen word"]];
+  if (current?.moe) opts.push(["expert", "expert chosen by the router"]);
+  if (current?.hasExits) opts.push(["exit", "layer that answered"]);
+  const prev = $("colour").value;
+  $("colour").innerHTML = opts.map(([v, t]) => `<option value="${v}">${t}</option>`).join("");
+  $("colour").value = opts.some(([v]) => v === prev) ? prev : opts[opts.length - 1][0];
+  $("layer").innerHTML = Array.from({ length: current?.L || 0 }, (_, i) => `<option value="${i}">${i + 1}</option>`).join("");
+  $("layerpick").hidden = $("colour").value !== "expert";
+}
+$("colour").onchange = () => { $("layerpick").hidden = $("colour").value !== "expert"; render(); };
+$("layer").onchange = render;
+$("tau").addEventListener("input", () => { if (!running) render(); });
+
+// ---------------- generation
+// Two kinds of per-token information: `own` = what happened when the model read this token (its experts);
+// `by` = the step that produced it (which layer answered, how confident, what it cost).
+async function write() {
+  if (!current || running) return;
+  running = true; stopFlag = false;
+  $("go").disabled = true; $("stop").disabled = false;
+  const m = current, prompt = $("prompt").value || " ";
+  const ids = tok.encode(prompt).slice(-(m.ctx - 10));
+  const maxNew = Math.min(+$("len").value, m.ctx - ids.length);
+  const early = m.hasExits && $("early").checked, tau = +$("tau").value;
+  const opts = { exits: m.hasExits, exitThreshold: early ? tau : null };
+  const rng = mulberry32(+$("seed").value || 0);
+  const temperature = +$("temp").value, topK = +$("topk").value;
+  last = { promptLen: ids.length, ids: [...ids], own: [], by: [], macs: 0, full: 0, layers: 0, n: 0, t0: 0, early };
+  m.reset();
+  let r;
+  ids.forEach((t, i) => {                                   // read the prompt; the last token already uses `opts`
+    r = m.step(t, i === ids.length - 1 ? opts : { exits: m.hasExits });
+    last.own.push(r.experts); last.by.push(null);
+  });
+  last.t0 = performance.now();
+  for (let i = 0; i < maxNew && !stopFlag; i++) {
+    const pos = m.t - 1;                                    // position of the token r was computed for
+    const s = sample(r.logits, { temperature, topK, rng });
+    last.macs += r.macs; last.full += m.fullMacs(pos); last.layers += r.layers; last.n++;
+    if (s.token === tok.eot) break;
+    last.ids.push(s.token);
+    last.by.push({ p: s.p, layers: r.layers, exits: r.exits });
+    if (i === maxNew - 1) { last.own.push(null); break; }
+    r = m.step(s.token, opts);
+    last.own.push(r.experts);
+    if (i % 2 === 0) { render(true); await new Promise((res) => setTimeout(res)); }
+  }
+  running = false;
+  $("go").disabled = false; $("stop").disabled = true;
+  render();
+  $("status").textContent = stopFlag ? "Stopped." : `Done: ${last.ids.length - last.promptLen} tokens.`;
+}
+$("go").onclick = write;
+$("stop").onclick = () => (stopFlag = true);
+$("prompt").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) write(); });
+
+// ---------------- rendering
+function esc(s) { return s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]); }
+
+function colourFor(i, mode) {
+  const by = last.by[i], own = last.own[i];
+  if (mode === "expert") {
+    if (!own || !own.length) return null;
+    const e = own[+$("layer").value][0].expert;
+    return `color-mix(in srgb, ${CAT[e % CAT.length]} 55%, transparent)`;
+  }
+  if (!by) return null;                                      // a prompt token: nothing produced it
+  if (mode === "prob") return `color-mix(in srgb, var(--accent) ${Math.round(by.p * 85)}%, transparent)`;
+  if (mode === "exit" && by.exits) {
+    let layer = by.layers;
+    if (!last.early) {                                       // not exiting: where *could* it have left at this τ?
+      const tau = +$("tau").value, k = by.exits.findIndex((e) => e.p >= tau);
+      layer = k < 0 ? by.exits.length : k + 1;
+    }
+    return `color-mix(in srgb, ${LAYER[layer - 1]} 60%, transparent)`;
+  }
+  return null;
+}
+
+function render(live = false) {
+  if (!last) { $("story").innerHTML = ""; $("tokens").innerHTML = ""; $("legend").innerHTML = ""; return; }
+  const prompt = tok.decode(last.ids.slice(0, last.promptLen)), all = tok.decode(last.ids);
+  $("story").innerHTML = `<span class="p">${esc(prompt)}</span>${esc(all.slice(prompt.length))}${live ? '<span class="cursor"></span>' : ""}`;
+  const dt = (performance.now() - last.t0) / 1000;
+  $("s-speed").textContent = last.n ? `${(last.n / dt).toFixed(0)} tok/s` : "–";
+  $("s-tokens").textContent = last.ids.length - last.promptLen;
+  $("s-layers").textContent = last.n ? (last.layers / last.n).toFixed(2) : "–";
+  $("s-compute").textContent = last.n ? `${(last.macs / last.full).toFixed(2)}×` : "–";
+  if (live) return;
+  const mode = $("colour").value;
+  const L = +$("layer").value;
+  $("tokens").innerHTML = last.ids.map((id, i) => {
+    const by = last.by[i], own = last.own[i], bg = colourFor(i, mode);
+    const parts = [by ? `p = ${by.p.toFixed(3)}` : "prompt"];
+    if (by?.exits && current.hasExits) parts.push(`exit confidences when it was chosen: ${by.exits.map((e) => e.p.toFixed(2)).join(" ")}`);
+    if (own?.length) parts.push(`layer ${L + 1} experts: ` + own[L].map((x) => `${x.expert + 1} (${x.weight.toFixed(2)})`).join(", "));
+    return `<span class="tok${by ? "" : " prompt"}" title="${esc(parts.join(" · "))}"${bg ? ` style="background:${bg}"` : ""}>${esc(tok.decode([id]))}</span>`;
+  }).join("");
+  const legend = mode === "expert" ? CAT.slice(0, current.config.n_experts).map((c, i) => [c, `expert ${i + 1}`])
+    : mode === "exit" ? LAYER.map((c, i) => [c, `layer ${i + 1}`])
+    : [["var(--accent)", "darker = the model was more sure of the word it picked"]];
+  $("legend").innerHTML = legend.map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join("")
+    + (mode === "exit" && !last.early ? `<span>(where each token could have left at τ = ${(+$("tau").value).toFixed(2)})</span>` : "");
+}
+
+// ---------------- start
+(async () => {
+  try {
+    [tok, index] = await Promise.all([fetch("tokenizer.json").then((r) => r.json()).then((j) => new Tokenizer(j)),
+                                      fetch("models/index.json").then((r) => r.json())]);
+  } catch (e) {
+    $("status").textContent = "Could not load the tokenizer or the model list. Serve this folder over HTTP (see the README).";
+    return;
+  }
+  for (const m of index) {
+    const i = INFO[m.name] || { title: m.name, sub: "", ppl: "?" };
+    const b = document.createElement("button");
+    b.className = "model"; b.type = "button"; b.dataset.name = m.name; b.setAttribute("aria-pressed", "false");
+    b.innerHTML = `<span class="t">${i.title}</span><span class="m">${i.sub}</span>
+      <span class="n">${(m.params / 1e6).toFixed(1)}M params · ${(m.active_params / 1e6).toFixed(1)}M per token · ppl ${i.ppl} · ${(m.bytes / 2 ** 20).toFixed(1)} MB</span>`;
+    b.onclick = () => select(m.name);
+    $("models").append(b);
+  }
+  // URL options, e.g. ?model=exit-d256-L6&early=0.6&seed=3&run  (used for links and headless screenshots)
+  const q = new URLSearchParams(location.search);
+  if (q.has("prompt")) $("prompt").value = q.get("prompt");
+  if (q.has("seed")) $("seed").value = q.get("seed");
+  if (q.has("early")) { $("early").checked = true; $("tau").value = q.get("early"); $("tau").oninput(); }
+  if (q.has("colour")) $("colour").dataset.want = q.get("colour");
+  const want = q.get("model");
+  await select(index.some((m) => m.name === want) ? want : index.some((m) => m.name === "moe-8x-top2") ? "moe-8x-top2" : index[0].name);
+  if ($("colour").dataset.want && [...$("colour").options].some((o) => o.value === $("colour").dataset.want)) {
+    $("colour").value = $("colour").dataset.want; $("colour").onchange();
+  }
+  if (q.has("run")) await write();
+  document.body.dataset.ready = "1";
+})();
+</script>
+</body>
+</html>

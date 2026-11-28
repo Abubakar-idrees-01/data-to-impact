@@ -32,6 +32,8 @@ TinyStories V2 (first 200 MB) ──► tokenizer.py: byte-level BPE, 4,096 toke
 | [`bench.py`](../src/tinygpt/bench.py) | training throughput by model size and thread count |
 | [`early_exit.py`](../src/tinygpt/early_exit.py) | per-layer quality and the confidence-threshold sweep |
 | [`sample.py`](../src/tinygpt/sample.py) | write stories with a trained model |
+| [`export_web.py`](../src/tinygpt/export_web.py) | int8 weights (one scale per row) + manifest for the browser demo |
+| [`site/tinygpt.js`](../site/tinygpt.js) | the same model in plain JavaScript: BPE, attention with a KV cache, MoE, early exits (with CALM key/value filling), sampling |
 
 ## Part B: an engine that fits real models to the machine (`src/adaptive/`)
 

@@ -105,6 +105,20 @@ curl -s http://127.0.0.1:8090/v1/chat/completions -H 'Content-Type: application/
 ```
 `model`: `auto` (routed; requests with tools go to the largest model) or part of a model's name. No streaming.
 
+## 9. Part A in the browser (`site/`)
+```bash
+PYTHONPATH=src .venv/bin/python -m tinygpt.export_web      # dense, 8-expert MoE, early exit -> site/models/
+python3 -m http.server 8000 -d site                         # then open http://localhost:8000
+```
+The page needs to be served over HTTP (opening `index.html` as a file blocks `fetch`). Any static host works,
+since everything runs in the browser. URL options for links and screenshots: `?model=exit-d256-L6&early=0.6&seed=3&run`.
+
+Screenshots and an end-to-end check of the real page (fails on any JavaScript error):
+```bash
+TMPDIR=$PWD/.tmp .venv/bin/pip install -r requirements-dev.txt   # Playwright; uses the installed Chrome
+.venv/bin/python scripts/screenshots.py                          # -> docs/images/web-*.png
+```
+
 ## Troubleshooting
 | problem | fix |
 |---|---|

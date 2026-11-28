@@ -99,3 +99,9 @@ Cost: two processes can no longer share one model's pages, which this engine nev
 
 **D18. No speculative decoding on this machine.** Measured slower in all 24 settings; the cause (verification is
 compute-bound on 2 cores) is a property of the hardware, so `pass_cost()` should decide per machine.
+
+**D19. The browser demo reimplements the model in plain JavaScript, with int8 weights.** No ONNX runtime or WebGPU
+library: the forward pass is ~200 lines, which a reader can check against `model.py`, and a test does check it
+against PyTorch (logits within 4e-7 on dense, MoE top-1/top-2 and exit models; identical greedy stories from all
+three trained models). int8 with one scale per row cut the downloads 4× (26 MB for three models instead of 107) for
++0.0001 to +0.0004 validation loss. Routers and norms stay float32: they are tiny, and routing is what MoE is about.

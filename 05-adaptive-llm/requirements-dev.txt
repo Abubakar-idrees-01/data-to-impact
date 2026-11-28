@@ -1,0 +1,2 @@
+# screenshots + end-to-end check of the browser demo (scripts/screenshots.py); uses the installed Chrome
+playwright==1.65.2

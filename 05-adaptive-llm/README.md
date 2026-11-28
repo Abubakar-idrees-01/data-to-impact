@@ -9,6 +9,21 @@ A chat assistant designed for weak, GPU-less machines, built in two parts:
 
 **Status:** ✅ both parts built and measured ([results](docs/RESULTS.md)), including the offline Scout demo.
 
+## Try the tiny GPT in your browser
+![The MoE model writing a story in the browser, tokens coloured by the expert the router chose](docs/images/web-moe.png)
+
+[`site/`](site/) runs the trained models **entirely in the browser**, in plain JavaScript with no libraries and no
+server. You get the tokenizer, attention with a KV cache, Mixture-of-Experts routing and early exits, checked against
+PyTorch (logits within 4 × 10⁻⁷, identical greedy stories). Pick a model and give it the start of a story. Colour the
+tokens by the expert the router chose, or turn on early exit and watch "layers per token" fall while "compute vs
+full model" *rises* (the checks cost more than the layers they skip; concept 4). Weights are 8-bit, one scale per
+row: 5.7 / 14.8 / 5.7 MB, at +0.0001–0.0004 validation loss.
+
+```bash
+PYTHONPATH=src .venv/bin/python -m tinygpt.export_web     # trained models -> site/models/ (int8) + tokenizer
+python3 -m http.server 8000 -d site                        # open http://localhost:8000
+```
+
 ## Why
 Training a ChatGPT-quality model is impossible on a CPU. Part A builds a tiny model to *show* the ideas behind
 efficient models and measure them honestly; Part B applies them to real open models people can actually use.

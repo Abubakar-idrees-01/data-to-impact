@@ -81,7 +81,7 @@ def machine(ram_avail: float, bandwidth: float = 20.0, gpus=()) -> Hardware:
 
 
 def fake_model(name: str, params_b: float, gb: float) -> dict:
-    return {"file": name, "params": int(params_b * 1e9), "quant": "Q4_K_M", "bytes": int(gb * GB),
+    return {"file": name, "name": name, "params": int(params_b * 1e9), "quant": "Q4_K_M", "bytes": int(gb * GB),
             "kv_layers": 28, "n_head_kv": 2, "head_dim": 128}
 
 
@@ -89,20 +89,39 @@ MODELS = [fake_model("small", 0.8, 0.5), fake_model("mid", 1.5, 1.0), fake_model
 
 
 def test_plan_takes_the_largest_model_that_fits_and_is_fast_enough():
-    assert plan_local(machine(16), MODELS, min_tok_s=4, eff=1.0)["choice"] == "big"  # 20 GB/s / 4.4 GB = 4.5 tok/s...
-    assert plan_local(machine(16), MODELS, min_tok_s=5, eff=1.0)["choice"] == "mid"  # ...too slow at a 5 tok/s floor
-    assert plan_local(machine(3), MODELS, min_tok_s=1, eff=1.0)["choice"] == "mid"   # big needs ~5 GB: doesn't fit
+    assert plan_local(machine(16), MODELS, min_tok_s=4, eff=1.0, quality={})["choice"] == "big"  # 20 GB/s / 4.4 GB = 4.5 tok/s...
+    assert plan_local(machine(16), MODELS, min_tok_s=5, eff=1.0, quality={})["choice"] == "mid"  # ...too slow at a 5 tok/s floor
+    assert plan_local(machine(3), MODELS, min_tok_s=1, eff=1.0, quality={})["choice"] == "mid"   # big needs ~5 GB: doesn't fit
 
 
 def test_plan_when_nothing_is_fast_or_nothing_fits():
-    slow = plan_local(machine(16, bandwidth=1.0), MODELS, eff=1.0)
+    slow = plan_local(machine(16, bandwidth=1.0), MODELS, eff=1.0, quality={})
     assert slow["choice"] == "small" and "fastest" in slow["why"]
-    none = plan_local(machine(1.2), MODELS, eff=1.0)
+    none = plan_local(machine(1.2), MODELS, eff=1.0, quality={})
     assert none["choice"] is None
 
 
+def answers(n_right: int, n: int = 100, offset: int = 0) -> dict:
+    return {f"q{i}": (i - offset) % n < n_right for i in range(n)}
+
+
+def test_plan_prefers_the_fastest_model_that_is_not_significantly_worse():
+    from adaptive.plan import mcnemar_p
+    assert mcnemar_p(answers(80), answers(80)) == 1.0
+    assert mcnemar_p(answers(60), answers(90)) < 0.001                      # 30 questions flip, all one way
+    small_mid = [fake_model("small", 0.8, 0.5), fake_model("mid", 1.5, 1.0)]
+    # mid 82% vs small 80%: not significant, so the faster small model wins
+    p = plan_local(machine(16), small_mid, eff=1.0, quality={"small": answers(80), "mid": answers(82)})
+    assert p["choice"] == "small" and "McNemar" in p["why"]
+    # mid 90% vs small 60%: significant, so the slower, better model is worth it
+    p = plan_local(machine(16), small_mid, eff=1.0, quality={"small": answers(60), "mid": answers(90)})
+    assert p["choice"] == "mid"
+    # a candidate without measurements: fall back to the largest rather than guess
+    assert plan_local(machine(16), small_mid, eff=1.0, quality={"small": answers(80)})["choice"] == "mid"
+
+
 def test_threads_and_gpu_layers():
-    assert plan_local(machine(16), MODELS, eff=1.0)["threads"] == 4                  # physical cores, not 8 threads
+    assert plan_local(machine(16), MODELS, eff=1.0, quality={})["threads"] == 4                  # physical cores, not 8 threads
     assert gpu_layers(machine(16, gpus=["Apple GPU (Metal, unified memory)"])) == -1
     assert gpu_layers(machine(16)) == 0
 

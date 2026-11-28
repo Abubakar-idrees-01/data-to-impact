@@ -221,6 +221,27 @@ def speculative(draft: Sequence, target: Sequence, prompt: list[int], max_new: i
     return Result(out, time.perf_counter() - t0, target.passes - p0, rounds, accepted, drafted)
 
 
+def pass_cost(seq: Sequence, context: list[int], probe: list[int], sizes=(1, 2, 3, 5, 7), repeats: int = 5) -> dict:
+    """Median seconds of one forward pass over n new tokens after `context`, for each n.
+
+    Speculative decoding assumes checking n tokens in one pass costs about as much as decoding one (true on a GPU,
+    where a single token leaves most of the compute idle). This measures what it costs here.
+    """
+    seq.reset()
+    seq.feed(context)
+    base, out = seq.n, {}
+    seq.mark()
+    for n in sizes:
+        times = []
+        for _ in range(repeats):
+            t = time.perf_counter()
+            seq.feed(probe[:n], all_logits=True)
+            times.append(time.perf_counter() - t)
+            seq.rewind(base, [])
+        out[n] = sorted(times)[len(times) // 2]
+    return out
+
+
 PROMPTS = [
     "Explain in a short paragraph why the sky is blue.",
     "Write a Python function that returns the n-th Fibonacci number, with a docstring.",
@@ -251,9 +272,22 @@ def main() -> None:
         raise SystemExit(f"draft and target must share a tokenizer (vocab {draft.vocab} vs {target.vocab})")
     print(f"rewind: draft {draft.probe_rewind()}, target {target.probe_rewind()}")
     stop = {target.llm.token_eos(), *target.llm.tokenize(b"<|im_end|>", add_bos=False, special=True)}
+    # an empty think block only for models whose template knows <think> (Qwen3.5), as LocalModel does; the first run
+    # of this script gave it to Qwen2.5 too, which then saw "<think></think>" as plain text
+    thinks = "think" in target.llm.metadata.get("tokenizer.chat_template", "")
+    context = target.llm.tokenize(("The quick brown fox jumps over the lazy dog. " * 30).encode(), add_bos=False)[:300]
+    probe = target.llm.tokenize(b" and then the dog woke up and ran far away", add_bos=False)
+    costs = {}
+    for role, seq in (("target", target), ("draft", draft)):
+        c = pass_cost(seq, context, probe)
+        costs[role] = {n: round(v * 1000, 1) for n, v in c.items()}
+        print(f"{role} pass cost (ms) by new tokens: " + ", ".join(f"{n}: {v * 1000:.0f} (×{v / c[1]:.2f})"
+                                                                for n, v in c.items()))
+    print(f"draft / target cost per token c = {costs['draft'][1] / costs['target'][1]:.2f}")
     rows = []
     for text in PROMPTS:
-        prompt = target.llm.tokenize(chatml([{"role": "user", "content": text}]).encode(), add_bos=False, special=True)
+        msgs = [{"role": "user", "content": text}]
+        prompt = target.llm.tokenize(chatml(msgs, think=not thinks).encode(), add_bos=False, special=True)
         target.reset()
         base = greedy(target, prompt, a.max_new, stop)
         row = {"prompt": text, "greedy": base.to_dict(), "spec": {}}
@@ -264,18 +298,19 @@ def main() -> None:
             restores = target.restores + draft.restores
             r = speculative(draft, target, prompt, a.max_new, stop, k)
             same = sum(x == y for x, y in zip(r.tokens, base.tokens)) / max(len(base.tokens), 1)
-            row["spec"][k] = {**r.to_dict(), "same_as_greedy": round(same, 3),
+            first_diff = next((i for i, (x, y) in enumerate(zip(r.tokens, base.tokens)) if x != y), None)
+            row["spec"][k] = {**r.to_dict(), "same_as_greedy": round(same, 3), "first_difference_at": first_diff,
                               "restores": target.restores + draft.restores - restores,
                               "snapshot_mb": round(max(target.snapshot_bytes, draft.snapshot_bytes) / 2 ** 20, 2),
                               "speedup": round(r.tok_s / base.tok_s, 3) if base.tok_s else None}
             print(f"  k={k}: {r.tok_s:5.2f} tok/s, acceptance {r.acceptance:.2f}, "
                   f"{len(r.tokens) / r.rounds:.2f} tokens/round, speed-up ×{row['spec'][k]['speedup']}, "
-                  f"identical to greedy {same:.0%}")
+                  f"identical to greedy {same:.0%}" + (f" (first difference at token {first_diff})" if first_diff is not None else ""))
         rows.append(row)
     out = ROOT / "results" / "speculative" / f"{a.draft}--{a.target}.json".lower()
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"draft": a.draft, "target": a.target, "rewind": [draft.rewindable, target.rewindable],
-                               "rows": rows}, indent=1))
+                               "pass_cost_ms": costs, "rows": rows}, indent=1))
     print("saved", out.relative_to(ROOT))
 
 

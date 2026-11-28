@@ -12,14 +12,19 @@ Two rules, both from how CPU inference works:
    size. Bigger or less-quantized models are slower in direct proportion. `efficiency` is calibrated against measured
    llama.cpp speeds (B2); until then it is 1.0 and the estimate is a ceiling.
 
-Among the models that fit, take the largest (more parameters = better answers) that is still at least
-`min_tok_s` fast; a reply slower than reading speed (~5 tokens/s) feels broken.
+Among the models that fit and are at least `min_tok_s` fast (a reply slower than reading speed, ~5 tokens/s, feels
+broken):
+- **with measured answers** (`route_eval` runs, the same questions for every model): the *fastest* model that is not
+  significantly less accurate than the most accurate one (exact McNemar test on the questions where they differ,
+  p < 0.05). Measured on this laptop, size was a bad guide: Qwen2.5-1.5B answered as well as Qwen3.5-2B, 1.6× faster.
+- **without measurements:** the largest, on the prior that more parameters give better answers.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 from .gguf import kv_cache_bytes, model_info
@@ -28,6 +33,8 @@ from .hardware import GB, Hardware, profile, slug
 ROOT = Path(__file__).resolve().parents[2]
 LOCAL_MODELS = ROOT.parent / "01-rag-from-scratch" / "models" / "llm"
 CALIBRATION = ROOT / "results" / "hardware" / "calibration.json"
+ROUTING = ROOT / "results" / "routing"
+SIGNIFICANCE = 0.05
 OVERHEAD_GB = 0.35            # llama.cpp compute buffers + the Python process; checked against measured RSS in B2
 RESERVE_GB = 1.0              # left free for the OS and other apps
 READING_SPEED = 5.0           # tokens/s: about 250 words per minute
@@ -58,20 +65,61 @@ def estimate(hw: Hardware, file_bytes: int, kv_bytes: int, eff: float | None = N
     return {"need_gb": round(need, 2), "fits": need <= budget, "tok_s": round(tok_s, 1) if tok_s else None}
 
 
+def mcnemar_p(a: dict, b: dict) -> float:
+    """Exact two-sided McNemar test: do two models' right/wrong answers on the same questions differ?"""
+    ids = a.keys() & b.keys()
+    only_a = sum(1 for i in ids if a[i] and not b[i])
+    only_b = sum(1 for i in ids if b[i] and not a[i])
+    n, k = only_a + only_b, min(only_a, only_b)
+    return 1.0 if n == 0 else min(1.0, 2 * sum(math.comb(n, i) for i in range(k + 1)) / 2 ** n)
+
+
+def load_quality(directory: Path = ROUTING) -> dict[str, dict[str, bool]]:
+    """{model name: {question id: correct}} from every `route_eval` runs file (answers don't depend on the machine)."""
+    out: dict[str, dict[str, bool]] = {}
+    for path in sorted(directory.glob("runs-*.jsonl")) if directory.exists() else []:
+        for line in path.read_text().splitlines():
+            r = json.loads(line)
+            out.setdefault(r["model"], {})[r["task"]] = bool(r["correct"])
+    return out
+
+
+def pick_by_quality(fast: list[dict], quality: dict[str, dict[str, bool]]) -> tuple[dict, str] | None:
+    """The fastest candidate not significantly less accurate than the most accurate one; None if unmeasured."""
+    measured = [r for r in fast if quality.get(r.get("name"))]
+    if len(measured) < 2 or len(measured) < len(fast):
+        return None                                   # an unmeasured candidate could be the best: don't guess
+    for r in measured:
+        q = quality[r["name"]]
+        r["accuracy"] = round(sum(q.values()) / len(q), 3)
+    best = max(measured, key=lambda r: r["accuracy"])
+    for r in sorted(measured, key=lambda r: -(r["tok_s"] or 0)):
+        p = 1.0 if r is best else mcnemar_p(quality[r["name"]], quality[best["name"]])
+        if p >= SIGNIFICANCE:
+            why = (f"fastest model not significantly less accurate than the most accurate ({best['file']}, "
+                   f"{best['accuracy']}): {r['accuracy']} on {len(quality[r['name']])} questions, McNemar p = {p:.2f}")
+            return r, why if r is not best else f"most accurate measured model ({r['accuracy']}), also the fastest such"
+    return best, "most accurate measured model"
+
+
 def plan_local(hw: Hardware, models: list[dict], n_ctx: int = 4096, min_tok_s: float = READING_SPEED,
-               eff: float | None = None) -> dict:
-    """Rank the given GGUF models for this machine and choose one."""
+               eff: float | None = None, quality: dict[str, dict[str, bool]] | None = None) -> dict:
+    """Rank the given GGUF models for this machine and choose one. quality: see `load_quality` ({} = ignore)."""
+    quality = load_quality() if quality is None else quality
     rows = []
     for m in models:
         kv = kv_cache_bytes(m, n_ctx)
-        rows.append({"file": m["file"], "params_b": round(m["params"] / 1e9, 2), "quant": m["quant"],
-                     "file_gb": round(m["bytes"] / GB, 2), "kv_gb": round(kv / GB, 3),
+        rows.append({"file": m["file"], "name": m.get("name"), "params_b": round(m["params"] / 1e9, 2),
+                     "quant": m["quant"], "file_gb": round(m["bytes"] / GB, 2), "kv_gb": round(kv / GB, 3),
                      "arch": m.get("arch"), **estimate(hw, m["bytes"], kv, eff, m.get("arch"))})
     rows.sort(key=lambda r: r["params_b"])
     fitting = [r for r in rows if r["fits"]]
     fast = [r for r in fitting if r["tok_s"] is None or r["tok_s"] >= min_tok_s]
-    if fast:
-        choice, why = fast[-1], f"largest model that fits in RAM and runs at ≥ {min_tok_s} tok/s"
+    picked = pick_by_quality(fast, quality) if fast else None
+    if picked:
+        choice, why = picked
+    elif fast:
+        choice, why = fast[-1], f"largest model that fits in RAM and runs at ≥ {min_tok_s} tok/s (no quality measurements)"
     elif fitting:
         choice, why = max(fitting, key=lambda r: r["tok_s"] or 0), f"nothing reaches {min_tok_s} tok/s; fastest that fits"
     else:
@@ -123,10 +171,11 @@ def main() -> None:
 
     models = [model_info(p) for p in sorted(Path(a.models).glob("*.gguf"))]
     p = plan_local(hw, models, a.ctx, a.min_tok_s)
-    print(f"\n{'model':<36} {'params':>6} {'quant':>7} {'file GB':>7} {'KV GB':>6} {'need':>5} {'fits':>4} {'tok/s':>6}")
+    print(f"\n{'model':<36} {'params':>6} {'quant':>7} {'file GB':>7} {'KV GB':>6} {'need':>5} {'fits':>4} {'tok/s':>6}"
+          f" {'acc':>6}")
     for r in p["models"]:
         print(f"{r['file']:<36} {r['params_b']:>5}B {r['quant']:>7} {r['file_gb']:>7} {r['kv_gb']:>6} "
-              f"{r['need_gb']:>5} {'yes' if r['fits'] else 'NO':>4} {r['tok_s'] or '?':>6}")
+              f"{r['need_gb']:>5} {'yes' if r['fits'] else 'NO':>4} {r['tok_s'] or '?':>6} {r.get('accuracy', '-'):>6}")
     print(f"\nchoice: {p['choice']} ({p['why']}); threads={p['threads']}, n_ctx={p['n_ctx']}, n_gpu_layers={p['gpu_layers']}")
 
     grid = quant_grid(hw)
